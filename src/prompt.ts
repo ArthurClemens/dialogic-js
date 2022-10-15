@@ -1,7 +1,16 @@
 import { wait, getDuration } from "./util";
-import "./prompt.css";
 
-export const Prompt = {
+export type TPrompt = {
+  el?: HTMLElement;
+  inited?: boolean;
+  mounted: () => void;
+  init: (command: Command) => void;
+  toggle: (command: Command) => void;
+  show: (command: Command) => void;
+  hide: (command: Command) => void;
+};
+
+export const Prompt: TPrompt = {
   mounted() {
     init(this);
   },
@@ -17,11 +26,6 @@ export const Prompt = {
   async hide(command: Command) {
     await init(this, command, MODE.HIDE);
   },
-};
-
-type TPrompt = typeof Prompt & {
-  el?: HTMLElement;
-  inited?: boolean;
 };
 
 const ROOT_SELECTOR = "[data-prompt]";

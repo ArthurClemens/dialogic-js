@@ -3,8 +3,9 @@
   --prompt-background-color-backdrop: black;
   --prompt-background-opacity-backdrop-dark: 0.5;
   --prompt-background-opacity-backdrop-light: 0.2;
+  --prompt-transition-property-pane: opacity;
   --prompt-transition-duration-pane: 220ms;
-  --prompt-transition-duration-backdrop: calc( 0.9 * var(--prompt-transition-duration-pane) );
+  --prompt-transition-duration-backdrop: calc( 0.8 * var(--prompt-transition-duration-pane) );
   --prompt-z-index-backdrop: 1998;
   --prompt-z-index-touch: 1999;
   --prompt-z-index-pane: 2000;
@@ -25,7 +26,7 @@
   max-width: var(--prompt-max-width-pane);
   max-height: var(--prompt-max-height-pane);
   z-index: var(--prompt-z-index-pane);
-  transition: all var(--prompt-transition-duration-pane) ease-in-out;
+  transition: var(--prompt-transition-property-pane) var(--prompt-transition-duration-pane) ease-in-out;
   opacity: 0;
 }
 [data-prompt][data-isshowing] [data-pane] {
