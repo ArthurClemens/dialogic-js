@@ -1,0 +1,26 @@
+{
+  "name": "dialogic-js",
+  "version": "0.1.0",
+  "description": "Control the opening and closing of menus and dialogs",
+  "main": "index.js",
+  "scripts": {
+    "dist:clean": "rm ./dist/*",
+    "build:minified": "esbuild src/index.ts --bundle --minify --target=es2020,chrome58,edge18,firefox57,node12,safari11 --outfile=dist/dialogic-js.min.js",
+    "build:module": "esbuild src/index.ts --bundle --format=esm --outfile=dist/dialogic-js.mjs",
+    "build": "npm run dist:clean && npm run build:module && npm run build:minified"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArthurClemens/dialogic-js.git"
+  },
+  "author": "Arthur Clemens",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArthurClemens/dialogic-js/issues"
+  },
+  "homepage": "https://github.com/ArthurClemens/dialogic-js#readme",
+  "devDependencies": {
+    "esbuild": "^0.15.11",
+    "typescript": "^4.8.4"
+  }
+}
