@@ -18,8 +18,7 @@
   display: none;
 }
 
-[data-prompt][data-isopen] [data-pane] {
-  display: block;
+[data-prompt] [data-pane] {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -34,6 +33,10 @@
   z-index: var(--prompt-z-index-pane);
   transition: var(--prompt-transition-property-pane)
     var(--prompt-transition-duration-pane) ease-in-out;
+}
+
+[data-prompt][data-isopen] [data-pane] {
+  display: block;
   opacity: 0;
 }
 
