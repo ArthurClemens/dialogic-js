@@ -165,7 +165,7 @@ prompt.show()
 
 #### Full example with Primer CSS dialog
 
-See [online example]()
+See [CodeSandbox example](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
 
 ```html
 <details class="details-reset" data-prompt ontoggle="Prompt.init(this)">
