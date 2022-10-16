@@ -7,7 +7,6 @@ export declare type TPrompt = {
     show: (command: Command) => void;
     hide: (command: Command) => void;
 };
-export declare const Prompt: TPrompt;
 declare type Command = 
 /**
  * HTML selector
@@ -17,4 +16,10 @@ string
  * HTML element
  */
  | HTMLElement;
+export declare const Prompt: TPrompt;
+declare global {
+    interface Window {
+        Prompt?: TPrompt;
+    }
+}
 export {};

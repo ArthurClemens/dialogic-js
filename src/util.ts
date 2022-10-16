@@ -48,3 +48,17 @@ export const getDuration = (domElement: HTMLElement) => {
     delayStyleValue !== undefined ? styleDurationToMs(delayStyleValue) : 0;
   return durationValue + delayValue;
 };
+
+export const repaint = (element: HTMLElement) => element.scrollTop;
+
+export const isVisible = (element: HTMLElement) => {
+  const style = window.getComputedStyle(element);
+  if (style.opacity === "0" || style.display === "none") {
+    return false;
+  }
+  return !!(
+    element.offsetWidth ||
+    element.offsetHeight ||
+    element.getClientRects().length
+  );
+};

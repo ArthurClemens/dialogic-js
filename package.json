@@ -1,6 +1,6 @@
 {
   "name": "dialogic-js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Control the opening and closing of menus and dialogs",
   "types": "dist",
   "files": [
@@ -18,9 +18,9 @@
   "scripts": {
     "dist:clean": "rm -rf ./dist/*",
     "build:minified": "esbuild src/index.ts --bundle --minify --target=es2020,chrome58,edge18,firefox57,node12,safari11 --outfile=dist/dialogic-js.min.js",
-    "build:module": "esbuild src/index.ts --bundle --format=esm --outfile=dist/dialogic-js.js",
+    "build:esm": "esbuild src/index.ts --bundle --format=esm --outfile=dist/dialogic-js.js",
     "build:types": "./node_modules/typescript/bin/tsc --p tsconfig.gen.json",
-    "build": "npm run dist:clean && npm run build:module && npm run build:minified && npm run build:types"
+    "build": "npm run dist:clean && npm run build:esm && npm run build:minified && npm run build:types"
   },
   "repository": {
     "type": "git",
