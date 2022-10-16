@@ -1,6 +1,6 @@
 # dialogic-js
 
-Control the opening and closing of dialogs and menus using HTML and vanilla JavaScript.
+Control the opening and closing of dialogs and menus using HTML and (optionally) vanilla JavaScript.
 
 This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic), to be used without a Virtual Dom library.
 
@@ -300,6 +300,15 @@ When using a form:
 </div>
 ```
 
+Improve dialog size and position with this CSS:
+
+```css
+[data-prompt] dialog[data-pane] {
+  width: 100%;
+  max-width: 60vw;
+}
+```
+
 Not yet supported:
 - Calling `dialog.close` on closing the prompt
 
@@ -315,4 +324,24 @@ Styles are defined by CSS variables. Override the default values to your own req
     --prompt-transition-duration-pane: 350ms;
   }
 </style>
+```
+
+Default values:
+
+```css
+[data-prompt] {
+  --prompt-background-color-backdrop: black;
+  --prompt-background-opacity-backdrop-dark: 0.5;
+  --prompt-background-opacity-backdrop-light: 0.2;
+  --prompt-transition-property-pane: opacity;
+  --prompt-transition-duration-pane: 220ms;
+  --prompt-transition-duration-backdrop: calc(
+    0.8 * var(--prompt-transition-duration-pane)
+  );
+  --prompt-z-index-backdrop: 1998;
+  --prompt-z-index-touch: 1999;
+  --prompt-z-index-pane: 2000;
+  --prompt-max-width-pane: 90vw;
+  --prompt-max-height-pane: 80vh;
+}
 ```
