@@ -8,15 +8,15 @@ This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic),
 - [Installation](#installation)
   - [Including on a static site](#including-on-a-static-site)
   - [Installing via npm](#installing-via-npm)
+  - [Adding to Phoenix LiveView](#adding-to-phoenix-liveview)
 - [Examples](#examples)
-- [Dialogic Prompt](#dialogic-prompt)
-  - [HTML structure](#html-structure)
-  - [Opening, closing and toggling](#opening-closing-and-toggling)
-    - [HTML: Prompt methods](#html-prompt-methods)
-    - [JavaScript: Methods on a Prompt instance](#javascript-methods-on-a-prompt-instance)
-  - [Support for details/summary](#support-for-detailssummary)
-  - [Support for dialog](#support-for-dialog)
-  - [Custom styles](#custom-styles)
+- [HTML structure](#html-structure)
+- [Opening, closing and toggling](#opening-closing-and-toggling)
+  - [HTML: Prompt methods](#html-prompt-methods)
+  - [JavaScript: Methods on a Prompt instance](#javascript-methods-on-a-prompt-instance)
+- [Support for details/summary](#support-for-detailssummary)
+- [Support for dialog](#support-for-dialog)
+- [Custom styles](#custom-styles)
 
 
 ## Rationale
@@ -82,7 +82,7 @@ AFTER - includes touch layer, backdrop, fade in and out
 </div>
 ```
 
-Please note that full support for `<dialog>` needs additional work around methods and events.
+Please note that `<dialog>` is not yet fully supported.
 
 ## Installation
 
@@ -106,6 +106,20 @@ import { Prompt } from 'dialogic-js';
 import 'dialogic-js/dist/dialogic-js.css';
 ```
 
+### Adding to Phoenix LiveView
+
+Inside your assets folder, do:
+
+```bash
+npm install dialogic-js --save
+```
+
+Add to your `app.js`:
+
+```js
+import { Prompt } from "dialogic-js";
+import "../node_modules/dialogic-js/dist/dialogic-js.css";
+```
 
 ## Examples
 
@@ -117,11 +131,10 @@ import 'dialogic-js/dist/dialogic-js.css';
 - [CodeSandbox with &lt;dialog&gt;](https://codesandbox.io/p/sandbox/dialogic-js-with-a-dialog-element-td1sxv)
 
 
-## Dialogic Prompt
 
 `Prompt` is a hook to control the opening and closing of dialogs and menus. It handles the showing and hiding of the HTML elements, without dealing with layout itself - to be implemented by you, or by using a UI library and adding "prompt" data attributes.
 
-### HTML structure
+## HTML structure
 
 `Prompt` recognizes this basic HTML markup:
 
@@ -154,12 +167,12 @@ Example of HTML with all relevant (but some optional) attributes:
 </div>
 ```
 
-### Opening, closing and toggling
+## Opening, closing and toggling
 
 - When using HTML markup: use methods on the `Prompt` object
 - When writing JavaAcript: create a new `Prompt` instance
 
-#### HTML: Prompt methods
+### HTML: Prompt methods
 
 If you have a dialog container with this markup:
 
@@ -200,7 +213,7 @@ Opening, closing and toggling are done with these methods:
 | `Prompt.init`   | HTML selector / element | When used with `<details>`: initializes the prompt and shows the detail content |
 
 
-#### JavaScript: Methods on a Prompt instance
+### JavaScript: Methods on a Prompt instance
 
 Create an instance that can be passed around. Initialize it with attribute `el`.
 
@@ -224,7 +237,7 @@ prompt.show()
 prompt.hide()
 ```
 
-### Support for details/summary
+## Support for details/summary
 
 Online example: [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
 
@@ -267,7 +280,7 @@ prompt.el = document.querySelector("#my-details")
 prompt.show()
 ```
 
-### Support for dialog
+## Support for dialog
 
 Online example: [CodeSandbox with &lt;dialog&gt;](https://codesandbox.io/p/sandbox/dialogic-js-with-a-dialog-element-td1sxv)
 
@@ -317,7 +330,7 @@ Not yet supported:
 - Calling `dialog.close` on closing the prompt
 
 
-### Custom styles
+## Custom styles
 
 Styles are defined by CSS variables. Override the default values to your own requirements. For example:
 
