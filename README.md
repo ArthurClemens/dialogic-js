@@ -109,6 +109,10 @@ import 'dialogic-js/dist/dialogic-js.css';
 
 ## Examples
 
+- [CodeSandbox with UIKit modal](https://codesandbox.io/p/sandbox/dialogic-js-with-a-uikit-modal-joil56)
+- [CodeSandbox with Material IO dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-a-material-io-dialog-shg1iv)
+- [CodeSandbox with Pico.css modal](https://codesandbox.io/p/sandbox/dialogic-js-with-a-pico-framework-dialog-lefcfi)
+- [CodeSandbox with Phonon Framework dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-a-phonon-framework-dialog-vfxupe)
 - [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
 - [CodeSandbox with &lt;dialog&gt;](https://codesandbox.io/p/sandbox/dialogic-js-with-a-dialog-element-td1sxv)
 
