@@ -1,6 +1,6 @@
 # dialogic-js
 
-Control the opening and closing of dialogs using HTML and (optionally) vanilla JavaScript.
+Control the opening and closing of dialogs and menus using HTML and (optionally) vanilla JavaScript.
 
 This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic), to be used without a Virtual Dom library.
 
@@ -132,7 +132,7 @@ import "../node_modules/dialogic-js/dist/dialogic-js.css";
 
 
 
-`Prompt` is a hook to control the opening and closing of dialogs. It handles the showing and hiding of the HTML elements, without dealing with layout itself - to be implemented by you, or by using a UI library and adding "prompt" data attributes.
+`Prompt` is a hook to control the opening and closing of dialogs and menus. It handles the showing and hiding of the HTML elements, without dealing with layout itself - to be implemented by you, or by using a UI library and adding "prompt" data attributes.
 
 ## HTML structure
 
@@ -151,7 +151,7 @@ import "../node_modules/dialogic-js/dist/dialogic-js.css";
 |--------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `data-prompt`      | required     | Container, may be a `<details>` element. When opening or closing from outside of this container, an id or other selector is required in order to call methods on it.<br />Optional attributes:<br />`data-ismodal` - Creates modal behavior: pane can't be closed by clicking on the background.<br />`data-isescapable` - Closes the pane when pressing Escape. |
 | `data-touch`       | required     | Touch layer, detects clicks on background.                                                                                                                                                                                                                                                                                                                       |
-| `data-pane`        | required     | Dialog pane layer.                                                                                                                                                                                                                                                                                                                                               |
+| `data-pane`        | required     | Dialog or menu pane layer.                                                                                                                                                                                                                                                                                                                                       |
 | `data-backdrop`    | -            | Backdrop layer.<br />Optional attributes:<br />`data-islight` - Creates a light colored backdrop.                                                                                                                                                                                                                                                                |
 | `data-toggle`      | -            | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                                                                                                                                                                                                                                        |
 
@@ -207,9 +207,9 @@ Opening, closing and toggling are done with these methods:
 
 | **Method**      | **Arguments**           | **Description**                                                                 |
 |-----------------|-------------------------|---------------------------------------------------------------------------------|
-| `Prompt.show`   | HTML selector / element | Shows the dialog                                                                |
-| `Prompt.hide`   | HTML selector / element | Hides the dialog                                                                |
-| `Prompt.toggle` | HTML selector / element | Toggles the dialog                                                              |
+| `Prompt.show`   | HTML selector / element | Shows the dialog/menu                                                           |
+| `Prompt.hide`   | HTML selector / element | Hides the dialog/menu                                                           |
+| `Prompt.toggle` | HTML selector / element | Toggles the dialog/menu                                                         |
 | `Prompt.init`   | HTML selector / element | When used with `<details>`: initializes the prompt and shows the detail content |
 
 
@@ -241,7 +241,7 @@ prompt.hide()
 
 Online example: [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
 
-The [HTMLDetailsElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDetailsElement) element can be used for toggling dialogs. PrimerCSS contains a couple of neat examples, see for example [PrimerCSS Dropdown](https://primer.style/css/components/dropdown). The summary element is styled as button - from the outside you'd never know the source is a details element.
+The [HTMLDetailsElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDetailsElement) element can be used for toggling dialogs and menus. PrimerCSS contains a couple of neat examples, see for example [PrimerCSS Dropdown](https://primer.style/css/components/dropdown). The summary element is styled as button - from the outside you'd never know the source is a details element.
 
 The downside to using `details` is that it provides little support for transitions; the open state is on or off, which leads to a faily basic user experience.
 
