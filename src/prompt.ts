@@ -2,7 +2,6 @@ import { wait, getDuration, repaint, isVisible } from "./util";
 
 export type TPrompt = {
   el?: HTMLElement;
-  inited?: boolean;
   mounted: () => void;
   init: (command: Command) => void;
   toggle: (command: Command) => void;
@@ -43,7 +42,6 @@ type PromptElements = {
   isEscapable?: boolean;
   touchLayer?: MaybeHTMLElement;
   toggle?: MaybeHTMLElement;
-  prompt: TPrompt;
   escapeListener: (e: KeyboardEvent) => void;
 };
 
@@ -115,13 +113,13 @@ const toggleView = async (
 };
 
 function getElements(
-  prompt: TPrompt,
+  promptElement: HTMLElement | undefined,
   command?: Command
 ): PromptElements | undefined {
   let root: MaybeHTMLElement = null;
 
-  if (!command && prompt.el) {
-    root = prompt.el;
+  if (!command && promptElement) {
+    root = promptElement;
   } else if (typeof command === "string") {
     root = document.querySelector(command);
   } else if (command && !!command.tagName) {
@@ -154,15 +152,12 @@ function getElements(
     toggle,
     content,
     touchLayer,
-    prompt,
-    escapeListener: () => undefined, // placeholder
+    escapeListener: function (e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        hideView(elements);
+      }
+    },
   };
-  const escapeListener = function (e: KeyboardEvent) {
-    if (e.key === "Escape") {
-      hideView(elements);
-    }
-  };
-  elements.escapeListener = escapeListener;
   return elements;
 }
 
@@ -194,7 +189,7 @@ const initTouchEvents = (elements: PromptElements) => {
 };
 
 async function init(prompt: TPrompt, command?: Command, mode?: MODE) {
-  const elements = getElements(prompt, command);
+  const elements = getElements(prompt.el, command);
   if (elements === undefined) {
     return;
   }
