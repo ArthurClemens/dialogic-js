@@ -12,7 +12,7 @@ export type TPrompt = {
 
 // Elements
 const ROOT_SELECTOR = "[data-prompt]";
-const PANE_SELECTOR = "[data-pane]";
+const CONTENT_SELECTOR = "[data-content]";
 const TOUCH_SELECTOR = "[data-touch]";
 const TOGGLE_SELECTOR = "[data-toggle]";
 // Modifier arguments
@@ -36,7 +36,7 @@ type Command =
 type MaybeHTMLElement = HTMLElement | null;
 
 type PromptElements = {
-  pane: HTMLElement;
+  content: HTMLElement;
   root: HTMLElement;
   isDetails: boolean;
   isModal: boolean;
@@ -54,7 +54,7 @@ enum MODE {
 }
 
 const hideView = async ({
-  pane,
+  content,
   root,
   isDetails,
   isEscapable,
@@ -65,7 +65,7 @@ const hideView = async ({
   }
   delete root.dataset[IS_SHOWING_DATA];
   root.dataset[IS_HIDING_DATA] = "";
-  const duration = getDuration(pane);
+  const duration = getDuration(content);
   await wait(duration);
   if (isDetails) {
     root.removeAttribute("open");
@@ -75,7 +75,7 @@ const hideView = async ({
 };
 
 const showView = async ({
-  pane,
+  content,
   root,
   isDetails,
   isEscapable,
@@ -91,7 +91,7 @@ const showView = async ({
   repaint(root);
   root.dataset[IS_SHOWING_DATA] = "";
 
-  const duration = getDuration(pane);
+  const duration = getDuration(content);
   await wait(duration);
 };
 
@@ -105,7 +105,7 @@ const toggleView = async (
     case MODE.HIDE:
       return await hideView(elements);
     default: {
-      if (isVisible(elements.pane)) {
+      if (isVisible(elements.content)) {
         return await hideView(elements);
       } else {
         return await showView(elements);
@@ -129,38 +129,41 @@ function getElements(
   }
 
   if (!root) {
+    console.error("Prompt element 'data-root' not found");
+    return undefined;
+  }
+  const content: MaybeHTMLElement = root.querySelector(CONTENT_SELECTOR);
+
+  if (!content) {
+    console.error("Prompt element 'data-content' not found");
     return undefined;
   }
 
   const toggle: MaybeHTMLElement =
     root.querySelector(TOGGLE_SELECTOR) || root.querySelector("summary");
-  const pane: MaybeHTMLElement = root.querySelector(PANE_SELECTOR);
   const touchLayer: MaybeHTMLElement = root.querySelector(TOUCH_SELECTOR);
   const isDetails = root.tagName === "DETAILS";
   const isModal = root.dataset[IS_MODAL_DATA] !== undefined;
   const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== undefined;
 
-  if (root && pane) {
-    const elements: PromptElements = {
-      root,
-      isDetails,
-      isModal,
-      isEscapable,
-      toggle,
-      pane,
-      touchLayer,
-      prompt,
-      escapeListener: () => undefined, // placeholder
-    };
-    const escapeListener = function (e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        hideView(elements);
-      }
-    };
-    elements.escapeListener = escapeListener;
-    return elements;
-  }
-  return undefined;
+  const elements: PromptElements = {
+    root,
+    isDetails,
+    isModal,
+    isEscapable,
+    toggle,
+    content,
+    touchLayer,
+    prompt,
+    escapeListener: () => undefined, // placeholder
+  };
+  const escapeListener = function (e: KeyboardEvent) {
+    if (e.key === "Escape") {
+      hideView(elements);
+    }
+  };
+  elements.escapeListener = escapeListener;
+  return elements;
 }
 
 const initToggleEvents = (elements: PromptElements) => {
@@ -193,7 +196,6 @@ const initTouchEvents = (elements: PromptElements) => {
 async function init(prompt: TPrompt, command?: Command, mode?: MODE) {
   const elements = getElements(prompt, command);
   if (elements === undefined) {
-    console.error("Prompt elements not found");
     return;
   }
 

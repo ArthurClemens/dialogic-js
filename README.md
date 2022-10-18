@@ -5,18 +5,27 @@ Control the opening and closing of dialogs and menus using HTML and (optionally)
 This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic), to be used without a Virtual Dom library.
 
 - [Rationale](#rationale)
+- [Limitations](#limitations)
+- [Examples](#examples)
+  - [Dialog](#dialog)
+  - [Menu](#menu)
 - [Installation](#installation)
   - [Including on a static site](#including-on-a-static-site)
   - [Installing via npm](#installing-via-npm)
-  - [Adding to Phoenix LiveView](#adding-to-phoenix-liveview)
-- [Examples](#examples)
+  - [Adding to a Phoenix LiveView project](#adding-to-a-phoenix-liveview-project)
 - [HTML structure](#html-structure)
-- [Opening, closing and toggling](#opening-closing-and-toggling)
+  - [Data attributes and modifiers](#data-attributes-and-modifiers)
+  - [Dialog and menu behaviour](#dialog-and-menu-behaviour)
+- [Opening, closing and toggling.](#opening-closing-and-toggling)
   - [HTML: Prompt methods](#html-prompt-methods)
   - [JavaScript: Methods on a Prompt instance](#javascript-methods-on-a-prompt-instance)
 - [Support for details/summary](#support-for-detailssummary)
-- [Support for dialog](#support-for-dialog)
+- [Support for the dialog element](#support-for-the-dialog-element)
 - [Custom styles](#custom-styles)
+  - [CSS Variables](#css-variables)
+  - [Conditional CSS](#conditional-css)
+
+
 
 
 ## Rationale
@@ -75,14 +84,32 @@ AFTER - includes touch layer, backdrop, fade in and out
   <button onclick="Prompt.show(this)">Open</button>
   <div data-backdrop></div>
   <div data-touch></div>
-  <dialog data-pane>
+  <dialog data-content>
     <p>Content</p>
     <button onclick="Prompt.hide(this)">Close</button>
   </dialog>
 </div>
 ```
 
-Please note that `<dialog>` is not yet fully supported.
+## Limitations
+
+- `<dialog>` is not yet fully supported.
+- Support for menu behaviour is limited to appearing - no positioning and specific animations are implemented
+
+## Examples
+
+### Dialog
+
+- [CodeSandbox with UIKit modal](https://codesandbox.io/p/sandbox/dialogic-js-with-a-uikit-modal-joil56)
+- [CodeSandbox with Material IO dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-a-material-io-dialog-shg1iv)
+- [CodeSandbox with Pico.css modal](https://codesandbox.io/p/sandbox/dialogic-js-with-a-pico-framework-dialog-lefcfi)
+- [CodeSandbox with Phonon Framework dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-a-phonon-framework-dialog-vfxupe)
+- [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
+- [CodeSandbox with &lt;dialog&gt;](https://codesandbox.io/p/sandbox/dialogic-js-with-a-dialog-element-td1sxv)
+
+### Menu
+
+- [CodeSandbox with Primer CSS select menu](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-selectmenu-bv1byj)
 
 ## Installation
 
@@ -106,7 +133,7 @@ import { Prompt } from 'dialogic-js';
 import 'dialogic-js/dist/dialogic-js.css';
 ```
 
-### Adding to Phoenix LiveView
+### Adding to a Phoenix LiveView project
 
 Inside your assets folder, do:
 
@@ -121,15 +148,6 @@ import { Prompt } from "dialogic-js";
 import "../node_modules/dialogic-js/dist/dialogic-js.css";
 ```
 
-## Examples
-
-- [CodeSandbox with UIKit modal](https://codesandbox.io/p/sandbox/dialogic-js-with-a-uikit-modal-joil56)
-- [CodeSandbox with Material IO dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-a-material-io-dialog-shg1iv)
-- [CodeSandbox with Pico.css modal](https://codesandbox.io/p/sandbox/dialogic-js-with-a-pico-framework-dialog-lefcfi)
-- [CodeSandbox with Phonon Framework dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-a-phonon-framework-dialog-vfxupe)
-- [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
-- [CodeSandbox with &lt;dialog&gt;](https://codesandbox.io/p/sandbox/dialogic-js-with-a-dialog-element-td1sxv)
-
 
 
 `Prompt` is a hook to control the opening and closing of dialogs and menus. It handles the showing and hiding of the HTML elements, without dealing with layout itself - to be implemented by you, or by using a UI library and adding "prompt" data attributes.
@@ -141,33 +159,66 @@ import "../node_modules/dialogic-js/dist/dialogic-js.css";
 ```html
 <div data-prompt id="some-id">
   <div data-touch></div>
-  <div data-pane>
+  <div data-content>
     Content
   </div>
 </div>
 ```
 
-| **Data attribute** | **Required** | **Description**                                                                                                                                                                                                                                                                                                                                                  |
-|--------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `data-prompt`      | required     | Container, may be a `<details>` element. When opening or closing from outside of this container, an id or other selector is required in order to call methods on it.<br />Optional attributes:<br />`data-ismodal` - Creates modal behavior: pane can't be closed by clicking on the background.<br />`data-isescapable` - Closes the pane when pressing Escape. |
-| `data-touch`       | required     | Touch layer, detects clicks on background.                                                                                                                                                                                                                                                                                                                       |
-| `data-pane`        | required     | Dialog or menu pane layer.                                                                                                                                                                                                                                                                                                                                       |
-| `data-backdrop`    | -            | Backdrop layer.<br />Optional attributes:<br />`data-islight` - Creates a light colored backdrop.                                                                                                                                                                                                                                                                |
-| `data-toggle`      | -            | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                                                                                                                                                                                                                                        |
+### Data attributes and modifiers
+
+| **Data attribute** | **Required** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+|--------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `data-prompt`      | required     | Container, may be a `<details>` element.<br />Optional attributes:<br />`id` - When opening or closing from outside of this container, an id or other selector is required in order to call methods on it.<br />`data-ismodal` - Creates modal behavior: content can't be closed by clicking on the background.<br />`data-isescapable` - Closes the content when pressing the Escape key.<br />`data-fast` - Creates fast fade transitions for backdrop and content. |
+| `data-touch`       | required     | Touch layer, detects clicks on background.                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `data-content`     | required     | Content to be shown (a dialog or menu pane).                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `data-backdrop`    | -            | Backdrop layer.<br />Optional attributes:<br />`data-islight` - Creates a light colored backdrop.<br />`data-isdark` - Creates a dark colored backdrop.<br />`data-ismedium` (default) - Creates a medium colored backdrop.<br />                                                                                                                                                                                                                                     |
+| `data-toggle`      | -            | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                                                                                                                                                                                                                                                                                                                                             |
 
 Example of HTML with all relevant (but some optional) attributes:
 
 ```html
-<div data-prompt data-ismodal data-isescapable id="some-id">
+<div data-prompt data-ismodal data-isescapable data-isfast id="some-id">
   <div data-backdrop data-islight></div>
   <div data-touch></div>
-  <div data-pane>
+  <div data-content>
     Content
   </div>
 </div>
 ```
 
-## Opening, closing and toggling
+### Dialog and menu behaviour
+
+The markup show above is the default for creating dialog behavior. Dialogs are centered on the screen, whereas menus are normally positioned nearby the calling button (not implemented by dialogic-js).
+
+Menus are supported with the same markup, with this difference: add `aria-role="menu"` to the element that has `data-content`.
+
+```html
+<div data-prompt id="some-id">
+  <div data-touch></div>
+  <div data-content aria-role="menu">
+    Content
+  </div>
+</div>
+```
+
+Other common settings used with menus:
+- Omit `data-backdrop`, or add `data-islight` to create a very light background
+- Add to `data-prompt` duration attribute `data-isfast` to get a fast transition
+
+Example of HTML for a menu with all relevant (but some optional) attributes:
+
+```html
+<div data-prompt data-isfast>
+  <div data-backdrop data-islight></div>
+  <div data-touch></div>
+  <div data-content aria-role="menu">
+    Content
+  </div>
+</div>
+```
+
+## Opening, closing and toggling.
 
 - When using HTML markup: use methods on the `Prompt` object
 - When writing JavaAcript: create a new `Prompt` instance
@@ -181,7 +232,7 @@ If you have a dialog container with this markup:
   <button onclick="Prompt.show(this)">Show</button>
   <div data-backdrop></div>
   <div data-touch></div>
-  <div data-pane>
+  <div data-content>
     Content
     <button onclick="Prompt.hide(this)">Hide</button>
   </div>
@@ -194,7 +245,7 @@ When calling open from outside the prompt container, supply a selector:
 <div data-prompt id="my-dialog">
   <div data-backdrop></div>
   <div data-touch></div>
-  <div data-pane>
+  <div data-content>
     Content
     <button onclick="Prompt.hide(this)">Hide</button>
   </div>
@@ -221,7 +272,7 @@ Create an instance that can be passed around. Initialize it with attribute `el`.
 <div data-prompt>
   <div data-backdrop></div>
   <div data-touch></div>
-  <div data-pane>
+  <div data-content>
     Content
   </div>
 </div>
@@ -239,7 +290,9 @@ prompt.hide()
 
 ## Support for details/summary
 
-Online example: [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
+Online examples:
+- [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
+- [CodeSandbox with Primer CSS select menu](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-selectmenu-bv1byj)
 
 The [HTMLDetailsElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDetailsElement) element can be used for toggling dialogs and menus. PrimerCSS contains a couple of neat examples, see for example [PrimerCSS Dropdown](https://primer.style/css/components/dropdown). The summary element is styled as button - from the outside you'd never know the source is a details element.
 
@@ -255,7 +308,7 @@ With HTML markup, the details is initialized with `Prompt.init()`:
   <summary>Open</summary>
   <div data-backdrop></div>
   <div data-touch></div>
-  <div data-pane>
+  <div data-content>
     Content
   </div>
 </details>
@@ -268,7 +321,7 @@ The alternative approach, using a prompt instance:
   <summary>Open</summary>
   <div data-backdrop></div>
   <div data-touch></div>
-  <div data-pane>
+  <div data-content>
     Content
   </div>
 </details>
@@ -280,7 +333,7 @@ prompt.el = document.querySelector("#my-details")
 prompt.show()
 ```
 
-## Support for dialog
+## Support for the dialog element
 
 Online example: [CodeSandbox with &lt;dialog&gt;](https://codesandbox.io/p/sandbox/dialogic-js-with-a-dialog-element-td1sxv)
 
@@ -289,7 +342,7 @@ Add a wrapper around the `<dialog>` plus the required data attributes:
 ```html
 <div data-prompt id="my-dialog">
   <div data-touch></div>
-  <dialog data-pane>
+  <dialog data-content>
     <p>Content in a minimal dialog</p>
     <button onclick="Prompt.hide(this)">Close</button>
   </dialog>
@@ -307,7 +360,7 @@ When using a form:
   </button>
   <div data-touch></div>
   <div data-backdrop></div>
-  <dialog data-pane>
+  <dialog data-content>
     <form method="dialog">
       <p>Would you like to continue?</p>
       <button type="submit" value="no" onclick="Prompt.hide(this)">No</button>
@@ -320,7 +373,7 @@ When using a form:
 Improve dialog size and position with this CSS:
 
 ```css
-[data-prompt] dialog[data-pane] {
+[data-prompt] dialog[data-content] {
   width: 100%;
   max-width: 60vw;
 }
@@ -332,13 +385,15 @@ Not yet supported:
 
 ## Custom styles
 
+### CSS Variables
+
 Styles are defined by CSS variables. Override the default values to your own requirements. For example:
 
 ```html
 <style>
   [data-prompt] {
     --prompt-background-color-backdrop: gray;
-    --prompt-transition-duration-pane: 350ms;
+    --prompt-transition-duration-content: 350ms;
   }
 </style>
 ```
@@ -347,18 +402,38 @@ Default values:
 
 ```css
 [data-prompt] {
+  /* colors */
   --prompt-background-color-backdrop: black;
+  --prompt-background-opacity-backdrop-medium: 0.2; /* default */
   --prompt-background-opacity-backdrop-dark: 0.5;
-  --prompt-background-opacity-backdrop-light: 0.2;
-  --prompt-transition-property-pane: opacity;
-  --prompt-transition-duration-pane: 220ms;
-  --prompt-transition-duration-backdrop: calc(
-    0.8 * var(--prompt-transition-duration-pane)
+  --prompt-background-opacity-backdrop-light: 0.07;
+  /* transitions */
+  --prompt-transition-timing-function-backdrop: ease-in-out;
+  --prompt-transition-timing-function-content: ease-in-out;
+  --prompt-transition-duration-content: 220ms;
+  --prompt-fast-transition-duration-content: 150ms;
+  --prompt-transition-duration-backdrop: var(
+    --prompt-transition-duration-content
   );
-  --prompt-z-index-backdrop: 1998;
-  --prompt-z-index-touch: 1999;
-  --prompt-z-index-pane: 2000;
-  --prompt-max-width-pane: 90vw;
-  --prompt-max-height-pane: 80vh;
+  --prompt-fast-transition-duration-backdrop: var(
+    --prompt-fast-transition-duration-content
+  );
+  /* z-index */
+  --prompt-z-index-backdrop: 98;
+  --prompt-z-index-touch: 99;
+  --prompt-z-index-content: 100;
+  /* size */
+  --prompt-max-width-content: 92vw; /* for dialog */
+  --prompt-max-height-content: 80vh; /* for dialog */
 }
+```
+
+### Conditional CSS
+
+You can use [@import](https://developer.mozilla.org/en-US/docs/Web/CSS/@import) with media queries if you need to use dialogic CSS at specific screen sizes:
+
+```css
+/* app.css */
+
+@import url("./dialogic-js.css") only screen and (min-width: 544px);
 ```

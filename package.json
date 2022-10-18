@@ -1,7 +1,7 @@
 {
   "name": "dialogic-js",
-  "version": "0.1.1",
-  "description": "Control the opening and closing of menus and dialogs",
+  "version": "0.2.0",
+  "description": "Control the opening and closing of dialogs and menus using HTML and (optionally) vanilla JavaScript.",
   "types": "dist",
   "files": [
     "dist",
