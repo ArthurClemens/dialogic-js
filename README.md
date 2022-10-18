@@ -116,8 +116,8 @@ AFTER - includes touch layer, backdrop, fade in and out
 ### Including on a static site
 
 ```html
-<script src="https://unpkg.com/dialogic-js/dist/dialogic-js.min.js"></script>
-<link href="https://unpkg.com/dialogic-js/dist/dialogic-js.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/dialogic-js@0.2.1/dist/dialogic-js.min.js"></script>
+<link href="https://unpkg.com/dialogic-js@0.2.1/dist/dialogic-js.min.css" rel="stylesheet" />
 ```
 
 ### Installing via npm

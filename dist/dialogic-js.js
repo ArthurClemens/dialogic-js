@@ -68,7 +68,7 @@ var isVisible = (element) => {
 
 // src/prompt.ts
 var ROOT_SELECTOR = "[data-prompt]";
-var PANE_SELECTOR = "[data-pane]";
+var CONTENT_SELECTOR = "[data-content]";
 var TOUCH_SELECTOR = "[data-touch]";
 var TOGGLE_SELECTOR = "[data-toggle]";
 var IS_MODAL_DATA = "ismodal";
@@ -77,7 +77,7 @@ var IS_OPEN_DATA = "isopen";
 var IS_SHOWING_DATA = "isshowing";
 var IS_HIDING_DATA = "ishiding";
 var hideView = (_0) => __async(void 0, [_0], function* ({
-  pane,
+  content,
   root,
   isDetails,
   isEscapable,
@@ -88,7 +88,7 @@ var hideView = (_0) => __async(void 0, [_0], function* ({
   }
   delete root.dataset[IS_SHOWING_DATA];
   root.dataset[IS_HIDING_DATA] = "";
-  const duration = getDuration(pane);
+  const duration = getDuration(content);
   yield wait(duration);
   if (isDetails) {
     root.removeAttribute("open");
@@ -97,7 +97,7 @@ var hideView = (_0) => __async(void 0, [_0], function* ({
   delete root.dataset[IS_OPEN_DATA];
 });
 var showView = (_0) => __async(void 0, [_0], function* ({
-  pane,
+  content,
   root,
   isDetails,
   isEscapable,
@@ -112,7 +112,7 @@ var showView = (_0) => __async(void 0, [_0], function* ({
   root.dataset[IS_OPEN_DATA] = "";
   repaint(root);
   root.dataset[IS_SHOWING_DATA] = "";
-  const duration = getDuration(pane);
+  const duration = getDuration(content);
   yield wait(duration);
 });
 var toggleView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, mode = 2 /* TOGGLE */) {
@@ -122,7 +122,7 @@ var toggleView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements
     case 1 /* HIDE */:
       return yield hideView(elements);
     default: {
-      if (isVisible(elements.pane)) {
+      if (isVisible(elements.content)) {
         return yield hideView(elements);
       } else {
         return yield showView(elements);
@@ -130,45 +130,44 @@ var toggleView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements
     }
   }
 });
-function getElements(prompt, command) {
+function getElements(promptElement, command) {
   let root = null;
-  if (!command && prompt.el) {
-    root = prompt.el;
+  if (!command && promptElement) {
+    root = promptElement;
   } else if (typeof command === "string") {
     root = document.querySelector(command);
   } else if (command && !!command.tagName) {
     root = command.closest(ROOT_SELECTOR);
   }
   if (!root) {
+    console.error("Prompt element 'data-root' not found");
+    return void 0;
+  }
+  const content = root.querySelector(CONTENT_SELECTOR);
+  if (!content) {
+    console.error("Prompt element 'data-content' not found");
     return void 0;
   }
   const toggle = root.querySelector(TOGGLE_SELECTOR) || root.querySelector("summary");
-  const pane = root.querySelector(PANE_SELECTOR);
   const touchLayer = root.querySelector(TOUCH_SELECTOR);
   const isDetails = root.tagName === "DETAILS";
   const isModal = root.dataset[IS_MODAL_DATA] !== void 0;
   const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== void 0;
-  if (root && pane) {
-    const elements = {
-      root,
-      isDetails,
-      isModal,
-      isEscapable,
-      toggle,
-      pane,
-      touchLayer,
-      prompt,
-      escapeListener: () => void 0
-    };
-    const escapeListener = function(e) {
+  const elements = {
+    root,
+    isDetails,
+    isModal,
+    isEscapable,
+    toggle,
+    content,
+    touchLayer,
+    escapeListener: function(e) {
       if (e.key === "Escape") {
         hideView(elements);
       }
-    };
-    elements.escapeListener = escapeListener;
-    return elements;
-  }
-  return void 0;
+    }
+  };
+  return elements;
 }
 var initToggleEvents = (elements) => {
   const { toggle } = elements;
@@ -196,9 +195,8 @@ var initTouchEvents = (elements) => {
 };
 function init(prompt, command, mode) {
   return __async(this, null, function* () {
-    const elements = getElements(prompt, command);
+    const elements = getElements(prompt.el, command);
     if (elements === void 0) {
-      console.error("Prompt elements not found");
       return;
     }
     initToggleEvents(elements);

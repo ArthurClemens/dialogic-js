@@ -1,6 +1,5 @@
 export declare type TPrompt = {
     el?: HTMLElement;
-    inited?: boolean;
     mounted: () => void;
     init: (command: Command) => void;
     toggle: (command: Command) => void;
