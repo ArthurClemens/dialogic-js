@@ -130,7 +130,7 @@ Import the dependencies:
 
 ```js
 import { Prompt } from 'dialogic-js';
-import 'dialogic-js/dist/dialogic-js.css';
+import 'dialogic-js/dialogic-js.css';
 ```
 
 ### Adding to a Phoenix LiveView project
@@ -138,16 +138,15 @@ import 'dialogic-js/dist/dialogic-js.css';
 Inside your assets folder, do:
 
 ```bash
-npm install dialogic-js --save
+npm install dialogic-js
 ```
 
 Add to your `app.js`:
 
 ```js
 import { Prompt } from "dialogic-js";
-import "../node_modules/dialogic-js/dist/dialogic-js.css";
+import 'dialogic-js/dialogic-js.css';
 ```
-
 
 
 `Prompt` is a hook to control the opening and closing of dialogs and menus. It handles the showing and hiding of the HTML elements, without dealing with layout itself - to be implemented by you, or by using a UI library and adding "prompt" data attributes.
