@@ -76,6 +76,8 @@ var IS_ESCAPABLE_DATA = "isescapable";
 var IS_OPEN_DATA = "isopen";
 var IS_SHOWING_DATA = "isshowing";
 var IS_HIDING_DATA = "ishiding";
+var IS_LOCKED_DATA = "islocked";
+var LOCK_DURATION = 300;
 var hideView = (_0) => __async(void 0, [_0], function* ({
   content,
   root,
@@ -83,6 +85,9 @@ var hideView = (_0) => __async(void 0, [_0], function* ({
   isEscapable,
   escapeListener
 }) {
+  if (root.dataset[IS_LOCKED_DATA] !== void 0) {
+    return;
+  }
   if (isEscapable) {
     window.addEventListener("keydown", escapeListener, { once: true });
   }
@@ -103,6 +108,15 @@ var showView = (_0) => __async(void 0, [_0], function* ({
   isEscapable,
   escapeListener
 }) {
+  if (root.dataset[IS_LOCKED_DATA] !== void 0) {
+    return;
+  }
+  root.dataset[IS_LOCKED_DATA] = "";
+  setTimeout(() => {
+    if (root) {
+      delete root.dataset[IS_LOCKED_DATA];
+    }
+  }, LOCK_DURATION);
   if (isEscapable) {
     window.addEventListener("keydown", escapeListener, { once: true });
   }
