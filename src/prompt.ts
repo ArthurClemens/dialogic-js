@@ -21,6 +21,8 @@ const IS_ESCAPABLE_DATA = "isescapable";
 const IS_OPEN_DATA = "isopen";
 const IS_SHOWING_DATA = "isshowing";
 const IS_HIDING_DATA = "ishiding";
+const IS_LOCKED_DATA = "islocked";
+const LOCK_DURATION = 300;
 
 type Command =
   /**
@@ -58,6 +60,9 @@ const hideView = async ({
   isEscapable,
   escapeListener,
 }: PromptElements) => {
+  if (root.dataset[IS_LOCKED_DATA] !== undefined) {
+    return;
+  }
   if (isEscapable) {
     window.addEventListener("keydown", escapeListener, { once: true });
   }
@@ -79,12 +84,22 @@ const showView = async ({
   isEscapable,
   escapeListener,
 }: PromptElements) => {
+  if (root.dataset[IS_LOCKED_DATA] !== undefined) {
+    return;
+  }
+  root.dataset[IS_LOCKED_DATA] = "";
+  setTimeout(() => {
+    if (root) {
+      delete root.dataset[IS_LOCKED_DATA];
+    }
+  }, LOCK_DURATION);
   if (isEscapable) {
     window.addEventListener("keydown", escapeListener, { once: true });
   }
   if (isDetails) {
     root.setAttribute("open", "");
   }
+
   root.dataset[IS_OPEN_DATA] = "";
   repaint(root);
   root.dataset[IS_SHOWING_DATA] = "";
