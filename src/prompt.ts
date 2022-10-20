@@ -22,7 +22,8 @@ const IS_OPEN_DATA = "isopen";
 const IS_SHOWING_DATA = "isshowing";
 const IS_HIDING_DATA = "ishiding";
 const IS_LOCKED_DATA = "islocked";
-const LOCK_DURATION = 300;
+// Other
+const LOCK_DURATION = 300; // Prevent the item from being closed or re-opened when it has just been opened.
 
 type Command =
   /**
