@@ -24,15 +24,27 @@
   --prompt-max-height-content: 80vh; /* for dialog */
 }
 
+/* Hide inner elements as long as prompt is not open */
+[data-prompt] [data-touch],
+[data-prompt] [data-backdrop],
+[data-prompt] [data-content] {
+  display: none;
+}
+[data-prompt][data-isopen] [data-touch],
+[data-prompt][data-isopen] [data-backdrop],
+[data-prompt][data-isopen] [data-content] {
+  display: block;
+}
+
+/* Reset any conflicting animation styles set on dialogs */
 [data-prompt] [data-content]:not([aria-role="menu"]) {
-  /* reset any conflicting animation style */
   animation-name: unset;
   animation-duration: unset;
   animation-timing-function: unset;
 }
 
+/* Set content size and set up fade */
 [data-prompt] [data-content] {
-  display: none;
   z-index: var(--prompt-z-index-content);
   max-width: var(--prompt-max-width-content);
   max-height: var(--prompt-max-height-content);
@@ -41,6 +53,7 @@
   opacity: 0;
 }
 
+/* Set positioning of dialogs */
 [data-prompt] [data-content]:not([aria-role="menu"]) {
   position: fixed;
   top: 50%;
@@ -50,27 +63,27 @@
   margin: 0 auto;
 }
 
+/* Regular transition */
 [data-prompt]:not([data-isfast]) [data-content] {
   transition-duration: var(--prompt-transition-duration-content);
 }
 
+/* Fast transition */
 [data-prompt][data-isfast] [data-content] {
   transition-duration: var(--prompt-fast-transition-duration-content);
 }
 
-[data-prompt][data-isopen] [data-content] {
-  display: block;
-  opacity: 0;
-}
-
+/* Fade in */
 [data-prompt][data-isshowing] [data-content] {
   opacity: 1;
 }
 
+/* Fade out */
 [data-prompt][data-ishiding] [data-content] {
   opacity: 0;
 }
 
+/* Touch and backdrop overlays */
 [data-prompt][data-isopen] [data-touch],
 [data-prompt][data-isopen] [data-backdrop] {
   position: fixed;
@@ -80,14 +93,17 @@
   left: 0;
 }
 
+/* Touch layer z-index */
 [data-prompt][data-isopen] [data-touch] {
   z-index: var(--prompt-z-index-touch);
 }
 
+/* Backdrop layer z-index */
 [data-prompt][data-isopen] [data-backdrop] {
   z-index: var(--prompt-z-index-backdrop);
 }
 
+/* Set up backdrop fade */
 [data-prompt] [data-backdrop] {
   background: var(--prompt-background-color-backdrop);
   opacity: 0;
@@ -95,26 +111,32 @@
   transition-timing-function: var(--prompt-transition-timing-function-backdrop);
 }
 
+/* Backdrop regular fade */
 [data-prompt]:not([data-isfast]) [data-backdrop] {
   transition-duration: var(--prompt-transition-duration-backdrop);
 }
 
+/* Backdrop fast fade */
 [data-prompt][data-isfast] [data-backdrop] {
   transition-duration: var(--prompt-fast-transition-duration-backdrop);
 }
 
+/* Backdrop medium opacity */
 [data-prompt][data-isshowing] [data-backdrop] {
   opacity: var(--prompt-background-opacity-backdrop-medium);
 }
 
+/* Backdrop dark opacity */
 [data-prompt][data-isshowing] [data-backdrop][data-isdark] {
   opacity: var(--prompt-background-opacity-backdrop-dark);
 }
 
+/* Backdrop light opacity */
 [data-prompt][data-isshowing] [data-backdrop][data-islight] {
   opacity: var(--prompt-background-opacity-backdrop-light);
 }
 
+/* Backdrop fade out */
 [data-prompt][data-ishiding] [data-backdrop] {
   opacity: 0;
 }
