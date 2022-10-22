@@ -88,9 +88,6 @@ var hideView = (_0) => __async(void 0, [_0], function* ({
   if (root.dataset[IS_LOCKED_DATA] !== void 0) {
     return;
   }
-  if (isEscapable) {
-    window.addEventListener("keydown", escapeListener, { once: true });
-  }
   delete root.dataset[IS_SHOWING_DATA];
   root.dataset[IS_HIDING_DATA] = "";
   const duration = getDuration(content);
@@ -198,13 +195,21 @@ var initTouchEvents = (elements) => {
   const { touchLayer, isModal } = elements;
   if (touchLayer && touchLayer.dataset.registered === void 0) {
     touchLayer.addEventListener("click", (e) => __async(void 0, null, function* () {
-      e.preventDefault();
       e.stopPropagation();
       if (!isModal) {
         toggleView(elements, 1 /* HIDE */);
       }
     }));
     touchLayer.dataset.registered = "";
+  }
+};
+var initContentEvents = (elements) => {
+  const { content } = elements;
+  if (content && content.dataset.registered === void 0) {
+    content.addEventListener("click", (e) => __async(void 0, null, function* () {
+      e.stopPropagation();
+    }));
+    content.dataset.registered = "";
   }
 };
 function init(prompt, command, mode) {
@@ -215,9 +220,10 @@ function init(prompt, command, mode) {
     }
     initToggleEvents(elements);
     initTouchEvents(elements);
+    initContentEvents(elements);
     const { root, isDetails } = elements;
     const isOpen = isDetails && root.getAttribute("open") !== null;
-    if (isOpen) {
+    if (isOpen && mode !== 1 /* HIDE */) {
       showView(elements);
     }
     if (mode !== void 0) {
