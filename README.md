@@ -1,5 +1,7 @@
 # dialogic-js
 
+[![npm](https://img.shields.io/badge/npm-0.2.5-blue)](https://www.npmjs.com/package/dialogic-js) [![GitHub issues](https://img.shields.io/github/issues/ArthurClemens/dialogic-js)](https://github.com/ArthurClemens/dialogic-js/issues)
+
 Control the opening and closing of dialogs and menus using HTML and (optionally) vanilla JavaScript.
 
 This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic), to be used without a Virtual Dom library.
