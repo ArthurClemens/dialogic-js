@@ -1,8 +1,8 @@
 [data-prompt] {
   /* colors */
   --prompt-background-color-backdrop: black;
-  --prompt-background-opacity-backdrop-medium: 0.2; /* default */
   --prompt-background-opacity-backdrop-dark: 0.5;
+  --prompt-background-opacity-backdrop-medium: 0.2; /* default */
   --prompt-background-opacity-backdrop-light: 0.07;
   /* transitions */
   --prompt-transition-timing-function-backdrop: ease-in-out;
