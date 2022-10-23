@@ -90,6 +90,7 @@ var TOGGLE_SELECTOR = "[data-toggle]";
 var IS_MODAL_DATA = "ismodal";
 var IS_ESCAPABLE_DATA = "isescapable";
 var IS_FOCUS_FIRST_DATA = "isfocusfirst";
+var FOCUS_FIRST_SELECTOR_DATA = "focusfirst";
 var IS_OPEN_DATA = "isopen";
 var IS_SHOWING_DATA = "isshowing";
 var IS_HIDING_DATA = "ishiding";
@@ -123,6 +124,7 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
     isDetails,
     isEscapable,
     isFocusFirst,
+    focusFirstSelector,
     escapeListener
   } = elements;
   if (root.dataset[IS_LOCKED_DATA] !== void 0) {
@@ -150,6 +152,11 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   yield wait(duration);
   if (isFocusFirst) {
     const firstFocusable = getFirstFocusable(content);
+    if (firstFocusable) {
+      firstFocusable.focus();
+    }
+  } else if (focusFirstSelector) {
+    const firstFocusable = content.querySelector(focusFirstSelector);
     if (firstFocusable) {
       firstFocusable.focus();
     }
@@ -197,12 +204,14 @@ function getElements(promptElement, command) {
   const isModal = root.dataset[IS_MODAL_DATA] !== void 0;
   const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== void 0;
   const isFocusFirst = root.dataset[IS_FOCUS_FIRST_DATA] !== void 0;
+  const focusFirstSelector = root.dataset[FOCUS_FIRST_SELECTOR_DATA];
   const elements = {
     root,
     isDetails,
     isModal,
     isEscapable,
     isFocusFirst,
+    focusFirstSelector,
     toggle,
     content,
     touchLayer,

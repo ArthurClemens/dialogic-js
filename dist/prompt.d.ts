@@ -15,6 +15,7 @@ declare type PromptElements = {
     isModal: boolean;
     isEscapable?: boolean;
     isFocusFirst?: boolean;
+    focusFirstSelector?: string;
     touchLayer?: MaybeHTMLElement;
     toggle?: MaybeHTMLElement;
     escapeListener: (e: KeyboardEvent) => void;
