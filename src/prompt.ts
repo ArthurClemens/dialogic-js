@@ -1,29 +1,10 @@
-import { wait, getDuration, repaint, isVisible } from "./util";
-
-export type TPrompt = {
-  el?: HTMLElement;
-  mounted: () => void;
-  init: (command: Command) => void;
-  toggle: (command: Command) => void;
-  show: (command: Command) => void;
-  hide: (command: Command) => void;
-};
-
-// Elements
-const ROOT_SELECTOR = "[data-prompt]";
-const CONTENT_SELECTOR = "[data-content]";
-const TOUCH_SELECTOR = "[data-touch]";
-const TOGGLE_SELECTOR = "[data-toggle]";
-// Modifier arguments
-const IS_MODAL_DATA = "ismodal";
-const IS_ESCAPABLE_DATA = "isescapable";
-// Internal state and CSS
-const IS_OPEN_DATA = "isopen";
-const IS_SHOWING_DATA = "isshowing";
-const IS_HIDING_DATA = "ishiding";
-const IS_LOCKED_DATA = "islocked";
-// Other
-const LOCK_DURATION = 300; // Prevent the item from being closed or re-opened when it has just been opened.
+import {
+  wait,
+  getDuration,
+  repaint,
+  isVisible,
+  getFirstFocusable,
+} from "./util";
 
 type Command =
   /**
@@ -35,6 +16,12 @@ type Command =
    */
   | HTMLElement;
 
+enum MODE {
+  SHOW,
+  HIDE,
+  TOGGLE,
+}
+
 type MaybeHTMLElement = HTMLElement | null;
 
 type PromptElements = {
@@ -43,26 +30,56 @@ type PromptElements = {
   isDetails: boolean;
   isModal: boolean;
   isEscapable?: boolean;
+  isFocusFirst?: boolean;
   touchLayer?: MaybeHTMLElement;
   toggle?: MaybeHTMLElement;
   escapeListener: (e: KeyboardEvent) => void;
+  firstFocusable?: HTMLElement;
 };
 
-enum MODE {
-  SHOW,
-  HIDE,
-  TOGGLE,
-}
+export type Options = {
+  willShow?: (elements?: PromptElements) => void;
+  didShow?: (elements?: PromptElements) => void;
+  willHide?: (elements?: PromptElements) => void;
+  didHide?: (elements?: PromptElements) => void;
+};
 
-const hideView = async ({
-  content,
-  root,
-  isDetails,
-  isEscapable,
-  escapeListener,
-}: PromptElements) => {
+export type TPrompt = {
+  el?: MaybeHTMLElement;
+  mounted: () => void;
+  init: (command: Command) => void;
+  toggle: (command: Command, options?: Options) => void;
+  show: (command: Command, options?: Options) => void;
+  hide: (command: Command, options?: Options) => void;
+};
+
+// Element selectors
+const ROOT_SELECTOR = "[data-prompt]";
+const CONTENT_SELECTOR = "[data-content]";
+const TOUCH_SELECTOR = "[data-touch]";
+const TOGGLE_SELECTOR = "[data-toggle]";
+// Modifier arguments
+const IS_MODAL_DATA = "ismodal";
+const IS_ESCAPABLE_DATA = "isescapable";
+const IS_FOCUS_FIRST_DATA = "isfocusfirst";
+// Internal state and CSS
+const IS_OPEN_DATA = "isopen";
+const IS_SHOWING_DATA = "isshowing";
+const IS_HIDING_DATA = "ishiding";
+const IS_LOCKED_DATA = "islocked";
+// Other
+const LOCK_DURATION = 300; // Prevent the item from being closed or re-opened when it has just been opened.
+
+const hideView = async (
+  elements: PromptElements,
+  options: Options = {} as Options
+) => {
+  const { content, root, isDetails } = elements;
   if (root.dataset[IS_LOCKED_DATA] !== undefined) {
     return;
+  }
+  if (options.willHide) {
+    options.willHide(elements);
   }
   delete root.dataset[IS_SHOWING_DATA];
   root.dataset[IS_HIDING_DATA] = "";
@@ -73,17 +90,28 @@ const hideView = async ({
   }
   delete root.dataset[IS_HIDING_DATA];
   delete root.dataset[IS_OPEN_DATA];
+  if (options.didHide) {
+    options.didHide(elements);
+  }
 };
 
-const showView = async ({
-  content,
-  root,
-  isDetails,
-  isEscapable,
-  escapeListener,
-}: PromptElements) => {
+const showView = async (
+  elements: PromptElements,
+  options: Options = {} as Options
+) => {
+  const {
+    content,
+    root,
+    isDetails,
+    isEscapable,
+    isFocusFirst,
+    escapeListener,
+  } = elements;
   if (root.dataset[IS_LOCKED_DATA] !== undefined) {
     return;
+  }
+  if (options.willShow) {
+    options.willShow(elements);
   }
   root.dataset[IS_LOCKED_DATA] = "";
   setTimeout(() => {
@@ -104,29 +132,39 @@ const showView = async ({
 
   const duration = getDuration(content);
   await wait(duration);
+  if (isFocusFirst) {
+    const firstFocusable = getFirstFocusable(content);
+    if (firstFocusable) {
+      firstFocusable.focus();
+    }
+  }
+  if (options.didShow) {
+    options.didShow(elements);
+  }
 };
 
 const toggleView = async (
   elements: PromptElements,
-  mode: MODE = MODE.TOGGLE
+  mode: MODE = MODE.TOGGLE,
+  options?: Options
 ) => {
   switch (mode) {
     case MODE.SHOW:
-      return await showView(elements);
+      return await showView(elements, options);
     case MODE.HIDE:
-      return await hideView(elements);
+      return await hideView(elements, options);
     default: {
       if (isVisible(elements.content)) {
-        return await hideView(elements);
+        return await hideView(elements, options);
       } else {
-        return await showView(elements);
+        return await showView(elements, options);
       }
     }
   }
 };
 
 function getElements(
-  promptElement: HTMLElement | undefined,
+  promptElement?: MaybeHTMLElement,
   command?: Command
 ): PromptElements | undefined {
   let root: MaybeHTMLElement = null;
@@ -156,12 +194,14 @@ function getElements(
   const isDetails = root.tagName === "DETAILS";
   const isModal = root.dataset[IS_MODAL_DATA] !== undefined;
   const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== undefined;
+  const isFocusFirst = root.dataset[IS_FOCUS_FIRST_DATA] !== undefined;
 
   const elements: PromptElements = {
     root,
     isDetails,
     isModal,
     isEscapable,
+    isFocusFirst,
     toggle,
     content,
     touchLayer,
@@ -210,7 +250,12 @@ const initContentEvents = (elements: PromptElements) => {
   }
 };
 
-async function init(prompt: TPrompt, command?: Command, mode?: MODE) {
+async function init(
+  prompt: TPrompt,
+  command?: Command,
+  options?: Options,
+  mode?: MODE
+) {
   const elements = getElements(prompt.el, command);
   if (elements === undefined) {
     return;
@@ -224,11 +269,11 @@ async function init(prompt: TPrompt, command?: Command, mode?: MODE) {
 
   const isOpen = isDetails && root.getAttribute("open") !== null;
   if (isOpen && mode !== MODE.HIDE) {
-    showView(elements);
+    showView(elements, options);
   }
 
   if (mode !== undefined) {
-    await toggleView(elements, mode);
+    await toggleView(elements, mode, options);
   }
 }
 
@@ -236,17 +281,17 @@ export const Prompt: TPrompt = {
   mounted() {
     init(this);
   },
-  async init(command: Command) {
-    await init(this, command);
+  async init(command: Command, options?: Options) {
+    await init(this, command, options);
   },
-  async toggle(command: Command) {
-    await init(this, command, MODE.TOGGLE);
+  async toggle(command: Command, options?: Options) {
+    await init(this, command, options, MODE.TOGGLE);
   },
-  async show(command: Command) {
-    await init(this, command, MODE.SHOW);
+  async show(command: Command, options?: Options) {
+    await init(this, command, options, MODE.SHOW);
   },
-  async hide(command: Command) {
-    await init(this, command, MODE.HIDE);
+  async hide(command: Command, options?: Options) {
+    await init(this, command, options, MODE.HIDE);
   },
 };
 

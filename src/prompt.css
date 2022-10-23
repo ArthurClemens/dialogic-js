@@ -7,7 +7,7 @@
   /* transitions */
   --prompt-transition-timing-function-backdrop: ease-in-out;
   --prompt-transition-timing-function-content: ease-in-out;
-  --prompt-transition-duration-content: 220ms;
+  --prompt-transition-duration-content: 200ms;
   --prompt-fast-transition-duration-content: 150ms;
   --prompt-transition-duration-backdrop: var(
     --prompt-transition-duration-content

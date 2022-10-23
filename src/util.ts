@@ -62,3 +62,42 @@ export const isVisible = (element: HTMLElement) => {
     element.getClientRects().length
   );
 };
+
+const isFocusable = (el: HTMLElement, interactiveOnly?: boolean) => {
+  return (
+    (el instanceof HTMLAnchorElement && el.rel !== "ignore") ||
+    (el instanceof HTMLAreaElement && el.href !== undefined) ||
+    ([
+      HTMLInputElement,
+      HTMLSelectElement,
+      HTMLTextAreaElement,
+      HTMLButtonElement,
+    ].some((elClass) => el instanceof elClass) &&
+      !(
+        el as
+          | HTMLInputElement
+          | HTMLSelectElement
+          | HTMLTextAreaElement
+          | HTMLButtonElement
+      ).disabled) ||
+    el instanceof HTMLIFrameElement ||
+    el.tabIndex > 0 ||
+    (!interactiveOnly &&
+      el.tabIndex === 0 &&
+      el.getAttribute("tabindex") !== null &&
+      el.getAttribute("aria-hidden") !== "true")
+  );
+};
+
+export const getFirstFocusable = (content: HTMLElement) => {
+  const focusable = (
+    [].slice.call(
+      content.querySelectorAll(
+        "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
+      )
+    ) as HTMLElement[]
+  )
+    .filter((el) => isFocusable(el, true))
+    .sort((a, b) => a.tabIndex - b.tabIndex);
+  return focusable[0];
+};

@@ -10,7 +10,7 @@ This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic),
   - [Including on a static site](#including-on-a-static-site)
   - [Installing via npm](#installing-via-npm)
   - [Adding to a Phoenix LiveView project](#adding-to-a-phoenix-liveview-project)
-- [Description and rationale](#description-and-rationale)
+- [Description](#description)
 - [Limitations](#limitations)
 - [Examples](#examples)
   - [Dialog](#dialog)
@@ -22,6 +22,10 @@ This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic),
 - [Data attributes and modifiers](#data-attributes-and-modifiers)
 - [Opening, closing and toggling](#opening-closing-and-toggling)
   - [HTML: Prompt methods](#html-prompt-methods)
+    - [`Prompt.show`](#promptshow)
+    - [`Prompt.hide`](#prompthide)
+    - [`Prompt.toggle`](#prompttoggle)
+    - [`Prompt.init`](#promptinit)
   - [JavaScript: Methods on a Prompt instance](#javascript-methods-on-a-prompt-instance)
 - [Support for the details element](#support-for-the-details-element)
 - [Support for the dialog element](#support-for-the-dialog-element)
@@ -66,29 +70,27 @@ import { Prompt } from "dialogic-js";
 import 'dialogic-js/dialogic-js.css';
 ```
 
-## Description and rationale
+## Description
 
 `Prompt` is a hook to control the opening and closing of dialogs and menus. It handles the showing and hiding of the HTML elements, without dealing with layout itself - to be implemented by you, or by using a UI library and adding "prompt" data attributes.
 
-Despite having written a fair amount of JavaScript for dialogs, the number of intricacies still confounds me. And because most code isn't as portable as it could be, I frequently end up writing more code when I begin a new project.
-
-When attempting to add fade in and out behaviour for Primer CSS dialogs, I came to the realisation that I didn't want to write any more custom code before having established a fundamental framework.
-
-Requirements:
+Features:
 - To be used in static HTML or templates
 - To be used with JavaScript
-- Easy to add to existing HTML markup
-- Easy to add behaviours:
+- Easy to add to existing HTML markup from UI libraries
+- Add behaviours:
+  - fading in and out
+  - colored backdrop
   - closing on clicking background
   - modal (prevent closing on clicking background)
-  - colored backdrop
-  - closing with Escape
-  - fading in and out
+  - closing with the Escape key
+  - focus first element
+- Callbacks
 - Support for stacked dialogs
 - Support for `<details>` and `<dialog>` elements
 - Support for Phoenix LiveView hooks
 
-The resulting library uses data attributes to supply to (new or existing) HTML markup. The supplementing CSS is defined around behaviours (state and modifiers), rather than visual appearance. The little styling provided can be customized with CSS Variables.
+This library uses data attributes to supply to (new or existing) HTML markup. The supplementing CSS is defined around behaviours (state and modifiers), rather than visual appearance. The little styling provided can be customized with CSS Variables.
 
 A basic example with `<dialog>` demonstrates how data attributes replace JS and add additional features.
 
@@ -148,6 +150,8 @@ AFTER - includes touch layer, backdrop, fade in and out
 - [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
 - [CodeSandbox with &lt;dialog&gt;](https://codesandbox.io/p/sandbox/dialogic-js-with-a-dialog-element-td1sxv)
 - [CodeSandbox with Flowbite/Tailwind modal](https://codesandbox.io/p/sandbox/dialogic-js-with-flowbite-tailwind-modal-qp241z) (stacked dialogs)
+- [CodeSandbox with isfocusfirst](https://codesandbox.io/p/sandbox/dialogic-js-isfocusfirst-with-flowbite-tailwind-modal-zs67ex)
+- [CodeSandbox with JavaScript methods](https://codesandbox.io/s/dialogic-js-javascript-methods-glgxgb)
 
 ### Menu
 
@@ -223,13 +227,13 @@ If your application needs to show dialogs on top of other dialogs - perhaps in t
 
 ## Data attributes and modifiers
 
-| **Data attribute** | **Required** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-|--------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `data-prompt`      | required     | Container, may be a `<details>` element.<br />Optional attributes:<br />`id` - When opening or closing from outside of this container, an id or other selector is required in order to call methods on it.<br />`data-ismodal` - Creates modal behavior: content can't be closed by clicking on the background.<br />`data-isescapable` - Closes the content when pressing the Escape key.<br />`data-fast` - Creates fast fade transitions for backdrop and content. |
-| `data-touch`       | required     | Touch layer, detects clicks on background. For stacked dialogs, wrap this around the element `data-content`.                                                                                                                                                                                                                                                                                                                                                          |
-| `data-content`     | required     | Content to be shown (a dialog or menu pane).                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `data-backdrop`    | -            | Backdrop layer.<br />Optional attributes:<br />`data-islight` - Creates a light colored backdrop.<br />`data-isdark` - Creates a dark colored backdrop.<br />`data-ismedium` (default) - Creates a medium colored backdrop.<br />                                                                                                                                                                                                                                     |
-| `data-toggle`      | -            | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                                                                                                                                                                                                                                                                                                                                             |
+| **Data attribute** | **Required** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+|--------------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `data-prompt`      | required     | Container, may be a `<details>` element.<br />Optional attributes:<br />`id` - When opening or closing from outside of this container, an id or other selector is required in order to call methods on it.<br />`data-ismodal` - Creates modal behavior: content can't be closed by clicking on the background.<br />`data-isescapable` - Closes the content when pressing the Escape key.<br />`isfocusfirst` - On show, gives focus to the first focusable element (the first active element with the lowest tab index).<br />`data-fast` - Creates fast fade transitions for backdrop and content. |
+| `data-touch`       | required     | Touch layer, detects clicks on background. For stacked dialogs, wrap this around the element `data-content`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `data-content`     | required     | Content to be shown (a dialog or menu pane).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `data-backdrop`    | -            | Backdrop layer.<br />Optional attributes:<br />`data-islight` - Creates a light colored backdrop.<br />`data-ismedium` (default) - Creates a medium colored backdrop.<br />`data-isdark` - Creates a dark colored backdrop.                                                                                                                                                                                                                                                                                                                                                                           |
+| `data-toggle`      | -            | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 
 Example of HTML with all relevant (but some optional) attributes:
 
@@ -282,15 +286,107 @@ When calling open from outside the prompt container, supply a selector:
 
 Opening, closing and toggling are done with these methods:
 
-| **Method**      | **Arguments**           | **Description**                                                                 |
-|-----------------|-------------------------|---------------------------------------------------------------------------------|
-| `Prompt.show`   | HTML selector / element | Shows the dialog/menu                                                           |
-| `Prompt.hide`   | HTML selector / element | Hides the dialog/menu                                                           |
-| `Prompt.toggle` | HTML selector / element | Toggles the dialog/menu                                                         |
-| `Prompt.init`   | HTML selector / element | When used with `<details>`: initializes the prompt and shows the detail content |
+- `Prompt.show`
+- `Prompt.hide`
+- `Prompt.toggle`
+- `Prompt.init`
+
+**Types used below**
+
+See `dist/prompt.d.ts`
+
+#### `Prompt.show`
+
+Shows a closed dialog or menu.
+
+```ts
+show: (command: Command, options?: Options) => void;
+```
+
+Optionally pass options with callback functions:
+
+```ts
+{
+  willShow: (elements: PromptElements) => void;
+  didShow: (elements: PromptElements) => void;
+}
+```
+
+Example:
+
+```html
+<button
+  onclick="Prompt.show('#my-dialog', { didShow: (elements) => console.log('showing', elements) })"
+>
+  Open dialog
+</button>
+```
+
+#### `Prompt.hide`
+
+Hides an open dialog or menu.
+
+```ts
+hide: (command: Command, options?: Options) => void;
+```
+
+Optionally pass options with callback functions:
+
+```ts
+{
+  willHide: (elements: PromptElements) => void;
+  didHide: (elements: PromptElements) => void;
+}
+```
+
+Example:
+
+```html
+<button
+  onclick="Prompt.hide('#my-dialog', { didHide: (elements) => console.log('hidden', elements) })"
+>
+  Hide dialog
+</button>
+```
+
+#### `Prompt.toggle`
+
+Dependent on the current state: shows a closed dialog or menu or hides an open dialog or menu.
+
+```ts
+toggle: (command: Command, options?: Options) => void;
+```
+
+Optionally pass options with callback functions:
+
+```ts
+{
+  willShow: (elements: PromptElements) => void;
+  didShow: (elements: PromptElements) => void;
+  willHide: (elements: PromptElements) => void;
+  didHide: (elements: PromptElements) => void;
+}
+```
+
+#### `Prompt.init`
+
+When used with `<details>`: initializes the prompt and shows the detail content
+
+```ts
+init: (command: Command) => void;
+```
+
+Example:
+
+```htmls
+<details data-prompt ontoggle="Prompt.init(this)">
+```
 
 
 ### JavaScript: Methods on a Prompt instance
+
+Online example:
+- [CodeSandbox with JavaScript methods](https://codesandbox.io/s/dialogic-js-javascript-methods-glgxgb)
 
 Create an instance that can be passed around. Initialize it with attribute `el`.
 
@@ -313,6 +409,7 @@ prompt.show()
 // some time later:
 prompt.hide()
 ```
+
 
 ## Support for the details element
 
@@ -436,7 +533,7 @@ Default values:
   /* transitions */
   --prompt-transition-timing-function-backdrop: ease-in-out;
   --prompt-transition-timing-function-content: ease-in-out;
-  --prompt-transition-duration-content: 220ms;
+  --prompt-transition-duration-content: 200ms;
   --prompt-fast-transition-duration-content: 150ms;
   --prompt-transition-duration-backdrop: var(
     --prompt-transition-duration-content
