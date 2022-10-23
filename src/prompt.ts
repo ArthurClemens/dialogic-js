@@ -31,6 +31,7 @@ type PromptElements = {
   isModal: boolean;
   isEscapable?: boolean;
   isFocusFirst?: boolean;
+  focusFirstSelector?: string;
   touchLayer?: MaybeHTMLElement;
   toggle?: MaybeHTMLElement;
   escapeListener: (e: KeyboardEvent) => void;
@@ -62,6 +63,7 @@ const TOGGLE_SELECTOR = "[data-toggle]";
 const IS_MODAL_DATA = "ismodal";
 const IS_ESCAPABLE_DATA = "isescapable";
 const IS_FOCUS_FIRST_DATA = "isfocusfirst";
+const FOCUS_FIRST_SELECTOR_DATA = "focusfirst";
 // Internal state and CSS
 const IS_OPEN_DATA = "isopen";
 const IS_SHOWING_DATA = "isshowing";
@@ -105,6 +107,7 @@ const showView = async (
     isDetails,
     isEscapable,
     isFocusFirst,
+    focusFirstSelector,
     escapeListener,
   } = elements;
   if (root.dataset[IS_LOCKED_DATA] !== undefined) {
@@ -134,6 +137,12 @@ const showView = async (
   await wait(duration);
   if (isFocusFirst) {
     const firstFocusable = getFirstFocusable(content);
+    if (firstFocusable) {
+      firstFocusable.focus();
+    }
+  } else if (focusFirstSelector) {
+    const firstFocusable: HTMLElement | null =
+      content.querySelector(focusFirstSelector);
     if (firstFocusable) {
       firstFocusable.focus();
     }
@@ -195,6 +204,7 @@ function getElements(
   const isModal = root.dataset[IS_MODAL_DATA] !== undefined;
   const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== undefined;
   const isFocusFirst = root.dataset[IS_FOCUS_FIRST_DATA] !== undefined;
+  const focusFirstSelector = root.dataset[FOCUS_FIRST_SELECTOR_DATA];
 
   const elements: PromptElements = {
     root,
@@ -202,6 +212,7 @@ function getElements(
     isModal,
     isEscapable,
     isFocusFirst,
+    focusFirstSelector,
     toggle,
     content,
     touchLayer,
