@@ -136,7 +136,6 @@ AFTER - includes touch layer, backdrop, fade in and out
 
 ## Limitations
 
-- `<dialog>` is not yet fully supported.
 - Support for menu behaviour is limited to appearing - no positioning and specific animations are implemented
 
 ## Examples
