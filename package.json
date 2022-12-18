@@ -29,8 +29,8 @@
     "test:server": "http-server ./test",
     "test:open": "cypress open",
     "test:run": "cypress run",
-    "test:i": "run-p test:server test:open",
-    "test": "run-p test:browser:chrome test:browser:firefox",
+    "test:local": "run-p test:server test:open",
+    "test:ci": "run-p test:browser:chrome test:browser:firefox",
     "test:browser:chrome": "cypress run --browser chrome",
     "test:browser:firefox": "cypress run --browser firefox"
   },
