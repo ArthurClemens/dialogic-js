@@ -2,11 +2,11 @@ export const wait = (m: number) => new Promise((r) => setTimeout(r, m));
 
 const getPropertyValue = (style: CSSStyleDeclaration, props: string[]) =>
   props.reduce((acc, prop) => {
-    if (acc !== "0s") {
+    if (acc !== '0s') {
       return acc;
     }
     return style.getPropertyValue(prop);
-  }, "0s");
+  }, '0s');
 
 const getStyleValue = ({
   domElement,
@@ -27,14 +27,14 @@ const getStyleValue = ({
 
 const styleDurationToMs = (durationStr: string) => {
   const parsed =
-    parseFloat(durationStr) * (durationStr.indexOf("ms") === -1 ? 1000 : 1);
+    parseFloat(durationStr) * (durationStr.indexOf('ms') === -1 ? 1000 : 1);
   return Number.isNaN(parsed) ? 0 : parsed;
 };
 
 export const getDuration = (domElement: HTMLElement) => {
   const durationStyleValue = getStyleValue({
     domElement,
-    props: ["animation-duration", "transition-duration"],
+    props: ['animation-duration', 'transition-duration'],
   });
   const durationValue =
     durationStyleValue !== undefined
@@ -42,7 +42,7 @@ export const getDuration = (domElement: HTMLElement) => {
       : 0;
   const delayStyleValue = getStyleValue({
     domElement,
-    props: ["animation-delay", "transition-delay"],
+    props: ['animation-delay', 'transition-delay'],
   });
   const delayValue =
     delayStyleValue !== undefined ? styleDurationToMs(delayStyleValue) : 0;
@@ -53,7 +53,7 @@ export const repaint = (element: HTMLElement) => element.scrollTop;
 
 export const isVisible = (element: HTMLElement) => {
   const style = window.getComputedStyle(element);
-  if (style.opacity === "0" || style.display === "none") {
+  if (style.opacity === '0' || style.display === 'none') {
     return false;
   }
   return !!(
@@ -65,7 +65,7 @@ export const isVisible = (element: HTMLElement) => {
 
 const isFocusable = (el: HTMLElement, interactiveOnly?: boolean) => {
   return (
-    (el instanceof HTMLAnchorElement && el.rel !== "ignore") ||
+    (el instanceof HTMLAnchorElement && el.rel !== 'ignore') ||
     (el instanceof HTMLAreaElement && el.href !== undefined) ||
     ([
       HTMLInputElement,
@@ -84,8 +84,8 @@ const isFocusable = (el: HTMLElement, interactiveOnly?: boolean) => {
     el.tabIndex > 0 ||
     (!interactiveOnly &&
       el.tabIndex === 0 &&
-      el.getAttribute("tabindex") !== null &&
-      el.getAttribute("aria-hidden") !== "true")
+      el.getAttribute('tabindex') !== null &&
+      el.getAttribute('aria-hidden') !== 'true')
   );
 };
 

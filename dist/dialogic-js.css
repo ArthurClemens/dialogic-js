@@ -8,13 +8,11 @@
   --prompt-transition-timing-function-content: ease-in-out;
   --prompt-transition-duration-content: 200ms;
   --prompt-fast-transition-duration-content: 150ms;
-  --prompt-transition-duration-backdrop: var( --prompt-transition-duration-content );
-  --prompt-fast-transition-duration-backdrop: var( --prompt-fast-transition-duration-content );
+  --prompt-transition-duration-backdrop: var(--prompt-transition-duration-content);
+  --prompt-fast-transition-duration-backdrop: var(--prompt-fast-transition-duration-content);
   --prompt-z-index-backdrop: 98;
   --prompt-z-index-touch: 99;
   --prompt-z-index-content: 100;
-  --prompt-max-width-content: 92vw;
-  --prompt-max-height-content: 80vh;
 }
 [data-prompt] [data-touch],
 [data-prompt] [data-backdrop],
@@ -33,8 +31,6 @@
 }
 [data-prompt] [data-content] {
   z-index: var(--prompt-z-index-content);
-  max-width: var(--prompt-max-width-content);
-  max-height: var(--prompt-max-height-content);
   transition-property: opacity;
   transition-timing-function: var(--prompt-transition-timing-function-content);
   opacity: 0;
@@ -42,10 +38,13 @@
 [data-prompt] [data-content]:not([aria-role="menu"]) {
   position: fixed;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
   overflow: auto;
   margin: 0 auto;
+}
+[data-prompt] [data-content]:not([aria-role="menu"]):not(dialog) {
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 [data-prompt]:not([data-isfast]) [data-content] {
   transition-duration: var(--prompt-transition-duration-content);
@@ -55,9 +54,6 @@
 }
 [data-prompt][data-isshowing] [data-content] {
   opacity: 1;
-}
-[data-prompt][data-ishiding] [data-content] {
-  opacity: 0;
 }
 [data-prompt][data-isopen] [data-touch],
 [data-prompt][data-isopen] [data-backdrop] {
@@ -93,7 +89,4 @@
 }
 [data-prompt][data-isshowing] [data-backdrop][data-islight] {
   opacity: var(--prompt-background-opacity-backdrop-light);
-}
-[data-prompt][data-ishiding] [data-backdrop] {
-  opacity: 0;
 }
