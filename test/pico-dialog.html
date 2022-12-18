@@ -44,8 +44,11 @@
         display: flex;
       }
       /* In Pico the dialog element is stretched across the screen. In order to make our touch layer work, we disable pointer-events. */
-      [data-prompt][data-isopen]#dialog-events dialog {
+      [data-prompt][data-isopen]#override-pointer dialog {
         pointer-events: none;
+      }
+      [data-prompt][data-isopen]#override-pointer dialog article {
+        pointer-events: all;
       }
       /* With the touch layer inserted inside the dialog element, the article needs to be placed higher */
       [data-prompt][data-isopen]#swapped-order [data-content] article {

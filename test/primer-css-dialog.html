@@ -13,8 +13,7 @@
     <script type="module" src="./dialogic-js/dialogic-js.min.js"></script>
     <style>
       :root {
-        --prompt-max-width-content: 92vw; /* for dialog */
-        --prompt-max-height-content: 80vh; /* for dialog */
+        --prompt-max-height-content: 80vh;
       }
       * {
         box-sizing: border-box;
@@ -30,8 +29,6 @@
       }
 
       [data-prompt] [data-content] {
-        z-index: var(--prompt-z-index-content);
-        max-width: var(--prompt-max-width-content);
         max-height: var(--prompt-max-height-content);
       }
     </style>
