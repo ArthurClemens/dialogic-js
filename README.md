@@ -1,6 +1,6 @@
 # dialogic-js
 
-[![npm](https://img.shields.io/badge/npm-0.2.8-blue)](https://www.npmjs.com/package/dialogic-js)
+[![npm](https://img.shields.io/badge/npm-0.3.0-blue)](https://www.npmjs.com/package/dialogic-js)
 
 Control the opening and closing of dialogs and menus using HTML and (optionally) vanilla JavaScript.
 
@@ -38,8 +38,8 @@ This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic),
 ### Including on a static site
 
 ```html
-<script src="https://unpkg.com/dialogic-js@0.2.8/dist/dialogic-js.min.js"></script>
-<link href="https://unpkg.com/dialogic-js@0.2.8/dist/dialogic-js.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/dialogic-js@0.3.0/dist/dialogic-js.min.js"></script>
+<link href="https://unpkg.com/dialogic-js@0.3.0/dist/dialogic-js.min.css" rel="stylesheet" />
 ```
 
 ### Installing via npm
@@ -148,10 +148,8 @@ AFTER - includes touch layer, backdrop, fade in and out
 - [CodeSandbox with Primer CSS dialog](https://codesandbox.io/p/sandbox/dialogic-js-with-primercss-dialog-6jpf9y?file=%2Findex.html)
 - [CodeSandbox with &lt;dialog&gt;](https://codesandbox.io/p/sandbox/dialogic-js-with-a-dialog-element-td1sxv)
 - [CodeSandbox with Flowbite/Tailwind modal](https://codesandbox.io/p/sandbox/dialogic-js-with-flowbite-tailwind-modal-qp241z) (stacked dialogs)
+- [CodeSandbox with UIkit modal](https://codesandbox.io/p/sandbox/dialogic-js-with-uikit-modal-h50x9y)
 - [CodeSandbox with JavaScript methods](https://codesandbox.io/s/dialogic-js-javascript-methods-glgxgb)
-
-<!-- [CodeSandbox with UIKit modal](https://codesandbox.io/p/sandbox/dialogic-js-with-a-uikit-modal-joil56) -->
-<!-- - [CodeSandbox with isfocusfirst](https://codesandbox.io/p/sandbox/dialogic-js-isfocusfirst-with-flowbite-tailwind-modal-zs67ex) -->
 
 ### Menu
 
