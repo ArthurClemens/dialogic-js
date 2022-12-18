@@ -32,8 +32,8 @@
     "test:run": "cypress run",
     "test:local": "run-p test:server test:open",
     "test:ci": "run-p test:browser:chrome test:browser:firefox",
-    "test:browser:chrome": "cypress run --browser chrome",
-    "test:browser:firefox": "cypress run --browser firefox"
+    "test:browser:chrome": "cypress run --browser chrome --spec cypress/e2e/*.cy.ts",
+    "test:browser:firefox": "cypress run --browser firefox --spec cypress/e2e/*.cy.ts"
   },
   "repository": {
     "type": "git",
