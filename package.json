@@ -27,6 +27,7 @@
     "build:types": "./node_modules/typescript/bin/tsc --p tsconfig.gen.json",
     "build": "npm run dist:clean && npm run build:esm && npm run build:minified && npm run build:types",
     "test:server": "http-server ./test",
+    "start": "npm run test:server",
     "test:open": "cypress open",
     "test:run": "cypress run",
     "test:local": "run-p test:server test:open",
