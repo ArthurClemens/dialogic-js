@@ -2,26 +2,20 @@
   /* colors */
   --prompt-background-color-backdrop: black;
   --prompt-background-opacity-backdrop-dark: 0.5;
-  --prompt-background-opacity-backdrop-medium: 0.2; /* default */
+  /* - default: */
+  --prompt-background-opacity-backdrop-medium: 0.2;
   --prompt-background-opacity-backdrop-light: 0.07;
   /* transitions */
   --prompt-transition-timing-function-backdrop: ease-in-out;
   --prompt-transition-timing-function-content: ease-in-out;
   --prompt-transition-duration-content: 200ms;
   --prompt-fast-transition-duration-content: 150ms;
-  --prompt-transition-duration-backdrop: var(
-    --prompt-transition-duration-content
-  );
-  --prompt-fast-transition-duration-backdrop: var(
-    --prompt-fast-transition-duration-content
-  );
+  --prompt-transition-duration-backdrop: var(--prompt-transition-duration-content);
+  --prompt-fast-transition-duration-backdrop: var(--prompt-fast-transition-duration-content);
   /* z-index */
   --prompt-z-index-backdrop: 98;
   --prompt-z-index-touch: 99;
   --prompt-z-index-content: 100;
-  /* size */
-  --prompt-max-width-content: 92vw; /* for dialog */
-  --prompt-max-height-content: 80vh; /* for dialog */
 }
 
 /* Hide inner elements as long as prompt is not open */
@@ -30,6 +24,7 @@
 [data-prompt] [data-content] {
   display: none;
 }
+
 [data-prompt][data-isopen] [data-touch],
 [data-prompt][data-isopen] [data-backdrop],
 [data-prompt][data-isopen] [data-content] {
@@ -46,21 +41,25 @@
 /* Set content size and set up fade */
 [data-prompt] [data-content] {
   z-index: var(--prompt-z-index-content);
-  max-width: var(--prompt-max-width-content);
-  max-height: var(--prompt-max-height-content);
   transition-property: opacity;
   transition-timing-function: var(--prompt-transition-timing-function-content);
   opacity: 0;
 }
 
-/* Set positioning of dialogs */
+/* Set positioning of dialogs (excluding menus and the dialog element) */
+/* The dialog element has a specific (native) way of positioning, so we only position on the vertical axis here */
+
 [data-prompt] [data-content]:not([aria-role="menu"]) {
   position: fixed;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
   overflow: auto;
   margin: 0 auto;
+}
+
+[data-prompt] [data-content]:not([aria-role="menu"]):not(dialog) {
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Regular transition */
@@ -73,14 +72,9 @@
   transition-duration: var(--prompt-fast-transition-duration-content);
 }
 
-/* Fade in */
+/* Fade in dialog */
 [data-prompt][data-isshowing] [data-content] {
   opacity: 1;
-}
-
-/* Fade out */
-[data-prompt][data-ishiding] [data-content] {
-  opacity: 0;
 }
 
 /* Touch and backdrop overlays */
@@ -134,9 +128,4 @@
 /* Backdrop light opacity */
 [data-prompt][data-isshowing] [data-backdrop][data-islight] {
   opacity: var(--prompt-background-opacity-backdrop-light);
-}
-
-/* Backdrop fade out */
-[data-prompt][data-ishiding] [data-backdrop] {
-  opacity: 0;
 }
