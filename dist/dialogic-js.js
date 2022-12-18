@@ -1,3 +1,22 @@
+var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b ||= {})
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -97,8 +116,8 @@ var IS_HIDING_DATA = "ishiding";
 var IS_LOCKED_DATA = "islocked";
 var LOCK_DURATION = 300;
 var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, options = {}) {
-  const { content, root, isDetails } = elements;
-  if (root.dataset[IS_LOCKED_DATA] !== void 0) {
+  const { content, root, isDetails, isEscapable, escapeListener } = elements;
+  if (root.dataset[IS_LOCKED_DATA] !== void 0 && !options.isIgnoreLockDuration) {
     return;
   }
   if (options.willHide) {
@@ -115,6 +134,9 @@ var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   delete root.dataset[IS_OPEN_DATA];
   if (options.didHide) {
     options.didHide(elements);
+  }
+  if (isEscapable) {
+    window.removeEventListener("keydown", escapeListener);
   }
 });
 var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, options = {}) {
@@ -140,7 +162,7 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
     }
   }, LOCK_DURATION);
   if (isEscapable) {
-    window.addEventListener("keydown", escapeListener, { once: true });
+    window.addEventListener("keydown", escapeListener);
   }
   if (isDetails) {
     root.setAttribute("open", "");
@@ -180,7 +202,7 @@ var toggleView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements
     }
   }
 });
-function getElements(promptElement, command) {
+function getElements(promptElement, command, options) {
   let root = null;
   if (!command && promptElement) {
     root = promptElement;
@@ -217,7 +239,13 @@ function getElements(promptElement, command) {
     touchLayer,
     escapeListener: function(e) {
       if (e.key === "Escape") {
-        hideView(elements);
+        const prompts = [].slice.call(
+          document.querySelectorAll("[data-prompt][data-isopen]")
+        );
+        const topElement = prompts.reverse()[0];
+        if (topElement === elements.root) {
+          hideView(elements, __spreadProps(__spreadValues({}, options), { isIgnoreLockDuration: true }));
+        }
       }
     }
   };
@@ -257,7 +285,7 @@ var initContentEvents = (elements) => {
 };
 function init(prompt, command, options, mode) {
   return __async(this, null, function* () {
-    const elements = getElements(prompt.el, command);
+    const elements = getElements(prompt.el, command, options);
     if (elements === void 0) {
       return;
     }

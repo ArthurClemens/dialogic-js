@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Base dialog tests</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="./dialogic-js/dialogic-js.min.css" rel="stylesheet" />
+    <script type="module" src="./dialogic-js/dialogic-js.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        padding: 2em;
+      }
+
+      section {
+        border: 1px solid #ddd;
+        padding: 20px;
+      }
+
+      section + section {
+        margin-top: 30px;
+      }
+
+      h2 {
+        margin: 0 0 0.5em 0;
+        font-size: 1em;
+      }
+
+      form input:focus {
+        border: 2px solid blue;
+      }
+
+      [data-prompt] dialog[data-content] {
+        width: 100%;
+        max-width: 460px;
+      }
+      [data-prompt] dialog[data-content].confirmation {
+        width: 100%;
+        max-width: 320px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <section>
+      <h2>Minimal dialog</h2>
+      <div data-prompt id="minimal">
+        <button onclick="Prompt.show(this)">Open</button>
+        <div data-touch></div>
+        <dialog data-content>
+          <p>Content in a minimal dialog</p>
+          <button onclick="Prompt.hide(this)">Close</button>
+        </dialog>
+      </div>
+    </section>
+
+    <section>
+      <h2>With backdrop, touch first</h2>
+      <div data-prompt id="touch-first">
+        <button onclick="Prompt.show(this)">Open</button>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <dialog data-content>
+          <p>Content in a dialog with backdrop, touch first</p>
+          <button onclick="Prompt.hide(this)">Close</button>
+        </dialog>
+      </div>
+    </section>
+
+    <section>
+      <h2>With backdrop, backdrop first</h2>
+      <div data-prompt id="backdrop-first">
+        <button onclick="Prompt.show(this)">Open</button>
+        <div data-backdrop></div>
+        <div data-touch></div>
+        <dialog data-content>
+          <p>Content in a dialog with backdrop, backdrop first</p>
+          <button onclick="Prompt.hide(this)">Close</button>
+        </dialog>
+      </div>
+    </section>
+
+    <section>
+      <h2>Modal</h2>
+      <div data-prompt id="modal" data-ismodal>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <dialog data-content>
+          <p>Content in a modal dialog</p>
+          <button onclick="Prompt.hide(this)">Close</button>
+        </dialog>
+      </div>
+
+      <button onclick="Prompt.show('#modal')">Open modal dialog</button>
+    </section>
+
+    <section>
+      <h2>Escapable</h2>
+      <div data-prompt id="escapable" data-isescapable>
+        <button onclick="Prompt.show(this)">Open</button>
+        <div data-touch></div>
+        <dialog data-content>
+          <p>Content in a escapable dialog</p>
+          <button onclick="Prompt.hide(this)">Close</button>
+        </dialog>
+      </div>
+    </section>
+
+    <section>
+      <h2>With form</h2>
+      <div data-prompt id="form">
+        <button onclick="Prompt.show(this)">Open dialog</button>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <dialog data-content>
+          <p>Content in a dialog with form</p>
+          <form method="dialog">
+            <p>
+              <input type="text" name="first" placeholder="First name" />
+            </p>
+            <p>
+              <input type="text" name="last" placeholder="Last name" />
+            </p>
+            <footer>
+              <button type="submit" onclick="Prompt.hide(this)">Send</button>
+              <button type="submit" onclick="Prompt.hide(this)">Cancel</button>
+            </footer>
+          </form>
+        </dialog>
+      </div>
+    </section>
+
+    <section>
+      <h2>With form, focusfirst</h2>
+      <div data-prompt id="form-focusfirst" data-isfocusfirst>
+        <button onclick="Prompt.show(this)">Open dialog</button>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <dialog data-content>
+          <p>Content in a dialog with form, focusfirst</p>
+          <form method="dialog">
+            <p>
+              <input type="text" name="first" placeholder="First name" />
+            </p>
+            <p>
+              <input type="text" name="last" placeholder="Last name" />
+            </p>
+            <footer>
+              <button type="submit" onclick="Prompt.hide(this)">Send</button>
+              <button type="submit" onclick="Prompt.hide(this)">Cancel</button>
+            </footer>
+          </form>
+        </dialog>
+      </div>
+    </section>
+
+    <section>
+      <h2>With form, focusfirst on specified element</h2>
+      <div
+        data-prompt
+        id="form-focusfirst-element"
+        data-focusfirst="#form-focusfirst-element input[name='last']"
+      >
+        <button onclick="Prompt.show(this)">Open dialog</button>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <dialog data-content>
+          <p>Content in a dialog with form, focusfirst on specified element</p>
+          <form method="dialog">
+            <p>
+              <input type="text" name="first" placeholder="First name" />
+            </p>
+            <p>
+              <input type="text" name="last" placeholder="Last name" />
+            </p>
+            <footer>
+              <button type="submit" onclick="Prompt.hide(this)">Send</button>
+              <button type="submit" onclick="Prompt.hide(this)">Cancel</button>
+            </footer>
+          </form>
+        </dialog>
+      </div>
+    </section>
+
+    <section>
+      <h2>Stacked dialogs</h2>
+
+      <button
+        data-testid="button-stacked-main"
+        onclick="Prompt.show('#stacked-main')"
+      >
+        Open main
+      </button>
+      <button
+        data-testid="button-stacked-confirmation"
+        onclick="Prompt.show('#stacked-confirmation')"
+      >
+        Open confirmation
+      </button>
+      <button
+        data-testid="button-stacked-both"
+        onclick="Prompt.show('#stacked-main'); Prompt.show('#stacked-confirmation'); "
+      >
+        Open both
+      </button>
+
+      <div data-prompt id="stacked-main" data-isescapable>
+        <div data-touch>
+          <div data-backdrop></div>
+          <dialog data-content>
+            <p>Content in main dialog</p>
+            <button onclick="Prompt.hide(this)">Accept</button>
+            <button onclick="Prompt.show('#stacked-confirmation')">
+              Decline
+            </button>
+          </dialog>
+        </div>
+      </div>
+
+      <div data-prompt id="stacked-confirmation" data-isescapable>
+        <div data-touch>
+          <div data-backdrop></div>
+          <dialog class="confirmation" data-content>
+            <p>Content in confirmation dialog</p>
+            <button onclick="Prompt.hide(this); Prompt.hide('#stacked-main')">
+              I'm sure
+            </button>
+            <button onclick="Prompt.hide(this)">Cancel</button>
+          </dialog>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
