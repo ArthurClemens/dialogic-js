@@ -1,6 +1,6 @@
 # dialogic-js
 
-[![npm](https://img.shields.io/badge/npm-0.3.0-blue)](https://www.npmjs.com/package/dialogic-js)
+[![npm](https://img.shields.io/badge/npm-0.3.1-blue)](https://www.npmjs.com/package/dialogic-js)
 
 Control the opening and closing of dialogs and menus using HTML and (optionally) vanilla JavaScript.
 
@@ -38,8 +38,8 @@ This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic),
 ### Including on a static site
 
 ```html
-<script src="https://unpkg.com/dialogic-js@0.3.0/dist/dialogic-js.min.js"></script>
-<link href="https://unpkg.com/dialogic-js@0.3.0/dist/dialogic-js.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/dialogic-js@0.3.1/dist/dialogic-js.min.js"></script>
+<link href="https://unpkg.com/dialogic-js@0.3.1/dist/dialogic-js.min.css" rel="stylesheet" />
 ```
 
 ### Installing via npm
