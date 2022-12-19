@@ -1,6 +1,6 @@
 {
   "name": "dialogic-js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Control the opening and closing of dialogs and menus using HTML and (optionally) vanilla JavaScript.",
   "types": "dist",
   "files": [
@@ -20,7 +20,6 @@
     }
   },
   "scripts": {
-    "postinstall": "sh scripts/link-dist.sh",
     "dist:clean": "rm -rf ./dist/*",
     "build:minified": "esbuild src/index.ts --bundle --minify --target=es2020,chrome58,edge18,firefox57,node12,safari11 --outfile=dist/dialogic-js.min.js",
     "build:esm": "esbuild src/index.ts --bundle --format=esm --outfile=dist/dialogic-js.js",
@@ -28,12 +27,12 @@
     "build": "npm run dist:clean && npm run build:esm && npm run build:minified && npm run build:types",
     "test:server": "http-server ./test",
     "start": "npm run test:server",
-    "test:open": "cypress open",
-    "test:run": "cypress run",
-    "test:local": "run-p test:server test:open",
-    "test:ci": "run-p test:browser:chrome test:browser:firefox",
-    "test:browser:chrome": "cypress run --browser chrome --spec cypress/e2e/*.cy.ts",
-    "test:browser:firefox": "cypress run --browser firefox --spec cypress/e2e/*.cy.ts"
+    "test:setup": "sh scripts/link-dist.sh",
+    "test:local": "npm run test:setup && run-p test:server test:open",
+    "test:ci": "npm run test:setup && run-p test:browser:chrome test:browser:firefox",
+    "test:browser:chrome": "cypress run --browser chrome --spec \"cypress/e2e/*.cy.ts\"",
+    "test:browser:firefox": "cypress run --browser firefox --spec \"cypress/e2e/*.cy.ts\"",
+    "test:open": "cypress open"
   },
   "repository": {
     "type": "git",
