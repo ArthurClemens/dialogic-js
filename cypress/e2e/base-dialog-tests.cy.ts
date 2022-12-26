@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import {
   ensureInteractionPossible,
   Opts,
@@ -290,9 +292,11 @@ describe('Base dialog tests', () => {
       verifyOpenedState(confirmationSelector, opts);
       ensureInteractionPossible(confirmationSelector, opts);
       typeEscape();
+      cy.wait(300);
       verifyClosedState(confirmationSelector, opts);
       verifyOpenedState(mainSelector, opts);
       typeEscape();
+      cy.wait(300);
       verifyClosedState(confirmationSelector, opts);
       verifyClosedState(mainSelector, opts);
     });

@@ -1,4 +1,6 @@
-import { verifyInitialState, verifyOpenedState } from '../support/util';
+/// <reference types="cypress" />
+
+import { verifyInitialState } from '../support/util';
 
 const TEST_URL = '/test/js-methods.html';
 

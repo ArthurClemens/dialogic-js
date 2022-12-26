@@ -12,11 +12,17 @@
   --prompt-fast-transition-duration-content: 150ms;
   --prompt-transition-duration-backdrop: var(--prompt-transition-duration-content);
   --prompt-fast-transition-duration-backdrop: var(--prompt-fast-transition-duration-content);
+  /* drawer */
+  --drawer-width: 320px;
   /* z-index */
   --prompt-z-index-backdrop: 98;
   --prompt-z-index-touch: 99;
   --prompt-z-index-content: 100;
 }
+
+/* -----------------------------------------------------
+GENERAL
+----------------------------------------------------- */
 
 /* Hide inner elements as long as prompt is not open */
 [data-prompt] [data-touch],
@@ -39,43 +45,16 @@
 }
 
 /* Set content size and set up fade */
-[data-prompt] [data-content] {
+[data-prompt]:not([data-drawer]) [data-content] {
   z-index: var(--prompt-z-index-content);
   transition-property: opacity;
   transition-timing-function: var(--prompt-transition-timing-function-content);
   opacity: 0;
 }
 
-/* Set positioning of dialogs (excluding menus and the dialog element) */
-/* The dialog element has a specific (native) way of positioning, so we only position on the vertical axis here */
-
-[data-prompt] [data-content]:not([aria-role="menu"]) {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  overflow: auto;
-  margin: 0 auto;
-}
-
-[data-prompt] [data-content]:not([aria-role="menu"]):not(dialog) {
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Regular transition */
-[data-prompt]:not([data-isfast]) [data-content] {
-  transition-duration: var(--prompt-transition-duration-content);
-}
-
-/* Fast transition */
-[data-prompt][data-isfast] [data-content] {
-  transition-duration: var(--prompt-fast-transition-duration-content);
-}
-
-/* Fade in dialog */
-[data-prompt][data-isshowing] [data-content] {
-  opacity: 1;
-}
+/* -----------------------------------------------------
+TOUCH AND BACKDROP
+----------------------------------------------------- */
 
 /* Touch and backdrop overlays */
 [data-prompt][data-isopen] [data-touch],
@@ -128,4 +107,167 @@
 /* Backdrop light opacity */
 [data-prompt][data-isshowing] [data-backdrop][data-islight] {
   opacity: var(--prompt-background-opacity-backdrop-light);
+}
+
+/* -----------------------------------------------------
+DIALOG
+----------------------------------------------------- */
+
+/* Set positioning of dialogs (excluding menus and the dialog element) */
+/* The dialog element has a specific (native) way of positioning, so we only position on the vertical axis here */
+[data-prompt]:not([data-drawer]) [data-content]:not([aria-role="menu"]) {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: auto;
+  margin: 0 auto;
+}
+
+/* Center on screen */
+[data-prompt]:not([data-drawer]) [data-content]:not([aria-role="menu"]):not(dialog) {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Transition: regular */
+[data-prompt]:not([data-isfast]) [data-content] {
+  transition-duration: var(--prompt-transition-duration-content);
+}
+
+/* Transition: fast */
+[data-prompt][data-isfast] [data-content] {
+  transition-duration: var(--prompt-fast-transition-duration-content);
+}
+
+/* Appear: fade in */
+[data-prompt]:not([data-drawer])[data-isshowing] [data-content] {
+  opacity: 1;
+}
+
+
+/* -----------------------------------------------------
+DRAWER
+----------------------------------------------------- */
+
+/* Drawer content */
+[data-prompt][data-drawer] [data-content] {
+  z-index: var(--prompt-z-index-content);
+  transition-property: transform;
+  transition-timing-function: var(--prompt-transition-timing-function-content);
+  position: fixed;
+  height: 100%;
+  top: 0;
+}
+
+/* Content, drawer specific */
+[data-prompt][data-drawer] [data-drawer-content] {
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+/* Position at start */
+[data-prompt][data-drawer] [data-content],
+[data-prompt][data-drawer][data-at-start] [data-content] {
+  left: 0;
+  right: auto;
+  transform: translateX(-100%);
+}
+
+/* Position at start (RTL) */
+[dir="rtl"] [data-prompt][data-drawer] [data-content],
+[dir="rtl"] [data-prompt][data-drawer][data-at-start] [data-content] {
+  left: auto;
+  right: 0;
+  transform: translateX(100%);
+}
+
+/* Position at end */
+[data-prompt][data-drawer][data-at-end] [data-content] {
+  left: auto;
+  right: 0;
+  transform: translateX(100%);
+}
+
+/* Position at end (RTL) */
+[dir="rtl"] [data-prompt][data-drawer][data-at-end] [data-content] {
+  left: 0;
+  right: auto;
+  transform: translateX(-100%);
+}
+
+/* Appear: slide in */
+[data-prompt][data-drawer][data-isshowing] [data-content],
+[dir="rtl"] [data-prompt][data-drawer][data-isshowing] [data-content] {
+  transform: translateX(0);
+}
+
+/* Local drawer */
+[data-prompt][data-isopen][data-local-drawer] [data-touch],
+[data-prompt][data-isopen][data-local-drawer] [data-backdrop],
+[data-prompt][data-drawer][data-local-drawer] [data-content] {
+  position: absolute;
+  z-index: initial;
+}
+
+/* Push drawer: touch and backdrop */
+[data-prompt][data-isopen][data-push-drawer] [data-touch],
+[data-prompt][data-isopen][data-push-drawer] [data-backdrop] {
+  z-index: 1;
+  position: absolute;
+}
+
+/* Push drawer: content */
+[data-prompt][data-drawer][data-push-drawer] [data-content] {
+  position: relative;
+  z-index: initial;
+  display: flex;
+  width: calc(100% + var(--drawer-width));
+}
+
+/* Push drawer: content, drawer specific */
+[data-prompt][data-drawer][data-push-drawer] [data-drawer-content] {
+  z-index: 1;
+  width: 100%;
+  max-width: var(--drawer-width);
+}
+
+/* Push drawer: default content position */
+[data-prompt][data-drawer][data-push-drawer] [data-content] {
+  transform: translateX(calc(-1 * var(--drawer-width)));
+}
+
+/* Push drawer: content position, position at end */
+[data-prompt][data-drawer][data-push-drawer][data-at-end] [data-content] {
+  flex-direction: row-reverse;
+  transform: translateX(0);
+}
+
+/* Push drawer: appear: slide in */
+[data-prompt][data-drawer][data-push-drawer][data-isshowing] [data-content] {
+  transform: translateX(0);
+}
+
+/* Push drawer, position at end: appear: slide in */
+[data-prompt][data-drawer][data-push-drawer][data-at-end][data-isshowing] [data-content] {
+  transform: translateX(calc(-1 * var(--drawer-width)));
+}
+
+/* Push drawer: default content position (RTL) */
+[dir="rtl"] [data-prompt][data-drawer][data-push-drawer] [data-content] {
+  transform: translateX(var(--drawer-width));
+}
+
+/* Push drawer: appear: slide in (RTL) */
+[dir="rtl"] [data-prompt][data-drawer][data-push-drawer][data-isshowing] [data-content] {
+  transform: translateX(0);
+}
+
+/* Push drawer: content position, position at end (RTL) */
+[dir="rtl"] [data-prompt][data-drawer][data-push-drawer][data-at-end] [data-content] {
+  transform: translateX(0);
+}
+
+/* Push drawer: appear: slide in (RTL) */
+[dir="rtl"] [data-prompt][data-drawer][data-push-drawer][data-at-end][data-isshowing] [data-content] {
+  transform: translateX(var(--drawer-width));
 }
