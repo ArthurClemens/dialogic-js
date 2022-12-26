@@ -24,7 +24,9 @@ This is a basic reimplementation of [dialogic](http://github.com/ArthurClemens/d
     - [Local drawer (inside a container)](#local-drawer-inside-a-container)
     - [Push drawer](#push-drawer)
   - [Menus](#menus)
-- [Data attributes and modifiers](#data-attributes-and-modifiers)
+- [Data attributes](#data-attributes)
+  - [Common attributes](#common-attributes)
+  - [Extra attributes for drawers](#extra-attributes-for-drawers)
 - [Opening, closing and toggling](#opening-closing-and-toggling)
   - [HTML: Prompt methods](#html-prompt-methods)
     - [`Prompt.show`](#promptshow)
@@ -311,17 +313,26 @@ Example of HTML for a menu with all relevant (but some optional) attributes:
 
 
 
-## Data attributes and modifiers
+## Data attributes
 
-| **Data attribute**    | **Required**        | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-|-----------------------|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `data-prompt`         | required            | Container, may be a `<details>` element.<br />Optional attributes:<br />`id` - When opening or closing from outside of this container, an id or other selector is required in order to call methods on it.<br />`data-ismodal` - Creates modal behavior: content can't be closed by clicking on the background.<br />`data-isescapable` - Closes the content when pressing the Escape key.<br />`data-isfocusfirst` - On show, gives focus to the first focusable element (the first active element with the lowest tab index).<br />`data-focusfirst="some-selector"` - Likewise, but find the focusable element by selector.<br />`data-fast` - Creates fast fade transitions for backdrop and content. |
-| `data-drawer`         | required for drawer | Sets drawer styles.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `data-touch`          | required            | Touch layer, detects clicks on background. For stacked dialogs, wrap this around the element `data-content`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `data-content`        | required            | Content to be shown (a dialog or menu pane).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `data-drawer-content` | required for drawer | Sets drawer styles.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `data-backdrop`       | -                   | Backdrop layer.<br />Optional attributes:<br />`data-islight` - Creates a light colored backdrop.<br />`data-ismedium` (default) - Creates a medium colored backdrop.<br />`data-isdark` - Creates a dark colored backdrop.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `data-toggle`         | -                   | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+### Common attributes
+
+| **Data attribute**                | **Required** | **Description**                                                                                                                                         |
+|-----------------------------------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `data-prompt`                     | required     | Container, may be a `<details>` element.                                                                                                                |
+| `id`                              | -            | Modifier for `data-prompt`. When opening or closing from outside of this container, an id or other selector is required in order to call methods on it. |
+| `data-ismodal`                    | -            | Modifier for `data-prompt`. Creates modal behavior: content can't be closed by clicking on the background.                                              |
+| `data-isescapable`                | -            | Modifier for `data-prompt`. Closes the content when pressing the Escape key.                                                                            |
+| `data-isfocusfirst`               | -            | Modifier for `data-prompt`. On show, gives focus to the first focusable element (the first active element with the lowest tab index).                   |
+| `data-focusfirst="some-selector"` | -            | Modifier for `data-prompt`. Likewise, but find the focusable element by selector.                                                                       |
+| `data-fast`                       | -            | Modifier for `data-prompt`. Creates fast fade transitions for backdrop and content.                                                                     |
+| `data-touch`                      | required     | Touch layer, detects clicks on background. For stacked dialogs, wrap this around the element `data-content`.                                            |
+| `data-backdrop`                   | -            | Backdrop layer.                                                                                                                                         |
+| `data-islight`                    | -            | Modifier for `data-backdrop`. Creates a light colored backdrop.                                                                                         |
+| `data-ismedium`                   | - (default)  | Modifier for `data-backdrop`. Creates a medium colored backdrop.                                                                                        |
+| `data-isdark`                     | -            | Modifier for `data-backdrop`. Creates a dark colored backdrop.                                                                                          |
+| `data-content`                    | required     | Content to be shown (a dialog or menu pane).                                                                                                            |
+| `data-toggle`                     | -            | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                               |
 
 Example of HTML with all relevant (but some optional) attributes:
 
@@ -334,6 +345,17 @@ Example of HTML with all relevant (but some optional) attributes:
   </div>
 </div>
 ```
+
+### Extra attributes for drawers
+
+| **Data attribute**    | **Required** | **Description**                                                                                 |
+|-----------------------|--------------|-------------------------------------------------------------------------------------------------|
+| `data-drawer`         | required     | Modifier for `data-prompt`. Creates drawer styles.                                              |
+| `data-local-drawer`   | -            | Modifier for `data-prompt`. Creates drawer styles for a local drawer.                           |
+| `data-push-drawer`    | -            | Modifier for `data-prompt`. Creates drawer styles for a push drawer.                            |
+| `data-at-start`       | - (default)  | Modifier for `data-prompt`. Opens the drawer at the side of the reading direction.              |
+| `data-at-end`         | -            | Modifier for `data-prompt`. Opens the drawer at the far end of the reading direction.           |
+| `data-drawer-content` | required     | Creates drawer content styles. Normally a modifier for `data-content`, except for push drawers. |
 
 
 ## Opening, closing and toggling
