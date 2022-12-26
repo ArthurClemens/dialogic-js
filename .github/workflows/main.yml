@@ -63,4 +63,6 @@ jobs:
       - name: Cypress tests
         uses: cypress-io/github-action@v4
         with:
+          browser: chrome
+          wait-on: 'http://localhost:3000'
           start: npm run test:ci
