@@ -413,7 +413,8 @@ describe('Drawer tests', () => {
         selector,
         (rect: DOMRect, windowWidth: number) => {
           cy.wrap(rect.top).should('equal', 0);
-          cy.wrap(Math.floor(rect.right)).should('equal', windowWidth);
+          cy.wrap(rect.right).should('be.lessThan', windowWidth + 1);
+          cy.wrap(rect.right).should('be.greaterThan', windowWidth - 250);
         }
       );
     });
