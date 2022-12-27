@@ -38,6 +38,10 @@
         font-size: 1em;
       }
 
+      [data-isshowing] [data-drawer-content] {
+        box-shadow: 0 0 18px rgb(0 0 0 / 40%);
+      }
+
       .drawer-content {
         background: #fff;
         padding: 15px;
@@ -49,27 +53,26 @@
 
       .local-drawer-container {
         position: relative;
-        height: 200px;
         margin-top: 1em;
         box-shadow: 0 0 0 1px #ccc;
-        overflow: hidden;
+        overflow-x: hidden;
       }
 
       .content-block {
         background: #eee;
-        height: 200px;
+        height: 150px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         align-content: center;
-      }
-      .content-block {
         margin-top: 1em;
       }
+
       .local-drawer-container__content {
         padding: 15px;
         flex-grow: 1;
       }
+
       .small-drawer .drawer-content > h3,
       .small-drawer .drawer-content > div {
         width: 150px;
@@ -80,121 +83,131 @@
   <body>
     <section>
       <h2>Drawer</h2>
-      <div data-prompt data-drawer id="start">
+      <div data-prompt data-isdrawer id="start">
         <button onclick="Prompt.show(this)">Open</button>
         <div data-backdrop></div>
         <div data-touch></div>
-        <div data-content data-drawer-content class="drawer-content">
-          <h3>Opened at start position</h3>
-          <button onclick="Prompt.hide(this)">Close</button>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Last</div>
+        <div data-content>
+          <div data-drawer-content class="drawer-content">
+            <h3>Opened at start position</h3>
+            <button onclick="Prompt.hide(this)">Close</button>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Last</div>
+          </div>
         </div>
       </div>
     </section>
 
     <section>
       <h2>Drawer, at end</h2>
-      <div data-prompt data-drawer data-at-end id="end">
+      <div data-prompt data-isdrawer data-isfarside id="end">
         <button onclick="Prompt.show(this)">Open</button>
         <div data-backdrop></div>
         <div data-touch></div>
-        <div data-content data-drawer-content class="drawer-content">
-          <h3>Opened at end position</h3>
-          <button onclick="Prompt.hide(this)">Close</button>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Last</div>
+        <div data-content>
+          <div data-drawer-content class="drawer-content">
+            <h3>Opened at end position</h3>
+            <button onclick="Prompt.hide(this)">Close</button>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Last</div>
+          </div>
         </div>
       </div>
     </section>
 
     <section>
       <h2>Small drawer</h2>
-      <div data-prompt data-drawer id="small" class="small-drawer">
+      <div data-prompt data-isdrawer id="small" class="small-drawer">
         <button onclick="Prompt.show(this)">Open</button>
         <div data-backdrop></div>
         <div data-touch></div>
-        <div data-content data-drawer-content class="drawer-content">
-          <h3>Opened at start position</h3>
-          <button onclick="Prompt.hide(this)">Close</button>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Last</div>
+        <div data-content>
+          <div data-drawer-content class="drawer-content">
+            <h3>Opened at start position</h3>
+            <button onclick="Prompt.hide(this)">Close</button>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Last</div>
+          </div>
         </div>
       </div>
     </section>
 
     <section>
       <h2>Modal drawer</h2>
-      <div data-prompt data-drawer data-ismodal id="modal">
+      <div data-prompt data-isdrawer data-ismodal id="modal">
         <button onclick="Prompt.show(this)">Open</button>
         <div data-backdrop></div>
         <div data-touch></div>
-        <div data-content data-drawer-content class="drawer-content">
-          <h3>Opened at start position</h3>
-          <button onclick="Prompt.hide(this)">Close</button>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Last</div>
+        <div data-content>
+          <div data-drawer-content class="drawer-content">
+            <h3>Opened at start position</h3>
+            <button onclick="Prompt.hide(this)">Close</button>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Last</div>
+          </div>
         </div>
       </div>
     </section>
 
     <section>
       <h2>Drawer without backdrop</h2>
-      <div data-prompt data-drawer id="no-backdrop">
+      <div data-prompt data-isdrawer id="no-backdrop">
         <button onclick="Prompt.show(this)">Open</button>
         <div data-touch></div>
-        <div data-content data-drawer-content class="drawer-content">
-          <h3>Opened at start position</h3>
-          <button onclick="Prompt.hide(this)">Close</button>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Content</div>
-          <div class="content-block">Last</div>
+        <div data-content>
+          <div data-drawer-content class="drawer-content">
+            <h3>Opened at start position</h3>
+            <button onclick="Prompt.hide(this)">Close</button>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Content</div>
+            <div class="content-block">Last</div>
+          </div>
         </div>
       </div>
     </section>
 
     <section>
       <h2>Local drawer</h2>
-      <div data-prompt data-drawer data-at-start data-local-drawer id="local">
+      <div data-prompt data-isdrawer data-islocal id="local">
         <button onclick="Prompt.show(this)">Open</button>
         <button onclick="Prompt.hide(this)">Close</button>
         <div class="local-drawer-container">
@@ -220,14 +233,16 @@
           </div>
           <div data-backdrop></div>
           <div data-touch></div>
-          <div data-content data-drawer-content class="drawer-content">
-            <h3>Opened at start position</h3>
-            <button onclick="Prompt.hide(this)">Close</button>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Last</div>
+          <div data-content>
+            <div data-drawer-content class="drawer-content">
+              <h3>Opened at start position</h3>
+              <button onclick="Prompt.hide(this)">Close</button>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Last</div>
+            </div>
           </div>
         </div>
       </div>
@@ -235,7 +250,7 @@
 
     <section>
       <h2>Local drawer, at end</h2>
-      <div data-prompt data-drawer data-at-end data-local-drawer id="local-end">
+      <div data-prompt data-isdrawer data-isfarside data-islocal id="local-end">
         <button onclick="Prompt.show(this)">Open</button>
         <button onclick="Prompt.hide(this)">Close</button>
         <div class="local-drawer-container">
@@ -261,14 +276,16 @@
           </div>
           <div data-backdrop></div>
           <div data-touch></div>
-          <div data-content data-drawer-content class="drawer-content">
-            <h3>Opened at end position</h3>
-            <button onclick="Prompt.hide(this)">Close</button>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Last</div>
+          <div data-content>
+            <div data-drawer-content class="drawer-content">
+              <h3>Opened at end position</h3>
+              <button onclick="Prompt.hide(this)">Close</button>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Last</div>
+            </div>
           </div>
         </div>
       </div>
@@ -276,7 +293,7 @@
 
     <section>
       <h2>Push drawer</h2>
-      <div data-prompt data-drawer data-push-drawer id="push-start">
+      <div data-prompt data-isdrawer data-ispush id="push-start">
         <button onclick="Prompt.show(this)">Open</button>
         <button onclick="Prompt.hide(this)">Close</button>
         <div class="local-drawer-container">
@@ -320,7 +337,7 @@
 
     <section>
       <h2>Push drawer, at end</h2>
-      <div data-prompt data-drawer data-at-end data-push-drawer id="push-end">
+      <div data-prompt data-isdrawer data-isfarside data-ispush id="push-end">
         <button onclick="Prompt.show(this)">Open</button>
         <button onclick="Prompt.hide(this)">Close</button>
         <div class="local-drawer-container">
@@ -365,23 +382,25 @@
     <section>
       <h2>Drawer, direction rtl</h2>
       <div dir="rtl">
-        <div data-prompt data-drawer id="start-rtl">
+        <div data-prompt data-isdrawer id="start-rtl">
           <button onclick="Prompt.show(this)">Open</button>
           <div data-backdrop></div>
           <div data-touch></div>
-          <div data-content data-drawer-content class="drawer-content">
-            <h3>Opened at start position</h3>
-            <button onclick="Prompt.hide(this)">Close</button>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Last</div>
+          <div data-content>
+            <div data-drawer-content class="drawer-content">
+              <h3>Opened at start position</h3>
+              <button onclick="Prompt.hide(this)">Close</button>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Last</div>
+            </div>
           </div>
         </div>
       </div>
@@ -390,23 +409,25 @@
     <section>
       <h2>Drawer, at end, direction rtl</h2>
       <div dir="rtl">
-        <div data-prompt data-drawer data-at-end id="end-rtl">
+        <div data-prompt data-isdrawer data-isfarside id="end-rtl">
           <button onclick="Prompt.show(this)">Open</button>
           <div data-backdrop></div>
           <div data-touch></div>
-          <div data-content data-drawer-content class="drawer-content">
-            <h3>Opened at end position</h3>
-            <button onclick="Prompt.hide(this)">Close</button>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Content</div>
-            <div class="content-block">Last</div>
+          <div data-content>
+            <div data-drawer-content class="drawer-content">
+              <h3>Opened at end position</h3>
+              <button onclick="Prompt.hide(this)">Close</button>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Content</div>
+              <div class="content-block">Last</div>
+            </div>
           </div>
         </div>
       </div>
@@ -415,7 +436,7 @@
     <section>
       <h2>Local drawer, direction rtl</h2>
       <div dir="rtl">
-        <div data-prompt data-drawer data-local-drawer id="local-rtl">
+        <div data-prompt data-isdrawer data-islocal id="local-rtl">
           <button onclick="Prompt.show(this)">Open</button>
           <button onclick="Prompt.hide(this)">Close</button>
           <div class="local-drawer-container">
@@ -442,14 +463,16 @@
             </div>
             <div data-backdrop></div>
             <div data-touch></div>
-            <div data-content data-drawer-content class="drawer-content">
-              <h3>Opened at start position</h3>
-              <button onclick="Prompt.hide(this)">Close</button>
-              <div class="content-block">Content</div>
-              <div class="content-block">Content</div>
-              <div class="content-block">Content</div>
-              <div class="content-block">Content</div>
-              <div class="content-block">Last</div>
+            <div data-content>
+              <div data-drawer-content class="drawer-content">
+                <h3>Opened at start position</h3>
+                <button onclick="Prompt.hide(this)">Close</button>
+                <div class="content-block">Content</div>
+                <div class="content-block">Content</div>
+                <div class="content-block">Content</div>
+                <div class="content-block">Content</div>
+                <div class="content-block">Last</div>
+              </div>
             </div>
           </div>
         </div>
@@ -460,9 +483,9 @@
       <div dir="rtl">
         <div
           data-prompt
-          data-drawer
-          data-at-end
-          data-local-drawer
+          data-isdrawer
+          data-isfarside
+          data-islocal
           id="local-end-rtl"
         >
           <button onclick="Prompt.show(this)">Open</button>
@@ -491,14 +514,16 @@
             </div>
             <div data-backdrop></div>
             <div data-touch></div>
-            <div data-content data-drawer-content class="drawer-content">
-              <h3>Opened at end position</h3>
-              <button onclick="Prompt.hide(this)">Close</button>
-              <div class="content-block">Content</div>
-              <div class="content-block">Content</div>
-              <div class="content-block">Content</div>
-              <div class="content-block">Content</div>
-              <div class="content-block">Last</div>
+            <div data-content>
+              <div data-drawer-content class="drawer-content">
+                <h3>Opened at end position</h3>
+                <button onclick="Prompt.hide(this)">Close</button>
+                <div class="content-block">Content</div>
+                <div class="content-block">Content</div>
+                <div class="content-block">Content</div>
+                <div class="content-block">Content</div>
+                <div class="content-block">Last</div>
+              </div>
             </div>
           </div>
         </div>
@@ -508,7 +533,7 @@
     <section>
       <h2>Push drawer, direction rtl</h2>
       <div dir="rtl">
-        <div data-prompt data-drawer data-push-drawer id="push-rtl">
+        <div data-prompt data-isdrawer data-ispush id="push-rtl">
           <button onclick="Prompt.show(this)">Open</button>
           <button onclick="Prompt.hide(this)">Close</button>
           <div class="local-drawer-container">
@@ -556,9 +581,9 @@
       <div dir="rtl">
         <div
           data-prompt
-          data-drawer
-          data-at-end
-          data-push-drawer
+          data-isdrawer
+          data-isfarside
+          data-ispush
           id="push-end-rtl"
         >
           <button onclick="Prompt.show(this)">Open</button>

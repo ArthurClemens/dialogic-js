@@ -205,26 +205,30 @@ If your application needs to show dialogs on top of other dialogs - perhaps in t
 
 #### Global drawer 
 
-To create a screen size drawer, add `data-drawer` and `data-drawer-content`:
+To create a screen size drawer, add `data-isdrawer` and `data-drawer-content`:
 
 ```html
-<div data-prompt data-drawer id="drawer">
+<div data-prompt data-isdrawer id="drawer">
   <div data-backdrop></div>
   <div data-touch></div>
-  <div data-content data-drawer-content>
-    Drawer content
+  <div data-content>
+    <div data-drawer-content>
+      Drawer content
+    </div>
   </div>
 </div>
 ```
 
-By default the drawer opens at the left side. To open at the right, pass `data-at-end`. 
+By default the drawer opens at the left side. To open at the right, pass `data-isfarside`. 
 
 ```html
-<div data-prompt data-drawer data-at-end id="drawer">
+<div data-prompt data-isdrawer data-isfarside id="drawer">
   <div data-backdrop></div>
   <div data-touch></div>
-  <div data-content data-drawer-content>
-    Drawer content
+  <div data-content>
+    <div data-drawer-content>
+      Drawer content
+    </div>
   </div>
 </div>
 ```
@@ -233,11 +237,13 @@ The positions are automatically reversed for right-to-left languages when the dr
 
 ```html
 <div dir="rtl">
-  <div data-prompt data-drawer data-at-end id="drawer">
+  <div data-prompt data-isdrawer data-isfarside id="drawer">
     <div data-backdrop></div>
     <div data-touch></div>
-    <div data-content data-drawer-content>
-      Drawer content
+    <div data-content>
+      <div data-drawer-content>
+        Drawer content
+      </div>
     </div>
   </div>
 </div>
@@ -245,15 +251,17 @@ The positions are automatically reversed for right-to-left languages when the dr
 
 #### Local drawer (inside a container)
 
-To create a local drawer, add `data-local-drawer`. Use a container with defined dimensions and `overflow: hidden`.
+To create a local drawer, add `data-islocal`.
 
 ```html
-<div data-prompt data-drawer data-local-drawer id="drawer">
-  <div class="local-drawer-container">
+<div data-prompt data-isdrawer data-islocal id="drawer">
+  <div class="some-container" style="overflow-x: hidden;">
     <div data-backdrop></div>
     <div data-touch></div>
-    <div data-content data-drawer-content>
-      Drawer content
+    <div data-content>
+      <div data-drawer-content>
+        Drawer content
+      </div>
     </div>
   </div>
 </div>
@@ -261,11 +269,11 @@ To create a local drawer, add `data-local-drawer`. Use a container with defined 
 
 #### Push drawer
 
-A push drawer pushes the adjacent content away when it opens. To create a push drawer, add `data-push-drawer` and wrap the backdrop and touch layers inside `data-content`:
+A push drawer pushes the adjacent content aside when it opens. To create a push drawer, add `data-ispush` and wrap the backdrop and touch layers inside `data-content`:
 
 ```html
-<div data-prompt data-drawer data-push-drawer id="drawer">
-  <div class="local-drawer-container">
+<div data-prompt data-isdrawer data-ispush id="drawer">
+  <div class="some-container">
     <div data-content>
       <div data-backdrop></div>
       <div data-touch></div>
@@ -282,7 +290,7 @@ A push drawer pushes the adjacent content away when it opens. To create a push d
 
 ### Menus
 
-Menus are supported with the same markup, with this difference: add `aria-role="menu"` to the element that has `data-content`.
+Menus are supported with the same markup as dialogs, with this difference: add `aria-role="menu"` to the element that has `data-content`.
 
 HTML markup to create menu behavior:
 
@@ -325,7 +333,7 @@ Example of HTML for a menu with all relevant (but some optional) attributes:
 | `data-isescapable`                | -            | Modifier for `data-prompt`. Closes the content when pressing the Escape key.                                                                            |
 | `data-isfocusfirst`               | -            | Modifier for `data-prompt`. On show, gives focus to the first focusable element (the first active element with the lowest tab index).                   |
 | `data-focusfirst="some-selector"` | -            | Modifier for `data-prompt`. Likewise, but find the focusable element by selector.                                                                       |
-| `data-fast`                       | -            | Modifier for `data-prompt`. Creates fast fade transitions for backdrop and content.                                                                     |
+| `data-isfast`                     | -            | Modifier for `data-prompt`. Creates fast fade transitions for backdrop and content.                                                                     |
 | `data-touch`                      | required     | Touch layer, detects clicks on background. For stacked dialogs, wrap this around the element `data-content`.                                            |
 | `data-backdrop`                   | -            | Backdrop layer.                                                                                                                                         |
 | `data-islight`                    | -            | Modifier for `data-backdrop`. Creates a light colored backdrop.                                                                                         |
@@ -350,11 +358,10 @@ Example of HTML with all relevant (but some optional) attributes:
 
 | **Data attribute**    | **Required** | **Description**                                                                                 |
 |-----------------------|--------------|-------------------------------------------------------------------------------------------------|
-| `data-drawer`         | required     | Modifier for `data-prompt`. Creates drawer styles.                                              |
-| `data-local-drawer`   | -            | Modifier for `data-prompt`. Creates drawer styles for a local drawer.                           |
-| `data-push-drawer`    | -            | Modifier for `data-prompt`. Creates drawer styles for a push drawer.                            |
-| `data-at-start`       | - (default)  | Modifier for `data-prompt`. Opens the drawer at the side of the reading direction.              |
-| `data-at-end`         | -            | Modifier for `data-prompt`. Opens the drawer at the far end of the reading direction.           |
+| `data-isdrawer`       | required     | Modifier for `data-prompt`. Creates drawer styles.                                              |
+| `data-islocal`        | -            | Modifier for `data-prompt`. Creates drawer styles for a local drawer.                           |
+| `data-ispush`         | -            | Modifier for `data-prompt`. Creates drawer styles for a push drawer.                            |
+| `data-isfarside`      | -            | Modifier for `data-prompt`. Opens the drawer at the far end of the reading direction.           |
 | `data-drawer-content` | required     | Creates drawer content styles. Normally a modifier for `data-content`, except for push drawers. |
 
 
