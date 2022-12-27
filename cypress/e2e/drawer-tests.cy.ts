@@ -12,6 +12,24 @@ import {
 const TEST_URL = '/test/drawer.html';
 const SAFE_TRANSITION_DURATION = 400;
 
+const verifyScrolledContent = (
+  selector: string,
+  opts: Opts,
+  openDrawer: () => void
+) => {
+  openDrawer();
+  cy.wait(SAFE_TRANSITION_DURATION);
+  verifyOpenedState(selector, opts);
+  cy.get(`${selector} [data-drawer-content]`)
+    .contains('Last')
+    .then(($el) => {
+      const el = $el.get(0);
+      expect(el.getBoundingClientRect().top).greaterThan(700);
+      el.scrollIntoView();
+      expect(el.getBoundingClientRect().top).lessThan(700);
+    });
+};
+
 describe('Drawer tests', () => {
   beforeEach(() => {
     cy.visit(TEST_URL);
@@ -49,11 +67,7 @@ describe('Drawer tests', () => {
     });
 
     it('Should scroll the drawer contents', () => {
-      openDrawer();
-      verifyOpenedState(selector);
-      cy.get(selector).contains('Last').should('not.be.visible');
-      cy.get(`${selector} [data-content]`).scrollTo('bottom');
-      cy.get(selector).contains('Last').should('be.visible');
+      verifyScrolledContent(selector, opts, openDrawer);
     });
 
     it('Should close using a close button', () => {
@@ -103,11 +117,7 @@ describe('Drawer tests', () => {
     });
 
     it('Should scroll the drawer contents', () => {
-      openDrawer();
-      verifyOpenedState(selector);
-      cy.get(selector).contains('Last').should('not.be.visible');
-      cy.get(`${selector} [data-content]`).scrollTo('bottom');
-      cy.get(selector).contains('Last').should('be.visible');
+      verifyScrolledContent(selector, opts, openDrawer);
     });
   });
 
@@ -205,16 +215,11 @@ describe('Drawer tests', () => {
         cy.wrap(rect.top).should('be.greaterThan', 0);
         cy.wrap(rect.left).should('be.greaterThan', 0);
         cy.wrap(rect.right).should('be.lessThan', 400);
-        cy.wrap(rect.height).should('equal', 200);
       });
     });
 
     it('Should scroll the drawer contents', () => {
-      openDrawer();
-      verifyOpenedState(selector);
-      cy.get(selector).contains('Last').should('not.be.visible');
-      cy.get(`${selector} [data-content]`).scrollTo('bottom');
-      cy.get(selector).contains('Last').should('be.visible');
+      verifyScrolledContent(selector, opts, openDrawer);
     });
 
     it('Closing using the touch layer should be possible after lock duration', () => {
@@ -243,7 +248,6 @@ describe('Drawer tests', () => {
         cy.wrap(rect.top).should('be.greaterThan', 0);
         cy.wrap(rect.left).should('be.greaterThan', 400);
         cy.wrap(rect.right).should('be.greaterThan', 900);
-        cy.wrap(rect.height).should('equal', 200);
       });
     });
   });
@@ -266,7 +270,6 @@ describe('Drawer tests', () => {
           cy.wrap(rect.left).should('be.greaterThan', 0);
           cy.wrap(rect.left).should('be.lessThan', 100);
           cy.wrap(rect.right).should('be.greaterThan', 1200);
-          cy.wrap(rect.height).should('equal', 200);
         },
         opts
       );
@@ -281,7 +284,6 @@ describe('Drawer tests', () => {
           cy.wrap(rect.left).should('be.greaterThan', -300);
           cy.wrap(rect.right).should('be.lessThan', 1200);
           cy.wrap(rect.right).should('be.greaterThan', 900);
-          cy.wrap(rect.height).should('equal', 200);
         },
         opts
       );
@@ -346,7 +348,6 @@ describe('Drawer tests', () => {
           cy.wrap(rect.left).should('be.greaterThan', -300);
           cy.wrap(rect.right).should('be.lessThan', 1200);
           cy.wrap(rect.right).should('be.greaterThan', 900);
-          cy.wrap(rect.height).should('equal', 200);
         },
         opts
       );
@@ -360,7 +361,6 @@ describe('Drawer tests', () => {
           cy.wrap(rect.left).should('be.greaterThan', 0);
           cy.wrap(rect.left).should('be.lessThan', 100);
           cy.wrap(rect.right).should('be.greaterThan', 1200);
-          cy.wrap(rect.height).should('equal', 200);
         },
         opts
       );
@@ -459,7 +459,6 @@ describe('Drawer tests', () => {
         cy.wrap(rect.top).should('be.greaterThan', 0);
         cy.wrap(rect.left).should('be.greaterThan', 400);
         cy.wrap(rect.right).should('be.greaterThan', 900);
-        cy.wrap(rect.height).should('equal', 200);
       });
     });
   });
@@ -482,7 +481,6 @@ describe('Drawer tests', () => {
         cy.wrap(rect.top).should('be.greaterThan', 0);
         cy.wrap(rect.left).should('be.greaterThan', 0);
         cy.wrap(rect.right).should('be.lessThan', 400);
-        cy.wrap(rect.height).should('equal', 200);
       });
     });
   });
@@ -506,7 +504,6 @@ describe('Drawer tests', () => {
           cy.wrap(rect.left).should('be.greaterThan', -300);
           cy.wrap(rect.right).should('be.lessThan', 1200);
           cy.wrap(rect.right).should('be.greaterThan', 900);
-          cy.wrap(rect.height).should('equal', 200);
         },
         opts
       );
@@ -520,7 +517,6 @@ describe('Drawer tests', () => {
           cy.wrap(rect.left).should('be.greaterThan', 0);
           cy.wrap(rect.left).should('be.lessThan', 100);
           cy.wrap(rect.right).should('be.greaterThan', 1200);
-          cy.wrap(rect.height).should('equal', 200);
         },
         opts
       );
@@ -562,7 +558,6 @@ describe('Drawer tests', () => {
           cy.wrap(rect.left).should('be.greaterThan', 0);
           cy.wrap(rect.left).should('be.lessThan', 100);
           cy.wrap(rect.right).should('be.greaterThan', 1200);
-          cy.wrap(rect.height).should('equal', 200);
         },
         opts
       );
@@ -577,7 +572,6 @@ describe('Drawer tests', () => {
           cy.wrap(rect.left).should('be.greaterThan', -300);
           cy.wrap(rect.right).should('be.lessThan', 1200);
           cy.wrap(rect.right).should('be.greaterThan', 900);
-          cy.wrap(rect.height).should('equal', 200);
         },
         opts
       );
