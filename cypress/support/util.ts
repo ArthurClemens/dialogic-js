@@ -104,3 +104,15 @@ export const ensureInteractionPossible = (
 };
 
 export const typeEscape = () => cy.get('body').type('{esc}');
+
+export const getDrawerContentClientRect = (
+  selector: string,
+  callback: (elementRect: DOMRect, windowWidth: number) => unknown,
+  opts: Opts = {}
+) => {
+  cy.get(`${selector} [data-content]`).then(($el) => {
+    cy.window().then(($window) => {
+      return callback($el[0].getBoundingClientRect(), $window.innerWidth);
+    });
+  });
+};

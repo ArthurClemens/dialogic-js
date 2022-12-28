@@ -2,9 +2,9 @@
 
 [![npm](https://img.shields.io/badge/npm-0.3.1-blue)](https://www.npmjs.com/package/dialogic-js)
 
-Control the opening and closing of dialogs and menus using HTML and (optionally) vanilla JavaScript.
+Control the opening and closing of dialogs, drawers and menus using HTML and (optionally) vanilla JavaScript.
 
-This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic), to be used without a Virtual Dom library.
+This is a basic reimplementation of [dialogic](http://github.com/ArthurClemens/dialogic), to be used without a Virtual Dom library.
 
 - [Installation](#installation)
   - [Including on a static site](#including-on-a-static-site)
@@ -17,9 +17,16 @@ This is a basic version of [dialogic](http://github.com/ArthurClemens/dialogic),
   - [Menu](#menu)
 - [HTML structure](#html-structure)
   - [Dialogs](#dialogs)
+    - [Singular dialog](#singular-dialog)
+    - [Stacked dialogs](#stacked-dialogs)
+  - [Drawers](#drawers)
+    - [Global drawer](#global-drawer)
+    - [Local drawer (inside a container)](#local-drawer-inside-a-container)
+    - [Push drawer](#push-drawer)
   - [Menus](#menus)
-  - [Stacked dialogs](#stacked-dialogs)
-- [Data attributes and modifiers](#data-attributes-and-modifiers)
+- [Data attributes](#data-attributes)
+  - [Common attributes](#common-attributes)
+  - [Extra attributes for drawers](#extra-attributes-for-drawers)
 - [Opening, closing and toggling](#opening-closing-and-toggling)
   - [HTML: Prompt methods](#html-prompt-methods)
     - [`Prompt.show`](#promptshow)
@@ -162,10 +169,12 @@ Both dialogs and menus share the same HTML structure. Dialogs are centered on th
 
 ### Dialogs
 
-HTML markup to create dialog behavior:
+#### Singular dialog
+
+HTML markup to create a single dialog:
 
 ```html
-<div data-prompt id="some-id">
+<div data-prompt>
   <div data-backdrop></div>
   <div data-touch></div>
   <div data-content>
@@ -174,15 +183,119 @@ HTML markup to create dialog behavior:
 </div>
 ```
 
+#### Stacked dialogs
+
+Online example:
+- [CodeSandbox with Flowbite/Tailwind modal](https://codesandbox.io/p/sandbox/dialogic-js-with-flowbite-tailwind-modal-qp241z)
+
+If your application needs to show dialogs on top of other dialogs - perhaps in the case of a confirmation dialog that appears floating above the initial dialog, wrap element `data-touch` around the `data-backdrop` and `data-content`:
+
+```html
+<div data-prompt>
+  <div data-touch>
+    <div data-backdrop></div>
+    <div data-content>
+      Content
+    </div>
+  </div>
+</div>
+```
+
+### Drawers
+
+#### Global drawer 
+
+To create a screen size drawer, add `data-isdrawer` and `data-drawer-content`:
+
+```html
+<div data-prompt data-isdrawer id="drawer">
+  <div data-backdrop></div>
+  <div data-touch></div>
+  <div data-content>
+    <div data-drawer-content>
+      Drawer content
+    </div>
+  </div>
+</div>
+```
+
+By default the drawer opens at the left side. To open at the right, pass `data-isfarside`. 
+
+```html
+<div data-prompt data-isdrawer data-isfarside id="drawer">
+  <div data-backdrop></div>
+  <div data-touch></div>
+  <div data-content>
+    <div data-drawer-content>
+      Drawer content
+    </div>
+  </div>
+</div>
+```
+
+The positions are automatically reversed for right-to-left languages when the drawer is inside an element with `dir="rtl"`:
+
+```html
+<div dir="rtl">
+  <div data-prompt data-isdrawer data-isfarside id="drawer">
+    <div data-backdrop></div>
+    <div data-touch></div>
+    <div data-content>
+      <div data-drawer-content>
+        Drawer content
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+#### Local drawer (inside a container)
+
+To create a local drawer, add `data-islocal`.
+
+```html
+<div data-prompt data-isdrawer data-islocal id="drawer">
+  <div class="some-container" style="overflow-x: hidden;">
+    <div data-backdrop></div>
+    <div data-touch></div>
+    <div data-content>
+      <div data-drawer-content>
+        Drawer content
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+#### Push drawer
+
+A push drawer pushes the adjacent content aside when it opens. To create a push drawer, add `data-ispush` and wrap the backdrop and touch layers inside `data-content`:
+
+```html
+<div data-prompt data-isdrawer data-ispush id="drawer">
+  <div class="some-container">
+    <div data-content>
+      <div data-backdrop></div>
+      <div data-touch></div>
+      <div data-drawer-content>
+        Drawer content
+      </div>
+      <div>
+        Adjacent content
+      </div>
+    </div>
+  </div>
+</div>
+```
 
 ### Menus
 
-Menus are supported with the same markup, with this difference: add `aria-role="menu"` to the element that has `data-content`.
+Menus are supported with the same markup as dialogs, with this difference: add `aria-role="menu"` to the element that has `data-content`.
 
 HTML markup to create menu behavior:
 
 ```html
-<div data-prompt id="some-id">
+<div data-prompt>
   <div data-touch></div>
   <div data-content aria-role="menu">
     Content
@@ -206,38 +319,33 @@ Example of HTML for a menu with all relevant (but some optional) attributes:
 </div>
 ```
 
-### Stacked dialogs
 
-Online example:
-- [CodeSandbox with Flowbite/Tailwind modal](https://codesandbox.io/p/sandbox/dialogic-js-with-flowbite-tailwind-modal-qp241z)
 
-If your application needs to show dialogs on top of other dialogs - perhaps in the case of a confirmation dialog that appears floating above the initial dialog, wrap element `data-touch` around the `data-backdrop` and `data-content`:
+## Data attributes
 
-```html
-<div data-prompt id="some-id">
-  <div data-touch>
-    <div data-backdrop></div>
-    <div data-content>
-      Content
-    </div>
-  </div>
-</div>
-```
+### Common attributes
 
-## Data attributes and modifiers
-
-| **Data attribute** | **Required** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-|--------------------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `data-prompt`      | required     | Container, may be a `<details>` element.<br />Optional attributes:<br />`id` - When opening or closing from outside of this container, an id or other selector is required in order to call methods on it.<br />`data-ismodal` - Creates modal behavior: content can't be closed by clicking on the background.<br />`data-isescapable` - Closes the content when pressing the Escape key.<br />`data-isfocusfirst` - On show, gives focus to the first focusable element (the first active element with the lowest tab index).<br />`data-focusfirst="some-selector"` - Likewise, but find the focusable element by selector.<br />`data-fast` - Creates fast fade transitions for backdrop and content. |
-| `data-touch`       | required     | Touch layer, detects clicks on background. For stacked dialogs, wrap this around the element `data-content`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `data-content`     | required     | Content to be shown (a dialog or menu pane).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `data-backdrop`    | -            | Backdrop layer.<br />Optional attributes:<br />`data-islight` - Creates a light colored backdrop.<br />`data-ismedium` (default) - Creates a medium colored backdrop.<br />`data-isdark` - Creates a dark colored backdrop.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| `data-toggle`      | -            | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| **Data attribute**                | **Required** | **Description**                                                                                                                                         |
+|-----------------------------------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `data-prompt`                     | required     | Container, may be a `<details>` element.                                                                                                                |
+| `id`                              | -            | Modifier for `data-prompt`. When opening or closing from outside of this container, an id or other selector is required in order to call methods on it. |
+| `data-ismodal`                    | -            | Modifier for `data-prompt`. Creates modal behavior: content can't be closed by clicking on the background.                                              |
+| `data-isescapable`                | -            | Modifier for `data-prompt`. Closes the content when pressing the Escape key.                                                                            |
+| `data-isfocusfirst`               | -            | Modifier for `data-prompt`. On show, gives focus to the first focusable element (the first active element with the lowest tab index).                   |
+| `data-focusfirst="some-selector"` | -            | Modifier for `data-prompt`. Likewise, but find the focusable element by selector.                                                                       |
+| `data-isfast`                     | -            | Modifier for `data-prompt`. Creates fast fade transitions for backdrop and content.                                                                     |
+| `data-touch`                      | required     | Touch layer, detects clicks on background. For stacked dialogs, wrap this around the element `data-content`.                                            |
+| `data-backdrop`                   | -            | Backdrop layer.                                                                                                                                         |
+| `data-islight`                    | -            | Modifier for `data-backdrop`. Creates a light colored backdrop.                                                                                         |
+| `data-ismedium`                   | - (default)  | Modifier for `data-backdrop`. Creates a medium colored backdrop.                                                                                        |
+| `data-isdark`                     | -            | Modifier for `data-backdrop`. Creates a dark colored backdrop.                                                                                          |
+| `data-content`                    | required     | Content to be shown (a dialog or menu pane).                                                                                                            |
+| `data-toggle`                     | -            | For buttons elements in situations when `prompt.el` has been assigned (using JavaScript).                                                               |
 
 Example of HTML with all relevant (but some optional) attributes:
 
 ```html
-<div data-prompt data-ismodal data-isescapable data-isfast id="some-id">
+<div data-prompt data-ismodal data-isescapable data-isfast>
   <div data-backdrop data-islight></div>
   <div data-touch></div>
   <div data-content>
@@ -245,6 +353,16 @@ Example of HTML with all relevant (but some optional) attributes:
   </div>
 </div>
 ```
+
+### Extra attributes for drawers
+
+| **Data attribute**    | **Required** | **Description**                                                                                 |
+|-----------------------|--------------|-------------------------------------------------------------------------------------------------|
+| `data-isdrawer`       | required     | Modifier for `data-prompt`. Creates drawer styles.                                              |
+| `data-islocal`        | -            | Modifier for `data-prompt`. Creates drawer styles for a local drawer.                           |
+| `data-ispush`         | -            | Modifier for `data-prompt`. Creates drawer styles for a push drawer.                            |
+| `data-isfarside`      | -            | Modifier for `data-prompt`. Opens the drawer at the far end of the reading direction.           |
+| `data-drawer-content` | required     | Creates drawer content styles. Normally a modifier for `data-content`, except for push drawers. |
 
 
 ## Opening, closing and toggling
@@ -527,19 +645,18 @@ Default values:
   /* colors */
   --prompt-background-color-backdrop: black;
   --prompt-background-opacity-backdrop-dark: 0.5;
-  --prompt-background-opacity-backdrop-medium: 0.2; /* default */
+  /* - default: */
+  --prompt-background-opacity-backdrop-medium: 0.2;
   --prompt-background-opacity-backdrop-light: 0.07;
   /* transitions */
   --prompt-transition-timing-function-backdrop: ease-in-out;
   --prompt-transition-timing-function-content: ease-in-out;
   --prompt-transition-duration-content: 200ms;
   --prompt-fast-transition-duration-content: 150ms;
-  --prompt-transition-duration-backdrop: var(
-    --prompt-transition-duration-content
-  );
-  --prompt-fast-transition-duration-backdrop: var(
-    --prompt-fast-transition-duration-content
-  );
+  --prompt-transition-duration-backdrop: var(--prompt-transition-duration-content);
+  --prompt-fast-transition-duration-backdrop: var(--prompt-fast-transition-duration-content);
+  /* drawer */
+  --drawer-width: 320px;
   /* z-index */
   --prompt-z-index-backdrop: 98;
   --prompt-z-index-touch: 99;
