@@ -152,9 +152,6 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   if (root.dataset[IS_LOCKED_DATA] !== void 0) {
     return;
   }
-  if (options.willShow) {
-    options.willShow(elements);
-  }
   root.dataset[IS_LOCKED_DATA] = "";
   setTimeout(() => {
     if (root) {
@@ -170,6 +167,9 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   root.dataset[IS_OPEN_DATA] = "";
   repaint(root);
   root.dataset[IS_SHOWING_DATA] = "";
+  if (options.willShow) {
+    options.willShow(elements);
+  }
   const duration = getDuration(content);
   yield wait(duration);
   if (isFocusFirst) {
@@ -240,7 +240,7 @@ function getElements(promptElement, command, options) {
     escapeListener: function(e) {
       if (e.key === "Escape") {
         const prompts = [].slice.call(
-          document.querySelectorAll("[data-prompt][data-isopen]")
+          document.querySelectorAll(`${ROOT_SELECTOR}[data-${IS_OPEN_DATA}]`)
         );
         const topElement = prompts.reverse()[0];
         if (topElement === elements.root) {

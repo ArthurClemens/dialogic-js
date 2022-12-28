@@ -121,9 +121,6 @@ const showView = async (
   if (root.dataset[IS_LOCKED_DATA] !== undefined) {
     return;
   }
-  if (options.willShow) {
-    options.willShow(elements);
-  }
   root.dataset[IS_LOCKED_DATA] = '';
   setTimeout(() => {
     if (root) {
@@ -141,6 +138,10 @@ const showView = async (
   root.dataset[IS_OPEN_DATA] = '';
   repaint(root);
   root.dataset[IS_SHOWING_DATA] = '';
+
+  if (options.willShow) {
+    options.willShow(elements);
+  }
 
   const duration = getDuration(content);
   await wait(duration);
@@ -230,7 +231,7 @@ function getElements(
       if (e.key === 'Escape') {
         // Only close the top element
         const prompts = [].slice.call(
-          document.querySelectorAll('[data-prompt][data-isopen]')
+          document.querySelectorAll(`${ROOT_SELECTOR}[data-${IS_OPEN_DATA}]`)
         );
         const topElement = prompts.reverse()[0];
         if (topElement === elements.root) {
