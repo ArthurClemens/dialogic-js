@@ -100,6 +100,30 @@ var getFirstFocusable = (content) => {
   ).filter((el) => isFocusable(el, true)).sort((a, b) => a.tabIndex - b.tabIndex);
   return focusable[0];
 };
+var storeDataset = (cache, id, dataset) => {
+  if (!id)
+    return;
+  if (!cache[id]) {
+    cache[id] = JSON.stringify(dataset);
+  }
+};
+var readDataset = (cache, id) => {
+  if (!id)
+    return;
+  return JSON.parse(cache[id]);
+};
+var clearDataset = (cache, id) => {
+  if (!id)
+    return;
+  delete cache[id];
+};
+var applyDataset = (dataset, el) => {
+  if (!el)
+    return;
+  Object.keys(dataset).forEach((key) => {
+    el.dataset[key] = dataset[key];
+  });
+};
 
 // src/prompt.ts
 var ROOT_SELECTOR = "[data-prompt]";
@@ -247,25 +271,8 @@ function getElements(promptElement, command, options) {
           hideView(elements, __spreadProps(__spreadValues({}, options), { isIgnoreLockDuration: true }));
         }
       }
-    }
-  };
-  return elements;
-}
-var initToggleEvents = (elements) => {
-  const { toggle } = elements;
-  if (toggle && toggle.dataset.registered === void 0) {
-    toggle.addEventListener("click", (e) => __async(void 0, null, function* () {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleView(elements);
-    }));
-    toggle.dataset.registered = "";
-  }
-};
-var initTouchEvents = (elements) => {
-  const { touchLayer, isModal } = elements;
-  if (touchLayer && touchLayer.dataset.registered === void 0) {
-    touchLayer.addEventListener("click", (e) => __async(void 0, null, function* () {
+    },
+    clickTouchLayerListener: function(e) {
       if (e.target !== touchLayer) {
         return;
       }
@@ -273,7 +280,26 @@ var initTouchEvents = (elements) => {
       if (!isModal) {
         toggleView(elements, 1 /* HIDE */);
       }
-    }));
+    },
+    clickToggleListener: function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleView(elements);
+    }
+  };
+  return elements;
+}
+var initToggleEvents = (elements) => {
+  const { toggle, clickToggleListener } = elements;
+  if (toggle && toggle.dataset.registered !== "") {
+    toggle.addEventListener("click", clickToggleListener);
+    toggle.dataset.registered = "";
+  }
+};
+var initTouchEvents = (elements) => {
+  const { clickTouchLayerListener, touchLayer } = elements;
+  if (touchLayer && touchLayer.dataset.registered !== "") {
+    touchLayer.addEventListener("click", clickTouchLayerListener);
     touchLayer.dataset.registered = "";
   }
 };
@@ -282,6 +308,9 @@ function init(prompt, command, options, mode) {
     const elements = getElements(prompt.el, command, options);
     if (elements === void 0) {
       return;
+    }
+    if (!prompt.el) {
+      prompt.el = elements == null ? void 0 : elements.root;
     }
     initToggleEvents(elements);
     initTouchEvents(elements);
@@ -296,8 +325,22 @@ function init(prompt, command, options, mode) {
   });
 }
 var Prompt = {
+  _cache: {},
   mounted() {
-    init(this);
+  },
+  beforeUpdate() {
+    var _a, _b;
+    storeDataset(this._cache, (_a = this.el) == null ? void 0 : _a.id, (_b = this.el) == null ? void 0 : _b.dataset);
+  },
+  updated() {
+    var _a, _b;
+    const dataset = readDataset(this._cache, (_a = this.el) == null ? void 0 : _a.id);
+    applyDataset(dataset, this.el);
+    clearDataset(this._cache, (_b = this.el) == null ? void 0 : _b.id);
+  },
+  destroyed() {
+    var _a;
+    clearDataset(this._cache, (_a = this.el) == null ? void 0 : _a.id);
   },
   init(command, options) {
     return __async(this, null, function* () {
