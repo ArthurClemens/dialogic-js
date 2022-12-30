@@ -30,9 +30,9 @@
     "test:setup": "sh scripts/link-dist.sh",
     "test:local": "npm run test:setup && run-p test:server test:open",
     "test:ci": "npm run test:setup && run-p test:browser:chrome test:browser:firefox",
-    "test:browser:chrome": "cypress run --browser chrome --spec \"cypress/e2e/*.cy.ts\"",
-    "test:browser:firefox": "cypress run --browser firefox --spec \"cypress/e2e/*.cy.ts\"",
-    "test:open": "cypress open"
+    "test:browser:chrome": "cypress run --browser chrome",
+    "test:browser:firefox": "cypress run --browser firefox",
+    "test:open": "cypress open --config '{\"specPattern\":[\"cypress/e2e/*.{cy,suite}.ts\"]}'"
   },
   "repository": {
     "type": "git",
