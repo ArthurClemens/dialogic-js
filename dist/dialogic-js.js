@@ -226,7 +226,7 @@ var toggleView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements
     }
   }
 });
-function getElements(promptElement, command, options) {
+var getElements = (promptElement, command, options) => {
   let root = null;
   if (!command && promptElement) {
     root = promptElement;
@@ -278,17 +278,17 @@ function getElements(promptElement, command, options) {
       }
       e.stopPropagation();
       if (!isModal) {
-        toggleView(elements, 1 /* HIDE */);
+        toggleView(elements, 1 /* HIDE */, options);
       }
     },
     clickToggleListener: function(e) {
       e.preventDefault();
       e.stopPropagation();
-      toggleView(elements);
+      toggleView(elements, void 0, options);
     }
   };
   return elements;
-}
+};
 var initToggleEvents = (elements) => {
   const { toggle, clickToggleListener } = elements;
   if (toggle && toggle.dataset.registered !== "") {
@@ -305,7 +305,8 @@ var initTouchEvents = (elements) => {
 };
 function init(prompt, command, options, mode) {
   return __async(this, null, function* () {
-    const elements = getElements(prompt.el, command, options);
+    prompt.options = __spreadValues(__spreadValues({}, prompt.options), options);
+    const elements = getElements(prompt.el, command, prompt.options);
     if (elements === void 0) {
       return;
     }
@@ -317,10 +318,10 @@ function init(prompt, command, options, mode) {
     const { root, isDetails } = elements;
     const isOpen = isDetails && root.getAttribute("open") !== null;
     if (isOpen && mode !== 1 /* HIDE */) {
-      showView(elements, options);
+      showView(elements, prompt.options);
     }
     if (mode !== void 0) {
-      yield toggleView(elements, mode, options);
+      yield toggleView(elements, mode, prompt.options);
     }
   });
 }

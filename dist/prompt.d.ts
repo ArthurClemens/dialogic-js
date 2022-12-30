@@ -37,6 +37,7 @@ export type TPrompt = {
     toggle: (command: Command, options?: Options) => void;
     show: (command: Command, options?: Options) => void;
     hide: (command: Command, options?: Options) => void;
+    options?: Options;
     /**
      * Phoenix LiveView callback.
      */

@@ -59,6 +59,7 @@ export type TPrompt = {
   toggle: (command: Command, options?: Options) => void;
   show: (command: Command, options?: Options) => void;
   hide: (command: Command, options?: Options) => void;
+  options?: Options;
 
   /**
    * Phoenix LiveView callback.
@@ -211,11 +212,11 @@ const toggleView = async (
   }
 };
 
-function getElements(
+const getElements = (
   promptElement?: MaybeHTMLElement,
   command?: Command,
   options?: Options
-): PromptElements | undefined {
+): PromptElements | undefined => {
   let root: MaybeHTMLElement = null;
 
   if (!command && promptElement) {
@@ -274,17 +275,17 @@ function getElements(
       }
       e.stopPropagation();
       if (!isModal) {
-        toggleView(elements, MODE.HIDE);
+        toggleView(elements, MODE.HIDE, options);
       }
     },
     clickToggleListener: function (e: Event) {
       e.preventDefault();
       e.stopPropagation();
-      toggleView(elements);
+      toggleView(elements, undefined, options);
     },
   };
   return elements;
-}
+};
 
 const initToggleEvents = (elements: PromptElements) => {
   const { toggle, clickToggleListener } = elements;
@@ -310,7 +311,11 @@ async function init(
   options?: Options,
   mode?: MODE
 ) {
-  const elements = getElements(prompt.el, command, options);
+  prompt.options = {
+    ...prompt.options,
+    ...options,
+  };
+  const elements = getElements(prompt.el, command, prompt.options);
   if (elements === undefined) {
     return;
   }
@@ -325,11 +330,11 @@ async function init(
 
   const isOpen = isDetails && root.getAttribute('open') !== null;
   if (isOpen && mode !== MODE.HIDE) {
-    showView(elements, options);
+    showView(elements, prompt.options);
   }
 
   if (mode !== undefined) {
-    await toggleView(elements, mode, options);
+    await toggleView(elements, mode, prompt.options);
   }
 }
 
