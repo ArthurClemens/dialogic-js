@@ -260,22 +260,15 @@ const initTouchEvents = (elements: PromptElements) => {
   const { touchLayer, isModal } = elements;
   if (touchLayer && touchLayer.dataset.registered === undefined) {
     touchLayer.addEventListener('click', async (e: Event) => {
+      if (e.target !== touchLayer) {
+        return;
+      }
       e.stopPropagation();
       if (!isModal) {
         toggleView(elements, MODE.HIDE);
       }
     });
     touchLayer.dataset.registered = '';
-  }
-};
-
-const initContentEvents = (elements: PromptElements) => {
-  const { content } = elements;
-  if (content && content.dataset.registered === undefined) {
-    content.addEventListener('click', async (e: Event) => {
-      e.stopPropagation();
-    });
-    content.dataset.registered = '';
   }
 };
 
@@ -292,7 +285,6 @@ async function init(
 
   initToggleEvents(elements);
   initTouchEvents(elements);
-  initContentEvents(elements);
 
   const { root, isDetails } = elements;
 
