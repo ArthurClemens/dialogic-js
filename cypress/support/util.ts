@@ -31,8 +31,6 @@ export const verifyInitialState = (selector: string, optsParam: Opts = {}) => {
     cy.get(`${selector} [data-backdrop]`).should('have.css', 'opacity', '0');
   }
 
-  // Content
-  cy.get(`${selector} [data-content][data-registered]`).should('not.exist');
   // Content should have opacity 0
   cy.get(`${selector} [data-content]`).should('exist');
   cy.get(`${selector} [data-content]`).should('not.be.visible');
@@ -70,7 +68,6 @@ export const verifyOpenedState = (selector: string, optsParam: Opts = {}) => {
   }
 
   // Content
-  cy.get(`${selector} [data-content][data-registered]`).should('exist');
   // Can't test visibility: https://github.com/cypress-io/cypress/issues/21164
   cy.get(`${selector} [data-content]`).should(
     'have.css',
