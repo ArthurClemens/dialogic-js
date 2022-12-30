@@ -25,6 +25,9 @@
 [data-prompt][data-isopen] [data-content] {
   display: block;
 }
+[data-prompt] [data-backdrop] {
+  pointer-events: none;
+}
 [data-prompt] [data-content]:not([aria-role="menu"]) {
   animation-name: unset;
   animation-duration: unset;

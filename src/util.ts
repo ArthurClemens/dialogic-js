@@ -101,3 +101,36 @@ export const getFirstFocusable = (content: HTMLElement) => {
     .sort((a, b) => a.tabIndex - b.tabIndex);
   return focusable[0];
 };
+
+export type CachedDataset = Record<string, string>;
+
+export const storeDataset = (
+  cache: CachedDataset,
+  id?: string,
+  dataset?: DOMStringMap
+) => {
+  if (!id) return;
+  if (!cache[id]) {
+    cache[id] = JSON.stringify(dataset);
+  }
+};
+
+export const readDataset = (cache: CachedDataset, id?: string) => {
+  if (!id) return;
+  return JSON.parse(cache[id]);
+};
+
+export const clearDataset = (cache: CachedDataset, id?: string) => {
+  if (!id) return;
+  delete cache[id];
+};
+
+export const applyDataset = (
+  dataset: DOMStringMap,
+  el?: HTMLElement | null
+) => {
+  if (!el) return;
+  Object.keys(dataset).forEach((key) => {
+    el.dataset[key] = dataset[key];
+  });
+};

@@ -4,6 +4,11 @@ import {
   repaint,
   isVisible,
   getFirstFocusable,
+  CachedDataset,
+  applyDataset,
+  clearDataset,
+  readDataset,
+  storeDataset,
 } from './util';
 
 type Command =
@@ -35,6 +40,8 @@ type PromptElements = {
   touchLayer?: MaybeHTMLElement;
   toggle?: MaybeHTMLElement;
   escapeListener: (e: KeyboardEvent) => void;
+  clickTouchLayerListener: (e: MouseEvent) => void;
+  clickToggleListener: (e: Event) => void;
   firstFocusable?: HTMLElement;
 };
 
@@ -48,11 +55,34 @@ export type Options = {
 
 export type TPrompt = {
   el?: MaybeHTMLElement;
-  mounted: () => void;
   init: (command: Command) => void;
   toggle: (command: Command, options?: Options) => void;
   show: (command: Command, options?: Options) => void;
   hide: (command: Command, options?: Options) => void;
+  options?: Options;
+
+  /**
+   * Phoenix LiveView callback.
+   */
+  mounted: () => void;
+  /**
+   * Phoenix LiveView callback.
+   */
+  beforeUpdate: () => void;
+  /**
+   * Phoenix LiveView callback.
+   */
+  updated: () => void;
+  /**
+   * Phoenix LiveView callback.
+   */
+  destroyed: () => void;
+
+  /**
+   * Phoenix LiveView specific.
+   * Cached values of the dataset values of the root element, so that the state can be restored after an update.
+   */
+  _cache: CachedDataset;
 };
 
 // Element selectors
@@ -182,11 +212,11 @@ const toggleView = async (
   }
 };
 
-function getElements(
+const getElements = (
   promptElement?: MaybeHTMLElement,
   command?: Command,
   options?: Options
-): PromptElements | undefined {
+): PromptElements | undefined => {
   let root: MaybeHTMLElement = null;
 
   if (!command && promptElement) {
@@ -239,35 +269,38 @@ function getElements(
         }
       }
     },
-  };
-  return elements;
-}
-
-const initToggleEvents = (elements: PromptElements) => {
-  const { toggle } = elements;
-
-  if (toggle && toggle.dataset.registered === undefined) {
-    toggle.addEventListener('click', async (e: Event) => {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleView(elements);
-    });
-    toggle.dataset.registered = '';
-  }
-};
-
-const initTouchEvents = (elements: PromptElements) => {
-  const { touchLayer, isModal } = elements;
-  if (touchLayer && touchLayer.dataset.registered === undefined) {
-    touchLayer.addEventListener('click', async (e: Event) => {
+    clickTouchLayerListener: function (e: MouseEvent) {
       if (e.target !== touchLayer) {
         return;
       }
       e.stopPropagation();
       if (!isModal) {
-        toggleView(elements, MODE.HIDE);
+        toggleView(elements, MODE.HIDE, options);
       }
-    });
+    },
+    clickToggleListener: function (e: Event) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleView(elements, undefined, options);
+    },
+  };
+  return elements;
+};
+
+const initToggleEvents = (elements: PromptElements) => {
+  const { toggle, clickToggleListener } = elements;
+
+  if (toggle && toggle.dataset.registered !== '') {
+    toggle.addEventListener('click', clickToggleListener);
+    toggle.dataset.registered = '';
+  }
+};
+
+const initTouchEvents = (elements: PromptElements) => {
+  const { clickTouchLayerListener, touchLayer } = elements;
+
+  if (touchLayer && touchLayer.dataset.registered !== '') {
+    touchLayer.addEventListener('click', clickTouchLayerListener);
     touchLayer.dataset.registered = '';
   }
 };
@@ -278,9 +311,16 @@ async function init(
   options?: Options,
   mode?: MODE
 ) {
-  const elements = getElements(prompt.el, command, options);
+  prompt.options = {
+    ...prompt.options,
+    ...options,
+  };
+  const elements = getElements(prompt.el, command, prompt.options);
   if (elements === undefined) {
     return;
+  }
+  if (!prompt.el) {
+    prompt.el = elements?.root;
   }
 
   initToggleEvents(elements);
@@ -290,17 +330,27 @@ async function init(
 
   const isOpen = isDetails && root.getAttribute('open') !== null;
   if (isOpen && mode !== MODE.HIDE) {
-    showView(elements, options);
+    showView(elements, prompt.options);
   }
 
   if (mode !== undefined) {
-    await toggleView(elements, mode, options);
+    await toggleView(elements, mode, prompt.options);
   }
 }
 
 export const Prompt: TPrompt = {
-  mounted() {
-    init(this);
+  _cache: {},
+  mounted() {},
+  beforeUpdate() {
+    storeDataset(this._cache, this.el?.id, this.el?.dataset);
+  },
+  updated() {
+    const dataset = readDataset(this._cache, this.el?.id);
+    applyDataset(dataset, this.el);
+    clearDataset(this._cache, this.el?.id);
+  },
+  destroyed() {
+    clearDataset(this._cache, this.el?.id);
   },
   async init(command: Command, options?: Options) {
     await init(this, command, options);

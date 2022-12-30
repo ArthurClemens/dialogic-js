@@ -37,6 +37,11 @@ GENERAL
   display: block;
 }
 
+/* Ignore any clicks on the backdrop layer. */
+[data-prompt] [data-backdrop] {
+  pointer-events: none;
+}
+
 /* Reset any conflicting animation styles set on dialogs */
 [data-prompt] [data-content]:not([aria-role="menu"]) {
   animation-name: unset;

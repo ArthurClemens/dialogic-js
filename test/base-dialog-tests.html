@@ -109,13 +109,42 @@
     <section>
       <h2>Escapable</h2>
       <div data-prompt id="escapable" data-isescapable>
-        <button onclick="Prompt.show(this)">Open</button>
+        <button
+          onclick="Prompt.show(this, {
+          didHide: () => console.log('didhide')
+        })"
+        >
+          Open
+        </button>
         <div data-touch></div>
         <div class="dialog" data-content>
           <p>Content in a escapable dialog</p>
           <button onclick="Prompt.hide(this)">Close</button>
         </div>
       </div>
+    </section>
+
+    <section>
+      <h2>With JavaScript</h2>
+      <button id="js-button-show">Open</button>
+
+      <div data-prompt id="js" data-isescapable>
+        <div data-touch></div>
+        <div class="dialog" data-content>
+          <p>Content in a JS invoked dialog</p>
+          <button onclick="Prompt.hide(this)">Close</button>
+        </div>
+      </div>
+
+      <script defer>
+        const showButton = document.getElementById('js-button-show');
+        showButton.addEventListener('click', () => {
+          Prompt.show('#js', {
+            didShow: () => console.log('didShow'),
+            didHide: () => console.log('didhide'),
+          });
+        });
+      </script>
     </section>
 
     <section>

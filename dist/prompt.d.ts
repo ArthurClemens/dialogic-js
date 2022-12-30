@@ -1,3 +1,4 @@
+import { CachedDataset } from './util';
 type Command = 
 /**
  * HTML selector
@@ -19,6 +20,8 @@ type PromptElements = {
     touchLayer?: MaybeHTMLElement;
     toggle?: MaybeHTMLElement;
     escapeListener: (e: KeyboardEvent) => void;
+    clickTouchLayerListener: (e: MouseEvent) => void;
+    clickToggleListener: (e: Event) => void;
     firstFocusable?: HTMLElement;
 };
 export type Options = {
@@ -30,11 +33,32 @@ export type Options = {
 };
 export type TPrompt = {
     el?: MaybeHTMLElement;
-    mounted: () => void;
     init: (command: Command) => void;
     toggle: (command: Command, options?: Options) => void;
     show: (command: Command, options?: Options) => void;
     hide: (command: Command, options?: Options) => void;
+    options?: Options;
+    /**
+     * Phoenix LiveView callback.
+     */
+    mounted: () => void;
+    /**
+     * Phoenix LiveView callback.
+     */
+    beforeUpdate: () => void;
+    /**
+     * Phoenix LiveView callback.
+     */
+    updated: () => void;
+    /**
+     * Phoenix LiveView callback.
+     */
+    destroyed: () => void;
+    /**
+     * Phoenix LiveView specific.
+     * Cached values of the dataset values of the root element, so that the state can be restored after an update.
+     */
+    _cache: CachedDataset;
 };
 export declare const Prompt: TPrompt;
 declare global {
