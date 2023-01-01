@@ -118,7 +118,7 @@ var clearDataset = (cache, id) => {
   delete cache[id];
 };
 var applyDataset = (dataset, el) => {
-  if (!el)
+  if (!el || !dataset)
     return;
   Object.keys(dataset).forEach((key) => {
     el.dataset[key] = dataset[key];
