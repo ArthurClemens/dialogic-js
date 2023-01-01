@@ -129,7 +129,7 @@ export const applyDataset = (
   dataset: DOMStringMap,
   el?: HTMLElement | null
 ) => {
-  if (!el) return;
+  if (!el || !dataset) return;
   Object.keys(dataset).forEach((key) => {
     el.dataset[key] = dataset[key];
   });
