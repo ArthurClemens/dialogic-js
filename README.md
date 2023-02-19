@@ -62,6 +62,8 @@ import { Prompt } from 'dialogic-js';
 import 'dialogic-js/dialogic-js.css';
 ```
 
+When using NextJS, use the JS import in client components.
+
 ### Adding to a Phoenix LiveView project
 
 Inside your assets folder, do:
@@ -386,6 +388,19 @@ If you have a dialog container with this markup:
 </div>
 ```
 
+With React:
+```jsx
+<div data-prompt id="my-prompt">
+  <button onClick={() => Prompt.show('#my-prompt')}>Show</button>
+  <div data-backdrop></div>
+  <div data-touch></div>
+  <div data-content>
+    Content
+    <button onClick={() => Prompt.hide('#my-prompt')}>Hide</button>
+  </div>
+</div>
+```
+
 When calling open from outside the prompt container, supply a selector:
 
 ```html
@@ -400,6 +415,8 @@ When calling open from outside the prompt container, supply a selector:
 
 <button onclick="Prompt.show('#my-dialog')">Show</button>
 ```
+
+With React, use the React example above.
 
 Opening, closing and toggling are done with these methods:
 
@@ -439,6 +456,15 @@ Example:
 </button>
 ```
 
+With React:
+```jsx
+<button
+  onClick={() => Prompt.show('#my-dialog', { didShow: (elements) => console.log('showing', elements) })}
+>
+  Open dialog
+</button>
+```
+
 #### `Prompt.hide`
 
 Hides an open dialog or menu.
@@ -461,6 +487,15 @@ Example:
 ```html
 <button
   onclick="Prompt.hide('#my-dialog', { didHide: (elements) => console.log('hidden', elements) })"
+>
+  Hide dialog
+</button>
+```
+
+With React:
+```jsx
+<button
+  onClick={() => Prompt.hide('#my-dialog', { didHide: (elements) => console.log('hidden', elements) })}
 >
   Hide dialog
 </button>
@@ -495,8 +530,14 @@ init: (command: Command) => void;
 
 Example:
 
-```htmls
+```html
 <details data-prompt ontoggle="Prompt.init(this)">
+```
+
+With React:
+
+```jsx
+<details data-prompt id="my-details" onToggle={() => Prompt.init('my-details')}>
 ```
 
 
@@ -554,6 +595,13 @@ With HTML markup, the details is initialized with `Prompt.init()`:
 </details>
 ```
 
+With React:
+```jsx
+<details data-prompt id="my-details" onToggle={() => Prompt.init('my-details')}>
+   ...
+</details>
+```
+
 The alternative approach, using a prompt instance:
 
 ```html
@@ -591,6 +639,11 @@ Add a wrapper around the `<dialog>` plus the required data attributes:
 <button onclick="Prompt.show('#my-dialog')">Open</button>
 ```
 
+With React, change the button tag to:
+```jsx
+<button onClick={() => Prompt.hide('#my-dialog')}>Close</button>
+```
+
 When using a form:
 
 ```html
@@ -609,6 +662,8 @@ When using a form:
   </dialog>
 </div>
 ```
+
+With React, change `onclick` to `onClick` like the example above.
 
 Improve dialog size and position with this CSS:
 

@@ -52,7 +52,10 @@ export const getDuration = (domElement: HTMLElement) => {
 export const repaint = (element: HTMLElement) => element.scrollTop;
 
 export const isVisible = (element: HTMLElement) => {
-  const style = window.getComputedStyle(element);
+  const style =
+    typeof window !== 'undefined'
+      ? window.getComputedStyle(element)
+      : ({} as CSSStyleDeclaration);
   if (style.opacity === '0' || style.display === 'none') {
     return false;
   }
