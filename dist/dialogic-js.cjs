@@ -101,7 +101,7 @@ var getDuration = (domElement) => {
 };
 var repaint = (element) => element.scrollTop;
 var isVisible = (element) => {
-  const style = window.getComputedStyle(element);
+  const style = typeof window !== "undefined" ? window.getComputedStyle(element) : {};
   if (style.opacity === "0" || style.display === "none") {
     return false;
   }
@@ -182,7 +182,7 @@ var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   if (options.didHide) {
     options.didHide(elements);
   }
-  if (isEscapable) {
+  if (isEscapable && typeof window !== "undefined") {
     window.removeEventListener("keydown", escapeListener);
   }
 });
@@ -205,7 +205,7 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
       delete root.dataset[IS_LOCKED_DATA];
     }
   }, LOCK_DURATION);
-  if (isEscapable) {
+  if (isEscapable && typeof window !== "undefined") {
     window.addEventListener("keydown", escapeListener);
   }
   if (isDetails) {
@@ -387,4 +387,6 @@ var Prompt = {
     });
   }
 };
-window.Prompt = Prompt;
+if (typeof window !== "undefined") {
+  window.Prompt = Prompt;
+}

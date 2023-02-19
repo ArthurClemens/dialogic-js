@@ -130,7 +130,7 @@ const hideView = async (
   if (options.didHide) {
     options.didHide(elements);
   }
-  if (isEscapable) {
+  if (isEscapable && typeof window !== 'undefined') {
     window.removeEventListener('keydown', escapeListener);
   }
 };
@@ -158,7 +158,7 @@ const showView = async (
     }
   }, LOCK_DURATION);
 
-  if (isEscapable) {
+  if (isEscapable && typeof window !== 'undefined') {
     window.addEventListener('keydown', escapeListener);
   }
   if (isDetails) {
@@ -372,4 +372,6 @@ declare global {
   }
 }
 
-window.Prompt = Prompt;
+if (typeof window !== 'undefined') {
+  window.Prompt = Prompt;
+}
