@@ -31,8 +31,8 @@
     "start": "npm run test:server",
     "lint": "eslint --ext .js,.ts,.tsx --fix .",
     "test:setup": "sh scripts/link-dist.sh",
-    "test:local": "npm run test:setup && run-p test:server test:open",
-    "test:ci": "npm run test:setup && run-p test:browser:chrome test:browser:firefox",
+    "test:i": "npm run test:setup && run-p test:server test:open",
+    "test": "npm run test:setup && run-p test:browser:chrome test:browser:firefox",
     "test:browser:chrome": "cypress run --browser chrome",
     "test:browser:firefox": "cypress run --browser firefox",
     "test:open": "cypress open --config '{\"specPattern\":[\"cypress/e2e/*.{cy,suite}.ts\"]}'"
