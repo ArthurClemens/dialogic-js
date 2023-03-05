@@ -29,6 +29,7 @@
     "build": "npm run dist:clean && npm run build:esm && npm run build:cjs && npm run build:minified && npm run build:types",
     "test:server": "http-server ./test",
     "start": "npm run test:server",
+    "lint": "eslint --ext .js,.ts,.tsx --fix .",
     "test:setup": "sh scripts/link-dist.sh",
     "test:local": "npm run test:setup && run-p test:server test:open",
     "test:ci": "npm run test:setup && run-p test:browser:chrome test:browser:firefox",
@@ -47,12 +48,24 @@
   },
   "homepage": "https://github.com/ArthurClemens/dialogic-js",
   "devDependencies": {
-    "@types/jest": "^29.2.6",
-    "cypress": "^12.3.0",
-    "esbuild": "^0.17.3",
+    "@types/jest": "^29.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "cypress": "^12.7.0",
+    "esbuild": "^0.17.11",
+    "eslint-config-prettier": "8.6.0",
+    "eslint-import-resolver-typescript": "3.5.3",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jest-dom": "4.0.3",
+    "eslint-plugin-json": "3.1.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-simple-import-sort": "10.0.0",
     "http-server": "^14.1.1",
+    "prettier": "^2.8.4",
     "start-server-and-test": "^2.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "npm-run-all": "^4.1.5"

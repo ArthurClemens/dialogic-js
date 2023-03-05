@@ -5,3 +5,4 @@ TARGET="${PWD}/test/dialogic-js"
 
 rm -rf ${TARGET}
 ln -s ${SOURCE} ${TARGET}
+rm -r "${TARGET}"/*.d.ts

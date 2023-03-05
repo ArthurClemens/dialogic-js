@@ -36,14 +36,14 @@ describe('PrimerCSS Select menu', () => {
 
   it('Closing using the touch layer should be possible after lock duration', () => {
     openDialog();
-    ensureInteractionPossible(selector, opts);
+    ensureInteractionPossible(selector);
     cy.get(`${selector} [data-touch]`).click({ force: true });
     verifyClosedState(selector, opts);
   });
 
   it('Selecting an item closes the menu', () => {
     openDialog();
-    ensureInteractionPossible(selector, opts);
+    ensureInteractionPossible(selector);
     cy.get(`${selector}`).contains('Item 3').click();
     verifyClosedState(selector, opts);
   });

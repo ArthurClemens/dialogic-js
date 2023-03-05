@@ -58,12 +58,12 @@ export const verifyOpenedState = (selector: string, optsParam: Opts = {}) => {
     cy.get(`${selector} [data-backdrop]`).should(
       'have.css',
       'display',
-      'block'
+      'block',
     );
     cy.get(`${selector} [data-backdrop]`).should(
       'have.css',
       'opacity',
-      opts.backdropOpacity?.toString()
+      opts.backdropOpacity?.toString(),
     );
   }
 
@@ -72,7 +72,7 @@ export const verifyOpenedState = (selector: string, optsParam: Opts = {}) => {
   cy.get(`${selector} [data-content]`).should(
     'have.css',
     'display',
-    opts.contentDisplay
+    opts.contentDisplay,
   );
   cy.get(`${selector} [data-content]`).should('have.css', 'opacity', '1');
 };
@@ -93,10 +93,7 @@ export const verifyClosedState = (selector: string, optsParam: Opts = {}) => {
   cy.get(`${selector} [data-content]`).should('not.be.visible');
 };
 
-export const ensureInteractionPossible = (
-  selector: string,
-  optsParam: Opts = {}
-) => {
+export const ensureInteractionPossible = (selector: string) => {
   cy.get(`${selector}[data-islocked]`).should('not.exist');
 };
 
@@ -105,10 +102,9 @@ export const typeEscape = () => cy.get('body').type('{esc}');
 export const getDrawerContentClientRect = (
   selector: string,
   callback: (elementRect: DOMRect, windowWidth: number) => unknown,
-  opts: Opts = {}
 ) => {
-  cy.get(`${selector} [data-content]`).then(($el) => {
-    cy.window().then(($window) => {
+  cy.get(`${selector} [data-content]`).then($el => {
+    cy.window().then($window => {
       return callback($el[0].getBoundingClientRect(), $window.innerWidth);
     });
   });

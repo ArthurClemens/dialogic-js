@@ -15,14 +15,14 @@ const SAFE_TRANSITION_DURATION = 400;
 const verifyScrolledContent = (
   selector: string,
   opts: Opts,
-  openDrawer: () => void
+  openDrawer: () => void,
 ) => {
   openDrawer();
   cy.wait(SAFE_TRANSITION_DURATION);
   verifyOpenedState(selector, opts);
   cy.get(`${selector} [data-drawer-content]`)
     .contains('Last')
-    .then(($el) => {
+    .then($el => {
       const el = $el.get(0);
       expect(el.getBoundingClientRect().top).greaterThan(700);
       el.scrollIntoView();
@@ -59,7 +59,7 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(selector, (rect: DOMRect) => {
         cy.wrap(rect.top).should('equal', 0);
         cy.wrap(rect.left).should('equal', 0);
@@ -86,7 +86,7 @@ describe('Drawer tests', () => {
 
     it('Closing using the touch layer should be possible after lock duration', () => {
       openDrawer();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click();
       verifyClosedState(selector, opts);
     });
@@ -105,14 +105,14 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(
         selector,
         (rect: DOMRect, windowWidth: number) => {
           cy.wrap(rect.top).should('equal', 0);
           cy.wrap(rect.right).should('be.lessThan', windowWidth + 1);
           cy.wrap(rect.right).should('be.greaterThan', windowWidth - 250);
-        }
+        },
       );
     });
 
@@ -134,7 +134,7 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(selector, (rect: DOMRect) => {
         cy.wrap(rect.top).should('equal', 0);
         cy.wrap(rect.left).should('equal', 0);
@@ -160,7 +160,7 @@ describe('Drawer tests', () => {
 
     it('Closing using the touch layer should still not be possible after lock duration', () => {
       openDrawer();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click();
       verifyOpenedState(selector, opts);
     });
@@ -191,7 +191,7 @@ describe('Drawer tests', () => {
 
     it('Closing using the touch layer should be possible after lock duration', () => {
       openDrawer();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click();
       verifyClosedState(selector, opts);
     });
@@ -210,7 +210,7 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(selector, (rect: DOMRect) => {
         cy.wrap(rect.top).should('be.greaterThan', 0);
         cy.wrap(rect.left).should('be.greaterThan', 0);
@@ -224,7 +224,7 @@ describe('Drawer tests', () => {
 
     it('Closing using the touch layer should be possible after lock duration', () => {
       openDrawer();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click();
       verifyClosedState(selector, opts);
     });
@@ -243,7 +243,7 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(selector, (rect: DOMRect) => {
         cy.wrap(rect.top).should('be.greaterThan', 0);
         cy.wrap(rect.left).should('be.greaterThan', 400);
@@ -263,37 +263,29 @@ describe('Drawer tests', () => {
     };
 
     const verifyOpenStateCurrentTest = () => {
-      getDrawerContentClientRect(
-        selector,
-        (rect: DOMRect) => {
-          cy.wrap(rect.width).should('be.greaterThan', 1200);
-          cy.wrap(rect.left).should('be.greaterThan', 0);
-          cy.wrap(rect.left).should('be.lessThan', 100);
-          cy.wrap(rect.right).should('be.greaterThan', 1200);
-        },
-        opts
-      );
+      getDrawerContentClientRect(selector, (rect: DOMRect) => {
+        cy.wrap(rect.width).should('be.greaterThan', 1200);
+        cy.wrap(rect.left).should('be.greaterThan', 0);
+        cy.wrap(rect.left).should('be.lessThan', 100);
+        cy.wrap(rect.right).should('be.greaterThan', 1200);
+      });
     };
 
     const verifyClosedStateCurrentTest = () => {
-      getDrawerContentClientRect(
-        selector,
-        (rect: DOMRect) => {
-          cy.wrap(rect.width).should('be.greaterThan', 1200);
-          cy.wrap(rect.left).should('be.lessThan', 0);
-          cy.wrap(rect.left).should('be.greaterThan', -300);
-          cy.wrap(rect.right).should('be.lessThan', 1200);
-          cy.wrap(rect.right).should('be.greaterThan', 900);
-        },
-        opts
-      );
+      getDrawerContentClientRect(selector, (rect: DOMRect) => {
+        cy.wrap(rect.width).should('be.greaterThan', 1200);
+        cy.wrap(rect.left).should('be.lessThan', 0);
+        cy.wrap(rect.left).should('be.greaterThan', -300);
+        cy.wrap(rect.right).should('be.lessThan', 1200);
+        cy.wrap(rect.right).should('be.greaterThan', 900);
+      });
     };
 
     it('Drawer should push content', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       verifyOpenStateCurrentTest();
     });
 
@@ -308,7 +300,7 @@ describe('Drawer tests', () => {
     it('Should close using a close button', () => {
       openDrawer();
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Close').click();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
@@ -322,7 +314,7 @@ describe('Drawer tests', () => {
 
     it('Closing using the touch layer should be possible after lock duration', () => {
       openDrawer();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
@@ -340,44 +332,36 @@ describe('Drawer tests', () => {
     };
 
     const verifyOpenStateCurrentTest = () => {
-      getDrawerContentClientRect(
-        selector,
-        (rect: DOMRect) => {
-          cy.wrap(rect.width).should('be.greaterThan', 1200);
-          cy.wrap(rect.left).should('be.lessThan', 0);
-          cy.wrap(rect.left).should('be.greaterThan', -300);
-          cy.wrap(rect.right).should('be.lessThan', 1200);
-          cy.wrap(rect.right).should('be.greaterThan', 900);
-        },
-        opts
-      );
+      getDrawerContentClientRect(selector, (rect: DOMRect) => {
+        cy.wrap(rect.width).should('be.greaterThan', 1200);
+        cy.wrap(rect.left).should('be.lessThan', 0);
+        cy.wrap(rect.left).should('be.greaterThan', -300);
+        cy.wrap(rect.right).should('be.lessThan', 1200);
+        cy.wrap(rect.right).should('be.greaterThan', 900);
+      });
     };
 
     const verifyClosedStateCurrentTest = () => {
-      getDrawerContentClientRect(
-        selector,
-        (rect: DOMRect) => {
-          cy.wrap(rect.width).should('be.greaterThan', 1200);
-          cy.wrap(rect.left).should('be.greaterThan', 0);
-          cy.wrap(rect.left).should('be.lessThan', 100);
-          cy.wrap(rect.right).should('be.greaterThan', 1200);
-        },
-        opts
-      );
+      getDrawerContentClientRect(selector, (rect: DOMRect) => {
+        cy.wrap(rect.width).should('be.greaterThan', 1200);
+        cy.wrap(rect.left).should('be.greaterThan', 0);
+        cy.wrap(rect.left).should('be.lessThan', 100);
+        cy.wrap(rect.right).should('be.greaterThan', 1200);
+      });
     };
 
     it('Drawer should push content from the right', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       verifyOpenStateCurrentTest();
     });
 
     it('Should close using a close button', () => {
       openDrawer();
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Close').click();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
@@ -408,14 +392,14 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(
         selector,
         (rect: DOMRect, windowWidth: number) => {
           cy.wrap(rect.top).should('equal', 0);
           cy.wrap(rect.right).should('be.lessThan', windowWidth + 1);
           cy.wrap(rect.right).should('be.greaterThan', windowWidth - 250);
-        }
+        },
       );
     });
   });
@@ -433,7 +417,7 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(selector, (rect: DOMRect) => {
         cy.wrap(rect.top).should('equal', 0);
         cy.wrap(rect.left).should('equal', 0);
@@ -454,7 +438,7 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(selector, (rect: DOMRect) => {
         cy.wrap(rect.top).should('be.greaterThan', 0);
         cy.wrap(rect.left).should('be.greaterThan', 400);
@@ -476,7 +460,7 @@ describe('Drawer tests', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       getDrawerContentClientRect(selector, (rect: DOMRect) => {
         cy.wrap(rect.top).should('be.greaterThan', 0);
         cy.wrap(rect.left).should('be.greaterThan', 0);
@@ -496,44 +480,36 @@ describe('Drawer tests', () => {
     };
 
     const verifyOpenStateCurrentTest = () => {
-      getDrawerContentClientRect(
-        selector,
-        (rect: DOMRect) => {
-          cy.wrap(rect.width).should('be.greaterThan', 1200);
-          cy.wrap(rect.left).should('be.lessThan', 0);
-          cy.wrap(rect.left).should('be.greaterThan', -300);
-          cy.wrap(rect.right).should('be.lessThan', 1200);
-          cy.wrap(rect.right).should('be.greaterThan', 900);
-        },
-        opts
-      );
+      getDrawerContentClientRect(selector, (rect: DOMRect) => {
+        cy.wrap(rect.width).should('be.greaterThan', 1200);
+        cy.wrap(rect.left).should('be.lessThan', 0);
+        cy.wrap(rect.left).should('be.greaterThan', -300);
+        cy.wrap(rect.right).should('be.lessThan', 1200);
+        cy.wrap(rect.right).should('be.greaterThan', 900);
+      });
     };
 
     const verifyClosedStateCurrentTest = () => {
-      getDrawerContentClientRect(
-        selector,
-        (rect: DOMRect) => {
-          cy.wrap(rect.width).should('be.greaterThan', 1200);
-          cy.wrap(rect.left).should('be.greaterThan', 0);
-          cy.wrap(rect.left).should('be.lessThan', 100);
-          cy.wrap(rect.right).should('be.greaterThan', 1200);
-        },
-        opts
-      );
+      getDrawerContentClientRect(selector, (rect: DOMRect) => {
+        cy.wrap(rect.width).should('be.greaterThan', 1200);
+        cy.wrap(rect.left).should('be.greaterThan', 0);
+        cy.wrap(rect.left).should('be.lessThan', 100);
+        cy.wrap(rect.right).should('be.greaterThan', 1200);
+      });
     };
 
     it('Drawer should push content from the right', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       verifyOpenStateCurrentTest();
     });
 
     it('Should close using a close button', () => {
       openDrawer();
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Close').click();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
@@ -551,44 +527,36 @@ describe('Drawer tests', () => {
     };
 
     const verifyOpenStateCurrentTest = () => {
-      getDrawerContentClientRect(
-        selector,
-        (rect: DOMRect) => {
-          cy.wrap(rect.width).should('be.greaterThan', 1200);
-          cy.wrap(rect.left).should('be.greaterThan', 0);
-          cy.wrap(rect.left).should('be.lessThan', 100);
-          cy.wrap(rect.right).should('be.greaterThan', 1200);
-        },
-        opts
-      );
+      getDrawerContentClientRect(selector, (rect: DOMRect) => {
+        cy.wrap(rect.width).should('be.greaterThan', 1200);
+        cy.wrap(rect.left).should('be.greaterThan', 0);
+        cy.wrap(rect.left).should('be.lessThan', 100);
+        cy.wrap(rect.right).should('be.greaterThan', 1200);
+      });
     };
 
     const verifyClosedStateCurrentTest = () => {
-      getDrawerContentClientRect(
-        selector,
-        (rect: DOMRect) => {
-          cy.wrap(rect.width).should('be.greaterThan', 1200);
-          cy.wrap(rect.left).should('be.lessThan', 0);
-          cy.wrap(rect.left).should('be.greaterThan', -300);
-          cy.wrap(rect.right).should('be.lessThan', 1200);
-          cy.wrap(rect.right).should('be.greaterThan', 900);
-        },
-        opts
-      );
+      getDrawerContentClientRect(selector, (rect: DOMRect) => {
+        cy.wrap(rect.width).should('be.greaterThan', 1200);
+        cy.wrap(rect.left).should('be.lessThan', 0);
+        cy.wrap(rect.left).should('be.greaterThan', -300);
+        cy.wrap(rect.right).should('be.lessThan', 1200);
+        cy.wrap(rect.right).should('be.greaterThan', 900);
+      });
     };
 
     it('Drawer should push content from the right', () => {
       openDrawer();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       verifyOpenStateCurrentTest();
     });
 
     it('Should close using a close button', () => {
       openDrawer();
       verifyOpenedState(selector, opts);
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Close').click();
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
@@ -623,13 +591,13 @@ describe('Drawer tests', () => {
       openLocalDrawer();
       verifyOpenedState(localSelector, localOpts);
       cy.get(localSelector).contains('Opened').should('be.visible');
-      ensureInteractionPossible(localSelector, localOpts);
+      ensureInteractionPossible(localSelector);
 
       // Open global drawer
       openGlobalDrawer();
       verifyOpenedState(globalSelector, globalOpts);
       cy.get(globalSelector).contains('Opened').should('be.visible');
-      ensureInteractionPossible(globalSelector, globalOpts);
+      ensureInteractionPossible(globalSelector);
 
       // Close global drawer first
       cy.get(`${globalSelector} [data-touch]`).click();
