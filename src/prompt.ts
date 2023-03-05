@@ -1,14 +1,14 @@
 import {
-  wait,
-  getDuration,
-  repaint,
-  isVisible,
-  getFirstFocusable,
-  CachedDataset,
   applyDataset,
+  CachedDataset,
   clearDataset,
+  getDuration,
+  getFirstFocusable,
+  isVisible,
   readDataset,
+  repaint,
   storeDataset,
+  wait,
 } from './util';
 
 type Command =
@@ -105,7 +105,7 @@ const LOCK_DURATION = 300; // Prevent the item from being closed or re-opened wh
 
 const hideView = async (
   elements: PromptElements,
-  options: Options = {} as Options
+  options: Options = {} as Options,
 ) => {
   const { content, root, isDetails, isEscapable, escapeListener } = elements;
 
@@ -137,7 +137,7 @@ const hideView = async (
 
 const showView = async (
   elements: PromptElements,
-  options: Options = {} as Options
+  options: Options = {} as Options,
 ) => {
   const {
     content,
@@ -195,7 +195,7 @@ const showView = async (
 const toggleView = async (
   elements: PromptElements,
   mode: MODE = MODE.TOGGLE,
-  options?: Options
+  options?: Options,
 ) => {
   switch (mode) {
     case MODE.SHOW:
@@ -215,7 +215,7 @@ const toggleView = async (
 const getElements = (
   promptElement?: MaybeHTMLElement,
   command?: Command,
-  options?: Options
+  options?: Options,
 ): PromptElements | undefined => {
   let root: MaybeHTMLElement = null;
 
@@ -261,7 +261,7 @@ const getElements = (
       if (e.key === 'Escape') {
         // Only close the top element
         const prompts = [].slice.call(
-          document.querySelectorAll(`${ROOT_SELECTOR}[data-${IS_OPEN_DATA}]`)
+          document.querySelectorAll(`${ROOT_SELECTOR}[data-${IS_OPEN_DATA}]`),
         );
         const topElement = prompts.reverse()[0];
         if (topElement === elements.root) {
@@ -309,7 +309,7 @@ async function init(
   prompt: TPrompt,
   command?: Command,
   options?: Options,
-  mode?: MODE
+  mode?: MODE,
 ) {
   prompt.options = {
     ...prompt.options,

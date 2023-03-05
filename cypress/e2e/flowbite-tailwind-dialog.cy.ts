@@ -53,10 +53,10 @@ describe('Flowbite / Tailwind dialog', () => {
   it('Closes the confirmation but keeps the main the dialog', () => {
     openMainDialog();
     verifyOpenedState(mainSelector, mainOpts);
-    ensureInteractionPossible(mainSelector, mainOpts);
+    ensureInteractionPossible(mainSelector);
     cy.get(mainSelector).contains('Decline').click();
     verifyOpenedState(confirmationSelector, confirmationOpts);
-    ensureInteractionPossible(confirmationSelector, confirmationOpts);
+    ensureInteractionPossible(confirmationSelector);
     cy.get(confirmationSelector).contains('No, cancel').click();
     verifyClosedState(confirmationSelector, confirmationOpts);
     verifyOpenedState(mainSelector, mainOpts);
@@ -65,10 +65,10 @@ describe('Flowbite / Tailwind dialog', () => {
   it('Closes both dialogs', () => {
     openMainDialog();
     verifyOpenedState(mainSelector, mainOpts);
-    ensureInteractionPossible(mainSelector, mainOpts);
+    ensureInteractionPossible(mainSelector);
     cy.get(mainSelector).contains('Decline').click();
     verifyOpenedState(confirmationSelector, confirmationOpts);
-    ensureInteractionPossible(confirmationSelector, confirmationOpts);
+    ensureInteractionPossible(confirmationSelector);
     cy.get(confirmationSelector).contains("Yes, I'm sure").click();
     verifyClosedState(confirmationSelector, confirmationOpts);
     verifyClosedState(mainSelector, mainOpts);
@@ -78,7 +78,7 @@ describe('Flowbite / Tailwind dialog', () => {
     openBothDialogs();
     verifyOpenedState(mainSelector, mainOpts);
     verifyOpenedState(confirmationSelector, confirmationOpts);
-    ensureInteractionPossible(confirmationSelector, confirmationOpts);
+    ensureInteractionPossible(confirmationSelector);
     cy.get(confirmationSelector).contains("I'm sure").click();
     verifyClosedState(confirmationSelector, confirmationOpts);
     verifyClosedState(mainSelector, mainOpts);
