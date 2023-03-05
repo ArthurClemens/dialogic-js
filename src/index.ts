@@ -1,2 +1,3 @@
-export * from "./prompt";
-import "./prompt.css";
+import './prompt.css';
+
+export * from './prompt';

@@ -1,4 +1,4 @@
-export const wait = (m: number) => new Promise((r) => setTimeout(r, m));
+export const wait = (m: number) => new Promise(r => setTimeout(r, m));
 
 const getPropertyValue = (style: CSSStyleDeclaration, props: string[]) =>
   props.reduce((acc, prop) => {
@@ -75,7 +75,7 @@ const isFocusable = (el: HTMLElement, interactiveOnly?: boolean) => {
       HTMLSelectElement,
       HTMLTextAreaElement,
       HTMLButtonElement,
-    ].some((elClass) => el instanceof elClass) &&
+    ].some(elClass => el instanceof elClass) &&
       !(
         el as
           | HTMLInputElement
@@ -96,11 +96,11 @@ export const getFirstFocusable = (content: HTMLElement) => {
   const focusable = (
     [].slice.call(
       content.querySelectorAll(
-        "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])"
-      )
+        "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+      ),
     ) as HTMLElement[]
   )
-    .filter((el) => isFocusable(el, true))
+    .filter(el => isFocusable(el, true))
     .sort((a, b) => a.tabIndex - b.tabIndex);
   return focusable[0];
 };
@@ -110,7 +110,7 @@ export type CachedDataset = Record<string, string>;
 export const storeDataset = (
   cache: CachedDataset,
   id?: string,
-  dataset?: DOMStringMap
+  dataset?: DOMStringMap,
 ) => {
   if (!id) return;
   if (!cache[id]) {
@@ -130,10 +130,10 @@ export const clearDataset = (cache: CachedDataset, id?: string) => {
 
 export const applyDataset = (
   dataset: DOMStringMap,
-  el?: HTMLElement | null
+  el?: HTMLElement | null,
 ) => {
   if (!el || !dataset) return;
-  Object.keys(dataset).forEach((key) => {
+  Object.keys(dataset).forEach(key => {
     el.dataset[key] = dataset[key];
   });
 };

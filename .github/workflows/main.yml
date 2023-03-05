@@ -63,4 +63,4 @@ jobs:
       - name: Cypress tests
         uses: cypress-io/github-action@v4
         with:
-          start: npm run test:ci
+          start: npm run test

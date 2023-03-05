@@ -86,7 +86,7 @@ describe('Dialog element tests', () => {
 
     it('Closing using the touch layer should be possible after lock duration', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click({ force: true });
       verifyClosedState(selector, opts);
     });
@@ -136,7 +136,7 @@ describe('Dialog element tests', () => {
 
     it('Closing using the touch layer should still not be possible after lock duration', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click({ force: true });
       verifyOpenedState(selector, opts);
     });
@@ -167,9 +167,6 @@ describe('Dialog element tests', () => {
     const openDialog = () => {
       cy.get(selector).contains('Open dialog').click();
     };
-    const opts: Opts = {
-      isBackdrop: true,
-    };
 
     it('Should not set focus to the first input element', () => {
       openDialog();
@@ -182,9 +179,6 @@ describe('Dialog element tests', () => {
     const openDialog = () => {
       cy.get(selector).contains('Open dialog').click();
     };
-    const opts: Opts = {
-      isBackdrop: true,
-    };
 
     it('Should set focus to the first input element', () => {
       openDialog();
@@ -193,7 +187,7 @@ describe('Dialog element tests', () => {
 
     it('Should close the dialog', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Cancel').click();
     });
   });
@@ -203,9 +197,6 @@ describe('Dialog element tests', () => {
     const openDialog = () => {
       cy.get(selector).contains('Open dialog').click();
     };
-    const opts: Opts = {
-      isBackdrop: true,
-    };
 
     it('Should set focus to the second input element', () => {
       openDialog();
@@ -214,7 +205,7 @@ describe('Dialog element tests', () => {
 
     it('Should close the dialog', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Cancel').click();
     });
   });
@@ -255,10 +246,10 @@ describe('Dialog element tests', () => {
     it('Closes the confirmation but keeps the main the dialog', () => {
       openMainDialog();
       verifyOpenedState(mainSelector, opts);
-      ensureInteractionPossible(mainSelector, opts);
+      ensureInteractionPossible(mainSelector);
       cy.get(mainSelector).contains('Decline').click();
       verifyOpenedState(confirmationSelector, opts);
-      ensureInteractionPossible(confirmationSelector, opts);
+      ensureInteractionPossible(confirmationSelector);
       cy.get(confirmationSelector).contains('Cancel').click();
       verifyClosedState(confirmationSelector, opts);
       verifyOpenedState(mainSelector, opts);
@@ -267,10 +258,10 @@ describe('Dialog element tests', () => {
     it('Closes both dialogs', () => {
       openMainDialog();
       verifyOpenedState(mainSelector, opts);
-      ensureInteractionPossible(mainSelector, opts);
+      ensureInteractionPossible(mainSelector);
       cy.get(mainSelector).contains('Decline').click();
       verifyOpenedState(confirmationSelector, opts);
-      ensureInteractionPossible(confirmationSelector, opts);
+      ensureInteractionPossible(confirmationSelector);
       cy.get(confirmationSelector).contains("I'm sure").click();
       verifyClosedState(confirmationSelector, opts);
       verifyClosedState(mainSelector, opts);
@@ -280,7 +271,7 @@ describe('Dialog element tests', () => {
       openBothDialogs();
       verifyOpenedState(mainSelector, opts);
       verifyOpenedState(confirmationSelector, opts);
-      ensureInteractionPossible(confirmationSelector, opts);
+      ensureInteractionPossible(confirmationSelector);
       cy.get(confirmationSelector).contains("I'm sure").click();
       verifyClosedState(confirmationSelector, opts);
       verifyClosedState(mainSelector, opts);
@@ -290,7 +281,7 @@ describe('Dialog element tests', () => {
       openBothDialogs();
       verifyOpenedState(mainSelector, opts);
       verifyOpenedState(confirmationSelector, opts);
-      ensureInteractionPossible(confirmationSelector, opts);
+      ensureInteractionPossible(confirmationSelector);
       typeEscape();
       verifyClosedState(confirmationSelector, opts);
       verifyOpenedState(mainSelector, opts);

@@ -37,7 +37,7 @@ describe('Pico dialog', () => {
 
     it('Closing using the touch layer should be possible after lock duration', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click({ force: true });
       verifyClosedState(selector, opts);
     });
@@ -50,7 +50,7 @@ describe('Pico dialog', () => {
 
     it('Closing using the cancel button should be possible after lock duration', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Cancel').click();
       verifyClosedState(selector, opts);
     });
@@ -83,7 +83,7 @@ describe('Pico dialog', () => {
 
     it('Closing using the cancel button should be possible after lock duration', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Cancel').click();
       verifyClosedState(selector, opts);
     });
@@ -115,7 +115,7 @@ describe('Pico dialog', () => {
 
     it('Closing using the touch layer should be possible after lock duration', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click({ force: true });
       verifyClosedState(selector, opts);
     });
@@ -128,7 +128,7 @@ describe('Pico dialog', () => {
 
     it('Closing using the cancel button should be possible after lock duration', () => {
       openDialog();
-      ensureInteractionPossible(selector, opts);
+      ensureInteractionPossible(selector);
       cy.get(selector).contains('Cancel').click();
       verifyClosedState(selector, opts);
     });
