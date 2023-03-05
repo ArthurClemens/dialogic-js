@@ -39,6 +39,7 @@ This is a basic reimplementation of [dialogic](http://github.com/ArthurClemens/d
 - [Custom styles](#custom-styles)
   - [CSS Variables](#css-variables)
   - [Conditional CSS](#conditional-css)
+- [Sizes](#sizes)
 
 ## Installation
 
@@ -727,4 +728,17 @@ You can use [@import](https://developer.mozilla.org/en-US/docs/Web/CSS/@import) 
 /* app.css */
 
 @import url("./dialogic-js.css") only screen and (min-width: 544px);
+```
+
+## Sizes
+
+```
+dist/dialogic-js.js   11.3kb
+dist/dialogic-js.css   7.2kb
+
+dist/dialogic-js.cjs  12.1kb
+dist/dialogic-js.css   7.2kb
+
+dist/dialogic-js.min.css  6.4kb
+dist/dialogic-js.min.js   4.9kb
 ```
