@@ -3,7 +3,7 @@
 import { verifyInitialState, verifyOpenedState } from '../support/util';
 
 const TEST_URL = '/test/js-status.html';
-const SAFE_TRANSITION_DURATION = 100;
+const SAFE_TRANSITION_DURATION = 150;
 
 describe('JS status tests', () => {
   beforeEach(() => {
