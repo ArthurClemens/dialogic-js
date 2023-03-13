@@ -18,6 +18,7 @@ const verifyScrolledContent = (
   openDrawer: () => void,
 ) => {
   openDrawer();
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(SAFE_TRANSITION_DURATION);
   verifyOpenedState(selector, opts);
   cy.get(`${selector} [data-drawer-content]`)
@@ -57,6 +58,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be positioned at the left', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -103,6 +105,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be positioned at the right', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -132,6 +135,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be smaller', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -208,6 +212,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be local', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -241,6 +246,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be local, positioned at the right', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -283,6 +289,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should push content', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -302,6 +309,7 @@ describe('Drawer tests', () => {
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
       cy.get(selector).contains('Close').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
     });
@@ -316,6 +324,7 @@ describe('Drawer tests', () => {
       openDrawer();
       ensureInteractionPossible(selector);
       cy.get(`${selector} [data-touch]`).click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
     });
@@ -352,6 +361,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should push content from the right', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -363,6 +373,7 @@ describe('Drawer tests', () => {
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
       cy.get(selector).contains('Close').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
     });
@@ -390,6 +401,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be positioned at the right', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -415,6 +427,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be positioned at the left', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -436,6 +449,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be positioned at the right', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -458,6 +472,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should be local, positioned at the left', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -500,6 +515,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should push content from the right', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -511,6 +527,7 @@ describe('Drawer tests', () => {
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
       cy.get(selector).contains('Close').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
     });
@@ -547,6 +564,7 @@ describe('Drawer tests', () => {
 
     it('Drawer should push content from the right', () => {
       openDrawer();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
@@ -558,6 +576,7 @@ describe('Drawer tests', () => {
       verifyOpenedState(selector, opts);
       ensureInteractionPossible(selector);
       cy.get(selector).contains('Close').click();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(SAFE_TRANSITION_DURATION);
       verifyClosedStateCurrentTest();
     });

@@ -283,10 +283,12 @@ describe('Base dialog tests', () => {
       verifyOpenedState(confirmationSelector, opts);
       ensureInteractionPossible(confirmationSelector);
       typeEscape();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(300);
       verifyClosedState(confirmationSelector, opts);
       verifyOpenedState(mainSelector, opts);
       typeEscape();
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(300);
       verifyClosedState(confirmationSelector, opts);
       verifyClosedState(mainSelector, opts);

@@ -30,6 +30,7 @@ enum MODE {
 type MaybeHTMLElement = HTMLElement | null;
 
 type PromptElements = {
+  prompt: TPrompt;
   content: HTMLElement;
   root: HTMLElement;
   isDetails: boolean;
@@ -53,12 +54,21 @@ export type Options = {
   isIgnoreLockDuration?: boolean;
 };
 
+export type Status = {
+  isOpen: boolean;
+  willShow: boolean;
+  didShow: boolean;
+  willHide: boolean;
+  didHide: boolean;
+};
+
 export type TPrompt = {
   el?: MaybeHTMLElement;
   init: (command: Command) => void;
   toggle: (command: Command, options?: Options) => void;
   show: (command: Command, options?: Options) => void;
   hide: (command: Command, options?: Options) => void;
+  getStatus: (command: Command) => Status;
   options?: Options;
 
   /**
@@ -77,6 +87,8 @@ export type TPrompt = {
    * Phoenix LiveView callback.
    */
   destroyed: () => void;
+
+  status: Status;
 
   /**
    * Phoenix LiveView specific.
@@ -103,11 +115,20 @@ const IS_LOCKED_DATA = 'islocked';
 // Other
 const LOCK_DURATION = 300; // Prevent the item from being closed or re-opened when it has just been opened.
 
+const INITIAL_STATUS = {
+  isOpen: false,
+  willShow: false,
+  didShow: false,
+  willHide: false,
+  didHide: false,
+};
+
 const hideView = async (
   elements: PromptElements,
   options: Options = {} as Options,
 ) => {
-  const { content, root, isDetails, isEscapable, escapeListener } = elements;
+  const { prompt, content, root, isDetails, isEscapable, escapeListener } =
+    elements;
 
   if (
     root.dataset[IS_LOCKED_DATA] !== undefined &&
@@ -115,9 +136,17 @@ const hideView = async (
   ) {
     return;
   }
+
+  prompt.status = {
+    ...INITIAL_STATUS,
+    isOpen: true, // still open while hiding
+    willHide: true,
+  };
+
   if (options.willHide) {
     options.willHide(elements);
   }
+
   delete root.dataset[IS_SHOWING_DATA];
   root.dataset[IS_HIDING_DATA] = '';
   const duration = getDuration(content);
@@ -127,9 +156,16 @@ const hideView = async (
   }
   delete root.dataset[IS_HIDING_DATA];
   delete root.dataset[IS_OPEN_DATA];
+
+  prompt.status = {
+    ...INITIAL_STATUS,
+    didHide: true,
+  };
+
   if (options.didHide) {
     options.didHide(elements);
   }
+
   if (isEscapable && typeof window !== 'undefined') {
     window.removeEventListener('keydown', escapeListener);
   }
@@ -140,6 +176,7 @@ const showView = async (
   options: Options = {} as Options,
 ) => {
   const {
+    prompt,
     content,
     root,
     isDetails,
@@ -169,6 +206,11 @@ const showView = async (
   repaint(root);
   root.dataset[IS_SHOWING_DATA] = '';
 
+  prompt.status = {
+    ...INITIAL_STATUS,
+    willShow: true,
+  };
+
   if (options.willShow) {
     options.willShow(elements);
   }
@@ -187,6 +229,13 @@ const showView = async (
       firstFocusable.focus();
     }
   }
+
+  prompt.status = {
+    ...INITIAL_STATUS,
+    didShow: true,
+    isOpen: true,
+  };
+
   if (options.didShow) {
     options.didShow(elements);
   }
@@ -213,6 +262,7 @@ const toggleView = async (
 };
 
 const getElements = (
+  prompt: TPrompt,
   promptElement?: MaybeHTMLElement,
   command?: Command,
   options?: Options,
@@ -248,6 +298,7 @@ const getElements = (
   const focusFirstSelector = root.dataset[FOCUS_FIRST_SELECTOR_DATA];
 
   const elements: PromptElements = {
+    prompt,
     root,
     isDetails,
     isModal,
@@ -315,7 +366,7 @@ async function init(
     ...prompt.options,
     ...options,
   };
-  const elements = getElements(prompt.el, command, prompt.options);
+  const elements = getElements(prompt, prompt.el, command, prompt.options);
   if (elements === undefined) {
     return;
   }
@@ -352,6 +403,10 @@ export const Prompt: TPrompt = {
   destroyed() {
     clearDataset(this._cache, this.el?.id);
   },
+  getStatus() {
+    return this.status;
+  },
+  status: INITIAL_STATUS,
   async init(command: Command, options?: Options) {
     await init(this, command, options);
   },

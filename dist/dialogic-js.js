@@ -139,11 +139,23 @@ var IS_SHOWING_DATA = "isshowing";
 var IS_HIDING_DATA = "ishiding";
 var IS_LOCKED_DATA = "islocked";
 var LOCK_DURATION = 300;
+var INITIAL_STATUS = {
+  isOpen: false,
+  willShow: false,
+  didShow: false,
+  willHide: false,
+  didHide: false
+};
 var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, options = {}) {
-  const { content, root, isDetails, isEscapable, escapeListener } = elements;
+  const { prompt, content, root, isDetails, isEscapable, escapeListener } = elements;
   if (root.dataset[IS_LOCKED_DATA] !== void 0 && !options.isIgnoreLockDuration) {
     return;
   }
+  prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
+    isOpen: true,
+    // still open while hiding
+    willHide: true
+  });
   if (options.willHide) {
     options.willHide(elements);
   }
@@ -156,6 +168,9 @@ var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   }
   delete root.dataset[IS_HIDING_DATA];
   delete root.dataset[IS_OPEN_DATA];
+  prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
+    didHide: true
+  });
   if (options.didHide) {
     options.didHide(elements);
   }
@@ -165,6 +180,7 @@ var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
 });
 var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, options = {}) {
   const {
+    prompt,
     content,
     root,
     isDetails,
@@ -191,6 +207,9 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   root.dataset[IS_OPEN_DATA] = "";
   repaint(root);
   root.dataset[IS_SHOWING_DATA] = "";
+  prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
+    willShow: true
+  });
   if (options.willShow) {
     options.willShow(elements);
   }
@@ -207,6 +226,10 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
       firstFocusable.focus();
     }
   }
+  prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
+    didShow: true,
+    isOpen: true
+  });
   if (options.didShow) {
     options.didShow(elements);
   }
@@ -226,7 +249,7 @@ var toggleView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements
     }
   }
 });
-var getElements = (promptElement, command, options) => {
+var getElements = (prompt, promptElement, command, options) => {
   let root = null;
   if (!command && promptElement) {
     root = promptElement;
@@ -252,6 +275,7 @@ var getElements = (promptElement, command, options) => {
   const isFocusFirst = root.dataset[IS_FOCUS_FIRST_DATA] !== void 0;
   const focusFirstSelector = root.dataset[FOCUS_FIRST_SELECTOR_DATA];
   const elements = {
+    prompt,
     root,
     isDetails,
     isModal,
@@ -306,7 +330,7 @@ var initTouchEvents = (elements) => {
 function init(prompt, command, options, mode) {
   return __async(this, null, function* () {
     prompt.options = __spreadValues(__spreadValues({}, prompt.options), options);
-    const elements = getElements(prompt.el, command, prompt.options);
+    const elements = getElements(prompt, prompt.el, command, prompt.options);
     if (elements === void 0) {
       return;
     }
@@ -343,6 +367,10 @@ var Prompt = {
     var _a;
     clearDataset(this._cache, (_a = this.el) == null ? void 0 : _a.id);
   },
+  getStatus() {
+    return this.status;
+  },
+  status: INITIAL_STATUS,
   init(command, options) {
     return __async(this, null, function* () {
       yield init(this, command, options);

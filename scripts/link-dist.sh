@@ -1,4 +1,3 @@
-
 SOURCE="${PWD}/dist"
 TARGET="${PWD}/test/dialogic-js"
 
