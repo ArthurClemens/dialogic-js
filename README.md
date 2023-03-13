@@ -33,6 +33,7 @@ This is a basic reimplementation of [dialogic](http://github.com/ArthurClemens/d
     - [`Prompt.hide`](#prompthide)
     - [`Prompt.toggle`](#prompttoggle)
     - [`Prompt.init`](#promptinit)
+    - [`Prompt.status`](#promptstatus)
   - [JavaScript: Methods on a Prompt instance](#javascript-methods-on-a-prompt-instance)
 - [Support for the details element](#support-for-the-details-element)
 - [Support for the dialog element](#support-for-the-dialog-element)
@@ -417,7 +418,7 @@ When calling open from outside the prompt container, supply a selector:
 <button onclick="Prompt.show('#my-dialog')">Show</button>
 ```
 
-With React, use the React example above.
+With React, use the React example with "onClick" above.
 
 Opening, closing and toggling are done with these methods:
 
@@ -426,11 +427,17 @@ Opening, closing and toggling are done with these methods:
 - `Prompt.toggle`
 - `Prompt.init`
 
+The prompt status can be read with `Prompt.status`
+
 **Types used below**
 
 See `dist/prompt.d.ts`
 
 #### `Prompt.show`
+
+```js
+Prompt.show('#my-dialog');
+```
 
 Shows a closed dialog or menu.
 
@@ -468,6 +475,10 @@ With React:
 
 #### `Prompt.hide`
 
+```js
+Prompt.hide('#my-dialog');
+```
+
 Hides an open dialog or menu.
 
 ```ts
@@ -504,6 +515,10 @@ With React:
 
 #### `Prompt.toggle`
 
+```js
+Prompt.toggle('#my-dialog');
+```
+
 Dependent on the current state: shows a closed dialog or menu or hides an open dialog or menu.
 
 ```ts
@@ -523,6 +538,10 @@ Optionally pass options with callback functions:
 
 #### `Prompt.init`
 
+```js
+Prompt.init('#my-dialog');
+```
+
 When used with `<details>`: initializes the prompt and shows the detail content
 
 ```ts
@@ -541,6 +560,23 @@ With React:
 <details data-prompt id="my-details" onToggle={() => Prompt.init('my-details')}>
 ```
 
+#### `Prompt.status`
+
+```js
+const status = Prompt.getStatus('#my-dialog');
+```
+
+Returns an object with type `Status`:
+
+```ts
+type Status = {
+  isOpen: boolean;
+  willShow: boolean;
+  didShow: boolean;
+  willHide: boolean;
+  didHide: boolean;
+};
+```
 
 ### JavaScript: Methods on a Prompt instance
 

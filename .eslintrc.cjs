@@ -7,7 +7,11 @@ module.exports = {
     browser: false,
     es6: true,
   },
-  extends: ['prettier', 'plugin:jsx-a11y/recommended'],
+  extends: [
+    'prettier',
+    'plugin:jsx-a11y/recommended',
+    'plugin:cypress/recommended',
+  ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
