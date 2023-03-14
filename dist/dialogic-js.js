@@ -211,7 +211,6 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
     willShow: true
   });
   (_a = options.willShow) == null ? void 0 : _a.call(options, elements);
-  console.log("options.getStatus", options.getStatus);
   (_b = options.getStatus) == null ? void 0 : _b.call(options, prompt.status);
   const duration = getDuration(content);
   yield wait(duration);
