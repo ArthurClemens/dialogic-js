@@ -46,20 +46,21 @@ type PromptElements = {
   firstFocusable?: HTMLElement;
 };
 
-export type Options = {
-  willShow?: (elements?: PromptElements) => void;
-  didShow?: (elements?: PromptElements) => void;
-  willHide?: (elements?: PromptElements) => void;
-  didHide?: (elements?: PromptElements) => void;
-  isIgnoreLockDuration?: boolean;
-};
-
-export type Status = {
+export type PromptStatus = {
   isOpen: boolean;
   willShow: boolean;
   didShow: boolean;
   willHide: boolean;
   didHide: boolean;
+};
+
+export type Options = {
+  willShow?: (elements?: PromptElements) => void;
+  didShow?: (elements?: PromptElements) => void;
+  willHide?: (elements?: PromptElements) => void;
+  didHide?: (elements?: PromptElements) => void;
+  getStatus?: (status: PromptStatus) => void;
+  isIgnoreLockDuration?: boolean;
 };
 
 export type TPrompt = {
@@ -68,7 +69,7 @@ export type TPrompt = {
   toggle: (command: Command, options?: Options) => void;
   show: (command: Command, options?: Options) => void;
   hide: (command: Command, options?: Options) => void;
-  getStatus: (command: Command) => Status;
+
   options?: Options;
 
   /**
@@ -88,7 +89,7 @@ export type TPrompt = {
    */
   destroyed: () => void;
 
-  status: Status;
+  status: PromptStatus;
 
   /**
    * Phoenix LiveView specific.
@@ -115,7 +116,7 @@ const IS_LOCKED_DATA = 'islocked';
 // Other
 const LOCK_DURATION = 300; // Prevent the item from being closed or re-opened when it has just been opened.
 
-const INITIAL_STATUS = {
+const INITIAL_STATUS: PromptStatus = {
   isOpen: false,
   willShow: false,
   didShow: false,
@@ -143,9 +144,8 @@ const hideView = async (
     willHide: true,
   };
 
-  if (options.willHide) {
-    options.willHide(elements);
-  }
+  options.willHide?.(elements);
+  options.getStatus?.(prompt.status);
 
   delete root.dataset[IS_SHOWING_DATA];
   root.dataset[IS_HIDING_DATA] = '';
@@ -161,10 +161,8 @@ const hideView = async (
     ...INITIAL_STATUS,
     didHide: true,
   };
-
-  if (options.didHide) {
-    options.didHide(elements);
-  }
+  options.getStatus?.(prompt.status);
+  options.didHide?.(elements);
 
   if (isEscapable && typeof window !== 'undefined') {
     window.removeEventListener('keydown', escapeListener);
@@ -211,9 +209,8 @@ const showView = async (
     willShow: true,
   };
 
-  if (options.willShow) {
-    options.willShow(elements);
-  }
+  options.willShow?.(elements);
+  options.getStatus?.(prompt.status);
 
   const duration = getDuration(content);
   await wait(duration);
@@ -236,9 +233,8 @@ const showView = async (
     isOpen: true,
   };
 
-  if (options.didShow) {
-    options.didShow(elements);
-  }
+  options.didShow?.(elements);
+  options.getStatus?.(prompt.status);
 };
 
 const toggleView = async (
@@ -402,9 +398,6 @@ export const Prompt: TPrompt = {
   },
   destroyed() {
     clearDataset(this._cache, this.el?.id);
-  },
-  getStatus() {
-    return this.status;
   },
   status: INITIAL_STATUS,
   async init(command: Command, options?: Options) {

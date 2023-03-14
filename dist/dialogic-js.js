@@ -147,6 +147,7 @@ var INITIAL_STATUS = {
   didHide: false
 };
 var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, options = {}) {
+  var _a, _b, _c, _d;
   const { prompt, content, root, isDetails, isEscapable, escapeListener } = elements;
   if (root.dataset[IS_LOCKED_DATA] !== void 0 && !options.isIgnoreLockDuration) {
     return;
@@ -156,9 +157,8 @@ var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
     // still open while hiding
     willHide: true
   });
-  if (options.willHide) {
-    options.willHide(elements);
-  }
+  (_a = options.willHide) == null ? void 0 : _a.call(options, elements);
+  (_b = options.getStatus) == null ? void 0 : _b.call(options, prompt.status);
   delete root.dataset[IS_SHOWING_DATA];
   root.dataset[IS_HIDING_DATA] = "";
   const duration = getDuration(content);
@@ -171,14 +171,14 @@ var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
     didHide: true
   });
-  if (options.didHide) {
-    options.didHide(elements);
-  }
+  (_c = options.getStatus) == null ? void 0 : _c.call(options, prompt.status);
+  (_d = options.didHide) == null ? void 0 : _d.call(options, elements);
   if (isEscapable && typeof window !== "undefined") {
     window.removeEventListener("keydown", escapeListener);
   }
 });
 var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, options = {}) {
+  var _a, _b, _c, _d;
   const {
     prompt,
     content,
@@ -210,9 +210,9 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
     willShow: true
   });
-  if (options.willShow) {
-    options.willShow(elements);
-  }
+  (_a = options.willShow) == null ? void 0 : _a.call(options, elements);
+  console.log("options.getStatus", options.getStatus);
+  (_b = options.getStatus) == null ? void 0 : _b.call(options, prompt.status);
   const duration = getDuration(content);
   yield wait(duration);
   if (isFocusFirst) {
@@ -230,9 +230,8 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
     didShow: true,
     isOpen: true
   });
-  if (options.didShow) {
-    options.didShow(elements);
-  }
+  (_c = options.didShow) == null ? void 0 : _c.call(options, elements);
+  (_d = options.getStatus) == null ? void 0 : _d.call(options, prompt.status);
 });
 var toggleView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, mode = 2 /* TOGGLE */, options) {
   switch (mode) {
@@ -366,9 +365,6 @@ var Prompt = {
   destroyed() {
     var _a;
     clearDataset(this._cache, (_a = this.el) == null ? void 0 : _a.id);
-  },
-  getStatus() {
-    return this.status;
   },
   status: INITIAL_STATUS,
   init(command, options) {

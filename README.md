@@ -33,7 +33,6 @@ This is a basic reimplementation of [dialogic](http://github.com/ArthurClemens/d
     - [`Prompt.hide`](#prompthide)
     - [`Prompt.toggle`](#prompttoggle)
     - [`Prompt.init`](#promptinit)
-    - [`Prompt.status`](#promptstatus)
   - [JavaScript: Methods on a Prompt instance](#javascript-methods-on-a-prompt-instance)
 - [Support for the details element](#support-for-the-details-element)
 - [Support for the dialog element](#support-for-the-dialog-element)
@@ -427,8 +426,6 @@ Opening, closing and toggling are done with these methods:
 - `Prompt.toggle`
 - `Prompt.init`
 
-The prompt status can be read with `Prompt.status`
-
 **Types used below**
 
 See `dist/prompt.d.ts`
@@ -533,6 +530,7 @@ Optionally pass options with callback functions:
   didShow: (elements: PromptElements) => void;
   willHide: (elements: PromptElements) => void;
   didHide: (elements: PromptElements) => void;
+  getStatus: (status: PromptStatus) => void;
 }
 ```
 
@@ -560,23 +558,6 @@ With React:
 <details data-prompt id="my-details" onToggle={() => Prompt.init('my-details')}>
 ```
 
-#### `Prompt.status`
-
-```js
-const status = Prompt.getStatus('#my-dialog');
-```
-
-Returns an object with type `Status`:
-
-```ts
-type Status = {
-  isOpen: boolean;
-  willShow: boolean;
-  didShow: boolean;
-  willHide: boolean;
-  didHide: boolean;
-};
-```
 
 ### JavaScript: Methods on a Prompt instance
 

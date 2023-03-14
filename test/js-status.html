@@ -7,36 +7,35 @@
       href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css"
     />
     <link href="./dialogic-js/dialogic-js.min.css" rel="stylesheet" />
-    <script type="module" src="./dialogic-js/dialogic-js.min.js"></script>
+    <script type="module" src="./dialogic-js/dialogic-js.js"></script>
     <script type="module" defer>
-      const button = document.querySelector('#open-dialog');
-      const btnStatus = document.querySelector('#btn-status');
-      const status = document.querySelector('#status');
+      const openDialogButton = document.querySelector('#open-dialog');
+      const openDummyButton = document.querySelector('#open-dummy');
+      const closeDummyButton = document.querySelector('#close-dummy');
+      const statusDialogEl = document.querySelector('#status-dialog');
+      const statusDummyEl = document.querySelector('#status-dummy');
 
-      if (btnStatus) {
-        btnStatus.addEventListener('click', () => {
-          const promptStatus = Prompt.getStatus('#dialog');
-          status.textContent = JSON.stringify(promptStatus);
-        });
-        btnStatus.click();
-      }
-
-      if (button && status) {
-        button.addEventListener('click', () => {
+      if (openDialogButton) {
+        openDialogButton.addEventListener('click', () => {
           Prompt.show('#dialog', {
-            willShow: () => {
-              setTimeout(() => btnStatus.click(), 100);
-            },
-            didShow: () => {
-              setTimeout(() => btnStatus.click(), 100);
-            },
-            willHide: () => {
-              setTimeout(() => btnStatus.click(), 100);
-            },
-            didHide: () => {
-              setTimeout(() => btnStatus.click(), 100);
+            getStatus: status => {
+              statusDialogEl.textContent = JSON.stringify(status);
             },
           });
+        });
+      }
+      if (openDummyButton) {
+        openDummyButton.addEventListener('click', () => {
+          Prompt.show('#dummy', {
+            getStatus: status => {
+              statusDummyEl.textContent = JSON.stringify(status);
+            },
+          });
+        });
+      }
+      if (closeDummyButton) {
+        closeDummyButton.addEventListener('click', () => {
+          Prompt.hide('#dummy');
         });
       }
     </script>
@@ -53,6 +52,10 @@
       body {
         padding: 2em;
       }
+      /* Slow transition for testing */
+      #dialog {
+        --prompt-transition-duration-content: 500ms;
+      }
     </style>
   </head>
 
@@ -62,19 +65,32 @@
       type="button"
       id="open-dialog"
     >
-      Open
+      Open dialog
     </button>
-
     <button
+      class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
       type="button"
-      id="btn-status"
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      onclick="Prompt.getStatus(this)"
+      id="open-dummy"
     >
-      Status
+      Open dummy
+    </button>
+    <button
+      class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+      type="button"
+      id="close-dummy"
+    >
+      Close dummy
     </button>
 
-    <p id="status">Status...</p>
+    <h2 class="text-2xl font-bold">Dialog status</h2>
+    <p id="status-dialog">Status...</p>
+
+    <h2 class="text-2xl font-bold">Dummy status</h2>
+    <p id="status-dummy">Status...</p>
+
+    <div id="dummy" data-prompt>
+      <div data-content>Dummy</div>
+    </div>
 
     <div id="dialog" data-prompt data-ismodal>
       <div data-touch>
