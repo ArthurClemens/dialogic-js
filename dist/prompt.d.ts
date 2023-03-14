@@ -25,19 +25,20 @@ type PromptElements = {
     clickToggleListener: (e: Event) => void;
     firstFocusable?: HTMLElement;
 };
-export type Options = {
-    willShow?: (elements?: PromptElements) => void;
-    didShow?: (elements?: PromptElements) => void;
-    willHide?: (elements?: PromptElements) => void;
-    didHide?: (elements?: PromptElements) => void;
-    isIgnoreLockDuration?: boolean;
-};
-export type Status = {
+export type PromptStatus = {
     isOpen: boolean;
     willShow: boolean;
     didShow: boolean;
     willHide: boolean;
     didHide: boolean;
+};
+export type Options = {
+    willShow?: (elements?: PromptElements) => void;
+    didShow?: (elements?: PromptElements) => void;
+    willHide?: (elements?: PromptElements) => void;
+    didHide?: (elements?: PromptElements) => void;
+    getStatus?: (status: PromptStatus) => void;
+    isIgnoreLockDuration?: boolean;
 };
 export type TPrompt = {
     el?: MaybeHTMLElement;
@@ -45,7 +46,6 @@ export type TPrompt = {
     toggle: (command: Command, options?: Options) => void;
     show: (command: Command, options?: Options) => void;
     hide: (command: Command, options?: Options) => void;
-    getStatus: (command: Command) => Status;
     options?: Options;
     /**
      * Phoenix LiveView callback.
@@ -63,7 +63,7 @@ export type TPrompt = {
      * Phoenix LiveView callback.
      */
     destroyed: () => void;
-    status: Status;
+    status: PromptStatus;
     /**
      * Phoenix LiveView specific.
      * Cached values of the dataset values of the root element, so that the state can be restored after an update.
