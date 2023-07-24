@@ -274,7 +274,7 @@ const getElements = (
   }
 
   if (!root) {
-    console.error("Prompt element 'data-root' not found");
+    console.error("Prompt element 'data-prompt' not found");
     return undefined;
   }
   const content: MaybeHTMLElement = root.querySelector(CONTENT_SELECTOR);
