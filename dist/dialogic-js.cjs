@@ -87,25 +87,21 @@ var getFirstFocusable = (content) => {
   return focusable[0];
 };
 var storeDataset = (cache, id, dataset) => {
-  if (!id)
-    return;
+  if (!id) return;
   if (!cache[id]) {
     cache[id] = JSON.stringify(dataset);
   }
 };
 var readDataset = (cache, id) => {
-  if (!id)
-    return;
+  if (!id) return;
   return JSON.parse(cache[id]);
 };
 var clearDataset = (cache, id) => {
-  if (!id)
-    return;
+  if (!id) return;
   delete cache[id];
 };
 var applyDataset = (dataset, el) => {
-  if (!el || !dataset)
-    return;
+  if (!el || !dataset) return;
   Object.keys(dataset).forEach((key) => {
     el.dataset[key] = dataset[key];
   });
