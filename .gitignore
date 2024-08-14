@@ -3,3 +3,4 @@ node_modules
 test/dialogic-js
 cypress/videos
 cypress/screenshots
+cypress/downloads/downloads.html
