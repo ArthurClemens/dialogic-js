@@ -1,43 +1,3 @@
-var __defProp = Object.defineProperty;
-var __defProps = Object.defineProperties;
-var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a, b) => {
-  for (var prop in b ||= {})
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    }
-  return a;
-};
-var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-var __async = (__this, __arguments, generator) => {
-  return new Promise((resolve, reject) => {
-    var fulfilled = (value) => {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    };
-    var rejected = (value) => {
-      try {
-        step(generator.throw(value));
-      } catch (e) {
-        reject(e);
-      }
-    };
-    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
-    step((generator = generator.apply(__this, __arguments)).next());
-  });
-};
-
 // src/util.ts
 var wait = (m) => new Promise((r) => setTimeout(r, m));
 var getPropertyValue = (style, props) => props.reduce((acc, prop) => {
@@ -146,39 +106,39 @@ var INITIAL_STATUS = {
   willHide: false,
   didHide: false
 };
-var hideView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, options = {}) {
-  var _a, _b, _c, _d;
+var hideView = async (elements, options = {}) => {
   const { prompt, content, root, isDetails, isEscapable, escapeListener } = elements;
   if (root.dataset[IS_LOCKED_DATA] !== void 0 && !options.isIgnoreLockDuration) {
     return;
   }
-  prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
+  prompt.status = {
+    ...INITIAL_STATUS,
     isOpen: true,
     // still open while hiding
     willHide: true
-  });
-  (_a = options.willHide) == null ? void 0 : _a.call(options, elements);
-  (_b = options.getStatus) == null ? void 0 : _b.call(options, prompt.status);
+  };
+  options.willHide?.(elements);
+  options.getStatus?.(prompt.status);
   delete root.dataset[IS_SHOWING_DATA];
   root.dataset[IS_HIDING_DATA] = "";
   const duration = getDuration(content);
-  yield wait(duration);
+  await wait(duration);
   if (isDetails) {
     root.removeAttribute("open");
   }
   delete root.dataset[IS_HIDING_DATA];
   delete root.dataset[IS_OPEN_DATA];
-  prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
+  prompt.status = {
+    ...INITIAL_STATUS,
     didHide: true
-  });
-  (_c = options.getStatus) == null ? void 0 : _c.call(options, prompt.status);
-  (_d = options.didHide) == null ? void 0 : _d.call(options, elements);
+  };
+  options.getStatus?.(prompt.status);
+  options.didHide?.(elements);
   if (isEscapable && typeof window !== "undefined") {
     window.removeEventListener("keydown", escapeListener);
   }
-});
-var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, options = {}) {
-  var _a, _b, _c, _d;
+};
+var showView = async (elements, options = {}) => {
   const {
     prompt,
     content,
@@ -207,13 +167,14 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
   root.dataset[IS_OPEN_DATA] = "";
   repaint(root);
   root.dataset[IS_SHOWING_DATA] = "";
-  prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
+  prompt.status = {
+    ...INITIAL_STATUS,
     willShow: true
-  });
-  (_a = options.willShow) == null ? void 0 : _a.call(options, elements);
-  (_b = options.getStatus) == null ? void 0 : _b.call(options, prompt.status);
+  };
+  options.willShow?.(elements);
+  options.getStatus?.(prompt.status);
   const duration = getDuration(content);
-  yield wait(duration);
+  await wait(duration);
   if (isFocusFirst) {
     const firstFocusable = getFirstFocusable(content);
     if (firstFocusable) {
@@ -225,28 +186,29 @@ var showView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, 
       firstFocusable.focus();
     }
   }
-  prompt.status = __spreadProps(__spreadValues({}, INITIAL_STATUS), {
+  prompt.status = {
+    ...INITIAL_STATUS,
     didShow: true,
     isOpen: true
-  });
-  (_c = options.didShow) == null ? void 0 : _c.call(options, elements);
-  (_d = options.getStatus) == null ? void 0 : _d.call(options, prompt.status);
-});
-var toggleView = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (elements, mode = 2 /* TOGGLE */, options) {
+  };
+  options.didShow?.(elements);
+  options.getStatus?.(prompt.status);
+};
+var toggleView = async (elements, mode = 2 /* TOGGLE */, options) => {
   switch (mode) {
     case 0 /* SHOW */:
-      return yield showView(elements, options);
+      return await showView(elements, options);
     case 1 /* HIDE */:
-      return yield hideView(elements, options);
+      return await hideView(elements, options);
     default: {
       if (isVisible(elements.content)) {
-        return yield hideView(elements, options);
+        return await hideView(elements, options);
       } else {
-        return yield showView(elements, options);
+        return await showView(elements, options);
       }
     }
   }
-});
+};
 var getElements = (prompt, promptElement, command, options) => {
   let root = null;
   if (!command && promptElement) {
@@ -257,7 +219,7 @@ var getElements = (prompt, promptElement, command, options) => {
     root = command.closest(ROOT_SELECTOR);
   }
   if (!root) {
-    console.error("Prompt element 'data-root' not found");
+    console.error("Prompt element 'data-prompt' not found");
     return void 0;
   }
   const content = root.querySelector(CONTENT_SELECTOR);
@@ -290,7 +252,7 @@ var getElements = (prompt, promptElement, command, options) => {
         );
         const topElement = prompts.reverse()[0];
         if (topElement === elements.root) {
-          hideView(elements, __spreadProps(__spreadValues({}, options), { isIgnoreLockDuration: true }));
+          hideView(elements, { ...options, isIgnoreLockDuration: true });
         }
       }
     },
@@ -325,66 +287,56 @@ var initTouchEvents = (elements) => {
     touchLayer.dataset.registered = "";
   }
 };
-function init(prompt, command, options, mode) {
-  return __async(this, null, function* () {
-    prompt.options = __spreadValues(__spreadValues({}, prompt.options), options);
-    const elements = getElements(prompt, prompt.el, command, prompt.options);
-    if (elements === void 0) {
-      return;
-    }
-    if (!prompt.el) {
-      prompt.el = elements == null ? void 0 : elements.root;
-    }
-    initToggleEvents(elements);
-    initTouchEvents(elements);
-    const { root, isDetails } = elements;
-    const isOpen = isDetails && root.getAttribute("open") !== null;
-    if (isOpen && mode !== 1 /* HIDE */) {
-      showView(elements, prompt.options);
-    }
-    if (mode !== void 0) {
-      yield toggleView(elements, mode, prompt.options);
-    }
-  });
+async function init(prompt, command, options, mode) {
+  prompt.options = {
+    ...prompt.options,
+    ...options
+  };
+  const elements = getElements(prompt, prompt.el, command, prompt.options);
+  if (elements === void 0) {
+    return;
+  }
+  if (!prompt.el) {
+    prompt.el = elements?.root;
+  }
+  initToggleEvents(elements);
+  initTouchEvents(elements);
+  const { root, isDetails } = elements;
+  const isOpen = isDetails && root.getAttribute("open") !== null;
+  if (isOpen && mode !== 1 /* HIDE */) {
+    showView(elements, prompt.options);
+  }
+  if (mode !== void 0) {
+    await toggleView(elements, mode, prompt.options);
+  }
 }
 var Prompt = {
   _cache: {},
   mounted() {
   },
   beforeUpdate() {
-    var _a, _b;
-    storeDataset(this._cache, (_a = this.el) == null ? void 0 : _a.id, (_b = this.el) == null ? void 0 : _b.dataset);
+    storeDataset(this._cache, this.el?.id, this.el?.dataset);
   },
   updated() {
-    var _a, _b;
-    const dataset = readDataset(this._cache, (_a = this.el) == null ? void 0 : _a.id);
+    const dataset = readDataset(this._cache, this.el?.id);
     applyDataset(dataset, this.el);
-    clearDataset(this._cache, (_b = this.el) == null ? void 0 : _b.id);
+    clearDataset(this._cache, this.el?.id);
   },
   destroyed() {
-    var _a;
-    clearDataset(this._cache, (_a = this.el) == null ? void 0 : _a.id);
+    clearDataset(this._cache, this.el?.id);
   },
   status: INITIAL_STATUS,
-  init(command, options) {
-    return __async(this, null, function* () {
-      yield init(this, command, options);
-    });
+  async init(command, options) {
+    await init(this, command, options);
   },
-  toggle(command, options) {
-    return __async(this, null, function* () {
-      yield init(this, command, options, 2 /* TOGGLE */);
-    });
+  async toggle(command, options) {
+    await init(this, command, options, 2 /* TOGGLE */);
   },
-  show(command, options) {
-    return __async(this, null, function* () {
-      yield init(this, command, options, 0 /* SHOW */);
-    });
+  async show(command, options) {
+    await init(this, command, options, 0 /* SHOW */);
   },
-  hide(command, options) {
-    return __async(this, null, function* () {
-      yield init(this, command, options, 1 /* HIDE */);
-    });
+  async hide(command, options) {
+    await init(this, command, options, 1 /* HIDE */);
   }
 };
 if (typeof window !== "undefined") {
