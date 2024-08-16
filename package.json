@@ -26,7 +26,7 @@
     "build:esm": "esbuild src/index.ts --bundle --format=esm --outfile=dist/dialogic-js.js",
     "build:cjs": "esbuild src/index.ts --bundle --format=cjs --outfile=dist/dialogic-js.cjs",
     "build:types": "./node_modules/typescript/bin/tsc --p tsconfig.gen.json",
-    "build": "npm run dist:clean && npm run build:esm && npm run build:cjs && npm run build:minified && npm run build:types",
+    "build": "npm run dist:clean && npm run build:types && npm run build:esm && npm run build:cjs && npm run build:minified",
     "test:server": "http-server -c-1 ./test",
     "start": "npm run test:server",
     "lint": "eslint --ext .js,.ts,.tsx --fix .",

@@ -10,8 +10,12 @@
   --prompt-transition-timing-function-content: ease-in-out;
   --prompt-transition-duration-content: 180ms;
   --prompt-fast-transition-duration-content: 140ms;
-  --prompt-transition-duration-backdrop: var(--prompt-transition-duration-content);
-  --prompt-fast-transition-duration-backdrop: var(--prompt-fast-transition-duration-content);
+  --prompt-transition-duration-backdrop: var(
+    --prompt-transition-duration-content
+  );
+  --prompt-fast-transition-duration-backdrop: var(
+    --prompt-fast-transition-duration-content
+  );
   /* drawer */
   --drawer-width: 320px;
   /* z-index */
@@ -27,26 +31,32 @@ GENERAL
 /* Hide inner elements as long as prompt is not open */
 [data-prompt] [data-touch],
 [data-prompt] [data-backdrop],
-[data-prompt] [data-content] {
+[data-prompt] [data-content],
+[data-prompt] [data-prompt-content] {
+  pointer-events: none;
+}
+[data-prompt] [data-touch] {
   display: none;
 }
 
+/* Restore pointer-events, but ignore any clicks on the backdrop layer. */
 [data-prompt][data-isopen] [data-touch],
-[data-prompt][data-isopen] [data-backdrop],
-[data-prompt][data-isopen] [data-content] {
+[data-prompt][data-isopen] [data-content],
+[data-prompt][data-isopen] [data-prompt-content] {
+  pointer-events: unset;
+}
+[data-prompt][data-isopen] [data-touch] {
   display: block;
 }
 
-/* Ignore any clicks on the backdrop layer. */
-[data-prompt] [data-backdrop] {
-  pointer-events: none;
-}
-
 /* Reset any conflicting animation styles set on dialogs */
-[data-prompt] [data-content]:not([aria-role="menu"]) {
+[data-prompt] [data-content]:not([aria-role='menu']) {
   animation-name: unset;
   animation-duration: unset;
   animation-timing-function: unset;
+}
+[data-prompt] [data-content][aria-role='menu'] {
+  animation-duration: unset;
 }
 
 /* Set content size and set up fade */
@@ -62,8 +72,8 @@ TOUCH AND BACKDROP
 ----------------------------------------------------- */
 
 /* Touch and backdrop overlays */
-[data-prompt][data-isopen] [data-touch],
-[data-prompt][data-isopen] [data-backdrop] {
+[data-prompt] [data-touch],
+[data-prompt] [data-backdrop] {
   position: fixed;
   top: 0;
   right: 0;
@@ -72,12 +82,12 @@ TOUCH AND BACKDROP
 }
 
 /* Touch layer z-index */
-[data-prompt][data-isopen] [data-touch] {
+[data-prompt] [data-touch] {
   z-index: var(--prompt-z-index-touch);
 }
 
 /* Backdrop layer z-index */
-[data-prompt][data-isopen] [data-backdrop] {
+[data-prompt] [data-backdrop] {
   z-index: var(--prompt-z-index-backdrop);
 }
 
@@ -100,17 +110,17 @@ TOUCH AND BACKDROP
 }
 
 /* Backdrop medium opacity */
-[data-prompt][data-isshowing] [data-backdrop] {
+[data-prompt][data-isopen] [data-backdrop] {
   opacity: var(--prompt-background-opacity-backdrop-medium);
 }
 
 /* Backdrop dark opacity */
-[data-prompt][data-isshowing] [data-backdrop][data-isdark] {
+[data-prompt][data-isopen] [data-backdrop][data-isdark] {
   opacity: var(--prompt-background-opacity-backdrop-dark);
 }
 
 /* Backdrop light opacity */
-[data-prompt][data-isshowing] [data-backdrop][data-islight] {
+[data-prompt][data-isopen] [data-backdrop][data-islight] {
   opacity: var(--prompt-background-opacity-backdrop-light);
 }
 
@@ -120,7 +130,7 @@ DIALOG
 
 /* Set positioning of dialogs (excluding menus and the dialog element) */
 /* The dialog element has a specific (native) way of positioning, so we only position on the vertical axis here */
-[data-prompt]:not([data-isdrawer]) [data-content]:not([aria-role="menu"]) {
+[data-prompt]:not([data-isdrawer]) [data-content]:not([aria-role='menu']) {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
@@ -129,7 +139,8 @@ DIALOG
 }
 
 /* Center on screen */
-[data-prompt]:not([data-isdrawer]) [data-content]:not([aria-role="menu"]):not(dialog) {
+[data-prompt]:not([data-isdrawer])
+  [data-content]:not([aria-role='menu']):not(dialog) {
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -145,7 +156,7 @@ DIALOG
 }
 
 /* Appear: fade in */
-[data-prompt]:not([data-isdrawer])[data-isshowing] [data-content] {
+[data-prompt]:not([data-isdrawer])[data-isopen] [data-content] {
   opacity: 1;
 }
 
@@ -190,7 +201,7 @@ DRAWER
 }
 
 /* Position at start (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer] [data-content] {
+[dir='rtl'] [data-prompt][data-isdrawer] [data-content] {
   left: auto;
   right: 0;
   transform: translateX(100%);
@@ -204,21 +215,21 @@ DRAWER
 }
 
 /* Position at end (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-isfarside] [data-content] {
+[dir='rtl'] [data-prompt][data-isdrawer][data-isfarside] [data-content] {
   left: 0;
   right: auto;
   transform: translateX(-100%);
 }
 
 /* Appear: slide in */
-[data-prompt][data-isdrawer][data-isshowing] [data-content],
-[dir="rtl"] [data-prompt][data-isdrawer][data-isshowing] [data-content] {
+[data-prompt][data-isdrawer][data-isopen] [data-content],
+[dir='rtl'] [data-prompt][data-isdrawer][data-isopen] [data-content] {
   transform: translateX(0);
 }
 
 /* Local drawer */
-[data-prompt][data-isopen][data-islocal] [data-touch],
-[data-prompt][data-isopen][data-islocal] [data-backdrop],
+[data-prompt][data-isdrawer][data-islocal] [data-touch],
+[data-prompt][data-isdrawer][data-islocal] [data-backdrop],
 [data-prompt][data-isdrawer][data-islocal] [data-content] {
   position: absolute;
   z-index: initial;
@@ -252,13 +263,15 @@ DRAWER
 }
 
 /* Push drawer: content shift: position at start (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-ispush] [data-content] {
+[dir='rtl'] [data-prompt][data-isdrawer][data-ispush] [data-content] {
   padding-left: 0;
   padding-right: var(--drawer-width);
 }
 
 /* Push drawer: content shift: position at end (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-ispush][data-isfarside] [data-content] {
+[dir='rtl']
+  [data-prompt][data-isdrawer][data-ispush][data-isfarside]
+  [data-content] {
   padding-left: var(--drawer-width);
   padding-right: 0;
 }
@@ -281,19 +294,22 @@ DRAWER
 }
 
 /* Push drawer: position at end */
-[data-prompt][data-isdrawer][data-ispush][data-isfarside] [data-drawer-content] {
+[data-prompt][data-isdrawer][data-ispush][data-isfarside]
+  [data-drawer-content] {
   left: auto;
   right: 0;
 }
 
 /* Push drawer: position at start (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-ispush] [data-drawer-content] {
+[dir='rtl'] [data-prompt][data-isdrawer][data-ispush] [data-drawer-content] {
   left: auto;
   right: 0;
 }
 
 /* Push drawer: position at end (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-ispush][data-isfarside] [data-drawer-content] {
+[dir='rtl']
+  [data-prompt][data-isdrawer][data-ispush][data-isfarside]
+  [data-drawer-content] {
   left: 0;
   right: auto;
 }
@@ -310,31 +326,38 @@ DRAWER
 }
 
 /* Push drawer: appear: slide in */
-[data-prompt][data-isdrawer][data-ispush][data-isshowing] [data-content] {
+[data-prompt][data-isdrawer][data-ispush][data-isopen] [data-content] {
   transform: translateX(0);
 }
 
 /* Push drawer, position at end: appear: slide in */
-[data-prompt][data-isdrawer][data-ispush][data-isfarside][data-isshowing] [data-content] {
+[data-prompt][data-isdrawer][data-ispush][data-isfarside][data-isopen]
+  [data-content] {
   transform: translateX(calc(-1 * var(--drawer-width)));
 }
 
 /* Push drawer: default content position (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-ispush] [data-content] {
+[dir='rtl'] [data-prompt][data-isdrawer][data-ispush] [data-content] {
   transform: translateX(var(--drawer-width));
 }
 
 /* Push drawer: appear: slide in (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-ispush][data-isshowing] [data-content] {
+[dir='rtl']
+  [data-prompt][data-isdrawer][data-ispush][data-isopen]
+  [data-content] {
   transform: translateX(0);
 }
 
 /* Push drawer: content position, position at end (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-ispush][data-isfarside] [data-content] {
+[dir='rtl']
+  [data-prompt][data-isdrawer][data-ispush][data-isfarside]
+  [data-content] {
   transform: translateX(0);
 }
 
 /* Push drawer: appear: slide in (RTL) */
-[dir="rtl"] [data-prompt][data-isdrawer][data-ispush][data-isfarside][data-isshowing] [data-content] {
+[dir='rtl']
+  [data-prompt][data-isdrawer][data-ispush][data-isfarside][data-isopen]
+  [data-content] {
   transform: translateX(var(--drawer-width));
 }

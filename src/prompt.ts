@@ -39,6 +39,7 @@ type PromptElements = {
   isFocusFirst?: boolean;
   focusFirstSelector?: string;
   touchLayer?: MaybeHTMLElement;
+  backdropLayer?: MaybeHTMLElement;
   toggle?: MaybeHTMLElement;
   escapeListener: (e: KeyboardEvent) => void;
   clickTouchLayerListener: (e: MouseEvent) => void;
@@ -61,6 +62,7 @@ export type Options = {
   didHide?: (elements?: PromptElements) => void;
   getStatus?: (status: PromptStatus) => void;
   isIgnoreLockDuration?: boolean;
+  transitionDuration?: number;
 };
 
 export type TPrompt = {
@@ -102,6 +104,7 @@ export type TPrompt = {
 const ROOT_SELECTOR = '[data-prompt]';
 const CONTENT_SELECTOR = '[data-content]';
 const TOUCH_SELECTOR = '[data-touch]';
+const BACKDROP_SELECTOR = '[data-backdrop]';
 const TOGGLE_SELECTOR = '[data-toggle]';
 // Modifier arguments
 const IS_MODAL_DATA = 'ismodal';
@@ -110,8 +113,6 @@ const IS_FOCUS_FIRST_DATA = 'isfocusfirst';
 const FOCUS_FIRST_SELECTOR_DATA = 'focusfirst';
 // Internal state and CSS
 const IS_OPEN_DATA = 'isopen';
-const IS_SHOWING_DATA = 'isshowing';
-const IS_HIDING_DATA = 'ishiding';
 const IS_LOCKED_DATA = 'islocked';
 // Other
 const LOCK_DURATION = 300; // Prevent the item from being closed or re-opened when it has just been opened.
@@ -147,15 +148,21 @@ const hideView = async (
   options.willHide?.(elements);
   options.getStatus?.(prompt.status);
 
-  delete root.dataset[IS_SHOWING_DATA];
-  root.dataset[IS_HIDING_DATA] = '';
+  delete root.dataset[IS_OPEN_DATA];
+
   const duration = getDuration(content);
   await wait(duration);
+
   if (isDetails) {
     root.removeAttribute('open');
   }
-  delete root.dataset[IS_HIDING_DATA];
-  delete root.dataset[IS_OPEN_DATA];
+
+  /* If dialog element: close */
+  if (content.tagName == 'DIALOG') {
+    const dialog = content as HTMLDialogElement;
+    dialog.close();
+    repaint(content);
+  }
 
   prompt.status = {
     ...INITIAL_STATUS,
@@ -198,11 +205,11 @@ const showView = async (
   }
   if (isDetails) {
     root.setAttribute('open', '');
+    repaint(root);
   }
 
   root.dataset[IS_OPEN_DATA] = '';
   repaint(root);
-  root.dataset[IS_SHOWING_DATA] = '';
 
   prompt.status = {
     ...INITIAL_STATUS,
@@ -287,6 +294,7 @@ const getElements = (
   const toggle: MaybeHTMLElement =
     root.querySelector(TOGGLE_SELECTOR) || root.querySelector('summary');
   const touchLayer: MaybeHTMLElement = root.querySelector(TOUCH_SELECTOR);
+  const backdropLayer: MaybeHTMLElement = root.querySelector(BACKDROP_SELECTOR);
   const isDetails = root.tagName === 'DETAILS';
   const isModal = root.dataset[IS_MODAL_DATA] !== undefined;
   const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== undefined;
@@ -304,6 +312,7 @@ const getElements = (
     toggle,
     content,
     touchLayer,
+    backdropLayer,
     escapeListener: function (e: KeyboardEvent) {
       if (e.key === 'Escape') {
         // Only close the top element
@@ -320,7 +329,6 @@ const getElements = (
       if (e.target !== touchLayer) {
         return;
       }
-      e.stopPropagation();
       if (!isModal) {
         toggleView(elements, MODE.HIDE, options);
       }
@@ -369,11 +377,39 @@ async function init(
   if (!prompt.el) {
     prompt.el = elements?.root;
   }
+  const { root, content, isDetails, backdropLayer } = elements;
+
+  /* Set transition duration override */
+  if (options?.transitionDuration) {
+    content.style.setProperty(
+      '--prompt-transition-duration-content',
+      `${options.transitionDuration}ms`,
+    );
+    content.style.setProperty(
+      '--prompt-fast-transition-duration-content',
+      `${options.transitionDuration}ms`,
+    );
+    if (backdropLayer) {
+      backdropLayer.style.setProperty(
+        '--prompt-transition-duration-backdrop',
+        `${options.transitionDuration}ms`,
+      );
+      backdropLayer.style.setProperty(
+        '--prompt-fast-transition-duration-backdrop',
+        `${options.transitionDuration}ms`,
+      );
+    }
+  }
+
+  /* If dialog element: open */
+  if (content.tagName == 'DIALOG') {
+    const dialog = content as HTMLDialogElement;
+    dialog.show();
+    repaint(content);
+  }
 
   initToggleEvents(elements);
   initTouchEvents(elements);
-
-  const { root, isDetails } = elements;
 
   const isOpen = isDetails && root.getAttribute('open') !== null;
   if (isOpen && mode !== MODE.HIDE) {

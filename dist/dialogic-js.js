@@ -85,14 +85,13 @@ var applyDataset = (dataset, el) => {
 var ROOT_SELECTOR = "[data-prompt]";
 var CONTENT_SELECTOR = "[data-content]";
 var TOUCH_SELECTOR = "[data-touch]";
+var BACKDROP_SELECTOR = "[data-backdrop]";
 var TOGGLE_SELECTOR = "[data-toggle]";
 var IS_MODAL_DATA = "ismodal";
 var IS_ESCAPABLE_DATA = "isescapable";
 var IS_FOCUS_FIRST_DATA = "isfocusfirst";
 var FOCUS_FIRST_SELECTOR_DATA = "focusfirst";
 var IS_OPEN_DATA = "isopen";
-var IS_SHOWING_DATA = "isshowing";
-var IS_HIDING_DATA = "ishiding";
 var IS_LOCKED_DATA = "islocked";
 var LOCK_DURATION = 300;
 var INITIAL_STATUS = {
@@ -115,15 +114,17 @@ var hideView = async (elements, options = {}) => {
   };
   options.willHide?.(elements);
   options.getStatus?.(prompt.status);
-  delete root.dataset[IS_SHOWING_DATA];
-  root.dataset[IS_HIDING_DATA] = "";
+  delete root.dataset[IS_OPEN_DATA];
   const duration = getDuration(content);
   await wait(duration);
   if (isDetails) {
     root.removeAttribute("open");
   }
-  delete root.dataset[IS_HIDING_DATA];
-  delete root.dataset[IS_OPEN_DATA];
+  if (content.tagName == "DIALOG") {
+    const dialog = content;
+    dialog.close();
+    repaint(content);
+  }
   prompt.status = {
     ...INITIAL_STATUS,
     didHide: true
@@ -159,10 +160,10 @@ var showView = async (elements, options = {}) => {
   }
   if (isDetails) {
     root.setAttribute("open", "");
+    repaint(root);
   }
   root.dataset[IS_OPEN_DATA] = "";
   repaint(root);
-  root.dataset[IS_SHOWING_DATA] = "";
   prompt.status = {
     ...INITIAL_STATUS,
     willShow: true
@@ -225,6 +226,7 @@ var getElements = (prompt, promptElement, command, options) => {
   }
   const toggle = root.querySelector(TOGGLE_SELECTOR) || root.querySelector("summary");
   const touchLayer = root.querySelector(TOUCH_SELECTOR);
+  const backdropLayer = root.querySelector(BACKDROP_SELECTOR);
   const isDetails = root.tagName === "DETAILS";
   const isModal = root.dataset[IS_MODAL_DATA] !== void 0;
   const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== void 0;
@@ -241,6 +243,7 @@ var getElements = (prompt, promptElement, command, options) => {
     toggle,
     content,
     touchLayer,
+    backdropLayer,
     escapeListener: function(e) {
       if (e.key === "Escape") {
         const prompts = [].slice.call(
@@ -256,7 +259,6 @@ var getElements = (prompt, promptElement, command, options) => {
       if (e.target !== touchLayer) {
         return;
       }
-      e.stopPropagation();
       if (!isModal) {
         toggleView(elements, 1 /* HIDE */, options);
       }
@@ -295,9 +297,34 @@ async function init(prompt, command, options, mode) {
   if (!prompt.el) {
     prompt.el = elements?.root;
   }
+  const { root, content, isDetails, backdropLayer } = elements;
+  if (options?.transitionDuration) {
+    content.style.setProperty(
+      "--prompt-transition-duration-content",
+      `${options.transitionDuration}ms`
+    );
+    content.style.setProperty(
+      "--prompt-fast-transition-duration-content",
+      `${options.transitionDuration}ms`
+    );
+    if (backdropLayer) {
+      backdropLayer.style.setProperty(
+        "--prompt-transition-duration-backdrop",
+        `${options.transitionDuration}ms`
+      );
+      backdropLayer.style.setProperty(
+        "--prompt-fast-transition-duration-backdrop",
+        `${options.transitionDuration}ms`
+      );
+    }
+  }
+  if (content.tagName == "DIALOG") {
+    const dialog = content;
+    dialog.show();
+    repaint(content);
+  }
   initToggleEvents(elements);
   initTouchEvents(elements);
-  const { root, isDetails } = elements;
   const isOpen = isDetails && root.getAttribute("open") !== null;
   if (isOpen && mode !== 1 /* HIDE */) {
     showView(elements, prompt.options);

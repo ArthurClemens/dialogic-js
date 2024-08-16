@@ -19,6 +19,7 @@ type PromptElements = {
     isFocusFirst?: boolean;
     focusFirstSelector?: string;
     touchLayer?: MaybeHTMLElement;
+    backdropLayer?: MaybeHTMLElement;
     toggle?: MaybeHTMLElement;
     escapeListener: (e: KeyboardEvent) => void;
     clickTouchLayerListener: (e: MouseEvent) => void;
@@ -39,6 +40,7 @@ export type Options = {
     didHide?: (elements?: PromptElements) => void;
     getStatus?: (status: PromptStatus) => void;
     isIgnoreLockDuration?: boolean;
+    transitionDuration?: number;
 };
 export type TPrompt = {
     el?: MaybeHTMLElement;
