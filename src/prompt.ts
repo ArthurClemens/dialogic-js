@@ -231,10 +231,10 @@ const showView = async (
   options.willShow?.(elements);
   options.getStatus?.(prompt.status);
 
+  focusFirstElement(content, isFocusFirst, focusFirstSelector);
+
   const duration = getDuration(content);
   await wait(duration);
-
-  focusFirstElement(content, isFocusFirst, focusFirstSelector);
 
   prompt.status = {
     ...INITIAL_STATUS,

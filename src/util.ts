@@ -101,7 +101,6 @@ export const getFirstFocusable = (content: HTMLElement) => {
     ) as HTMLElement[]
   )
     // Omit focus trap element
-    .filter(el => !(el.getAttribute('aria-hidden') === 'true'))
     .filter(el => isFocusable(el, true))
     .sort((a, b) => a.tabIndex - b.tabIndex);
   return focusable[0] || content;
