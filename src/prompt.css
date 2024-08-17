@@ -49,6 +49,12 @@ GENERAL
   display: block;
 }
 
+/* Override libraries that hide the content */
+[data-prompt][data-isopen] [data-content] {
+  visibility: visible;
+  display: block;
+}
+
 /* Reset any conflicting animation styles set on dialogs */
 [data-prompt] [data-content]:not([aria-role='menu']) {
   animation-name: unset;
