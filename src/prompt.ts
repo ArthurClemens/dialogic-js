@@ -171,9 +171,11 @@ const hideView = async (
   options.getStatus?.(prompt.status);
   options.didHide?.(elements);
 
-  if (isEscapable && typeof window !== 'undefined') {
-    window.removeEventListener('keydown', escapeListener);
+  if (isEscapable) {
+    content.removeEventListener('keydown', escapeListener);
   }
+  // Focus on underlaying prompt
+  focusNextPrompt();
 };
 
 const showView = async (
@@ -200,8 +202,8 @@ const showView = async (
     }
   }, LOCK_DURATION);
 
-  if (isEscapable && typeof window !== 'undefined') {
-    window.addEventListener('keydown', escapeListener);
+  if (isEscapable) {
+    content.addEventListener('keydown', escapeListener);
   }
   if (isDetails) {
     root.setAttribute('open', '');
@@ -221,18 +223,8 @@ const showView = async (
 
   const duration = getDuration(content);
   await wait(duration);
-  if (isFocusFirst) {
-    const firstFocusable = getFirstFocusable(content);
-    if (firstFocusable) {
-      firstFocusable.focus();
-    }
-  } else if (focusFirstSelector) {
-    const firstFocusable: HTMLElement | null =
-      content.querySelector(focusFirstSelector);
-    if (firstFocusable) {
-      firstFocusable.focus();
-    }
-  }
+
+  focusFirstElement(content, isFocusFirst, focusFirstSelector);
 
   prompt.status = {
     ...INITIAL_STATUS,
@@ -297,8 +289,8 @@ const getElements = (
   const backdropLayer: MaybeHTMLElement = root.querySelector(BACKDROP_SELECTOR);
   const isDetails = root.tagName === 'DETAILS';
   const isModal = root.dataset[IS_MODAL_DATA] !== undefined;
-  const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== undefined;
-  const isFocusFirst = root.dataset[IS_FOCUS_FIRST_DATA] !== undefined;
+  const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== 'false';
+  const isFocusFirst = !!(root.dataset[IS_FOCUS_FIRST_DATA] !== undefined);
   const focusFirstSelector = root.dataset[FOCUS_FIRST_SELECTOR_DATA];
 
   const elements: PromptElements = {
@@ -357,6 +349,37 @@ const initTouchEvents = (elements: PromptElements) => {
   if (touchLayer && touchLayer.dataset.registered !== '') {
     touchLayer.addEventListener('click', clickTouchLayerListener);
     touchLayer.dataset.registered = '';
+  }
+};
+
+const focusFirstElement = (
+  content: HTMLElement,
+  isFocusFirst?: boolean,
+  focusFirstSelector?: string,
+) => {
+  if (isFocusFirst) {
+    const firstFocusable = getFirstFocusable(content);
+    if (firstFocusable) {
+      firstFocusable.focus();
+    }
+  } else if (focusFirstSelector) {
+    const firstFocusable: HTMLElement | null =
+      content.querySelector(focusFirstSelector);
+    if (firstFocusable) {
+      firstFocusable.focus();
+    }
+  }
+};
+
+const focusNextPrompt = () => {
+  const prompts: HTMLElement[] = [].slice.call(
+    document.querySelectorAll(`${ROOT_SELECTOR}[data-${IS_OPEN_DATA}]`),
+  );
+  const topElement = prompts.reverse()[0];
+  const content: MaybeHTMLElement = topElement?.querySelector(CONTENT_SELECTOR);
+  const firstFocusable = content && getFirstFocusable(content);
+  if (firstFocusable) {
+    firstFocusable.focus();
   }
 };
 
