@@ -30,21 +30,23 @@ enum MODE {
 type MaybeHTMLElement = HTMLElement | null;
 
 type PromptElements = {
-  prompt: TPrompt;
+  backdropLayer?: MaybeHTMLElement;
+  clickToggleListener: (e: Event) => void;
+  clickTouchLayerListener: (e: MouseEvent) => void;
   content: HTMLElement;
-  root: HTMLElement;
+  escapeListener: (e: KeyboardEvent) => void;
+  firstFocusable?: HTMLElement;
+  focusFirstSelector?: string;
   isDetails: boolean;
-  isModal: boolean;
   isEscapable?: boolean;
   isFocusFirst?: boolean;
-  focusFirstSelector?: string;
-  touchLayer?: MaybeHTMLElement;
-  backdropLayer?: MaybeHTMLElement;
+  isMenuContent: boolean;
+  isModal: boolean;
+  keyDownListenerElement: HTMLElement;
+  prompt: TPrompt;
+  root: HTMLElement;
   toggle?: MaybeHTMLElement;
-  escapeListener: (e: KeyboardEvent) => void;
-  clickTouchLayerListener: (e: MouseEvent) => void;
-  clickToggleListener: (e: Event) => void;
-  firstFocusable?: HTMLElement;
+  touchLayer?: MaybeHTMLElement;
 };
 
 export type PromptStatus = {
@@ -129,8 +131,15 @@ const hideView = async (
   elements: PromptElements,
   options: Options = {} as Options,
 ) => {
-  const { prompt, content, root, isDetails, isEscapable, escapeListener } =
-    elements;
+  const {
+    content,
+    escapeListener,
+    isDetails,
+    isEscapable,
+    keyDownListenerElement,
+    prompt,
+    root,
+  } = elements;
 
   if (
     root.dataset[IS_LOCKED_DATA] !== undefined &&
@@ -172,7 +181,7 @@ const hideView = async (
   options.didHide?.(elements);
 
   if (isEscapable) {
-    content.removeEventListener('keydown', escapeListener);
+    keyDownListenerElement.removeEventListener('keydown', escapeListener);
   }
   // Focus on underlaying prompt
   focusNextPrompt();
@@ -183,14 +192,15 @@ const showView = async (
   options: Options = {} as Options,
 ) => {
   const {
-    prompt,
     content,
-    root,
+    escapeListener,
+    focusFirstSelector,
     isDetails,
     isEscapable,
     isFocusFirst,
-    focusFirstSelector,
-    escapeListener,
+    keyDownListenerElement,
+    prompt,
+    root,
   } = elements;
   if (root.dataset[IS_LOCKED_DATA] !== undefined) {
     return;
@@ -203,7 +213,7 @@ const showView = async (
   }, LOCK_DURATION);
 
   if (isEscapable) {
-    content.addEventListener('keydown', escapeListener);
+    keyDownListenerElement.addEventListener('keydown', escapeListener);
   }
   if (isDetails) {
     root.setAttribute('open', '');
@@ -283,6 +293,10 @@ const getElements = (
     return undefined;
   }
 
+  if (!content.getAttribute('tabIndex')) {
+    content.setAttribute('tabIndex', '0');
+  }
+
   const toggle: MaybeHTMLElement =
     root.querySelector(TOGGLE_SELECTOR) || root.querySelector('summary');
   const touchLayer: MaybeHTMLElement = root.querySelector(TOUCH_SELECTOR);
@@ -290,21 +304,30 @@ const getElements = (
   const isDetails = root.tagName === 'DETAILS';
   const isModal = root.dataset[IS_MODAL_DATA] !== undefined;
   const isEscapable = root.dataset[IS_ESCAPABLE_DATA] !== 'false';
-  const isFocusFirst = !!(root.dataset[IS_FOCUS_FIRST_DATA] !== undefined);
+  const isMenuContent = content.getAttribute('aria-role') == 'menu';
+  const isFocusFirst = isMenuContent
+    ? !!(root.dataset[IS_FOCUS_FIRST_DATA] !== undefined)
+    : true;
+  const keyDownListenerElement = isMenuContent
+    ? (window as unknown as HTMLElement)
+    : content;
+
   const focusFirstSelector = root.dataset[FOCUS_FIRST_SELECTOR_DATA];
 
   const elements: PromptElements = {
-    prompt,
-    root,
+    backdropLayer,
+    content,
+    focusFirstSelector,
     isDetails,
-    isModal,
     isEscapable,
     isFocusFirst,
-    focusFirstSelector,
+    isMenuContent,
+    isModal,
+    keyDownListenerElement,
+    prompt,
+    root,
     toggle,
-    content,
     touchLayer,
-    backdropLayer,
     escapeListener: function (e: KeyboardEvent) {
       if (e.key === 'Escape') {
         // Only close the top element
@@ -357,18 +380,14 @@ const focusFirstElement = (
   isFocusFirst?: boolean,
   focusFirstSelector?: string,
 ) => {
-  if (isFocusFirst) {
-    const firstFocusable = getFirstFocusable(content);
-    if (firstFocusable) {
-      firstFocusable.focus();
-    }
-  } else if (focusFirstSelector) {
-    const firstFocusable: HTMLElement | null =
-      content.querySelector(focusFirstSelector);
-    if (firstFocusable) {
-      firstFocusable.focus();
-    }
+  let firstFocusable: HTMLElement | null = null;
+  if (focusFirstSelector) {
+    firstFocusable = content.querySelector(focusFirstSelector);
+  } else if (isFocusFirst) {
+    firstFocusable = getFirstFocusable(content);
   }
+  firstFocusable ||= content;
+  firstFocusable.focus();
 };
 
 const focusNextPrompt = () => {
@@ -403,23 +422,24 @@ async function init(
   const { root, content, isDetails, backdropLayer } = elements;
 
   /* Set transition duration override */
-  if (options?.transitionDuration) {
+  if (Number.isInteger(options?.transitionDuration)) {
+    const transitionDurationMs: string = `${options?.transitionDuration}ms`;
     content.style.setProperty(
       '--prompt-transition-duration-content',
-      `${options.transitionDuration}ms`,
+      transitionDurationMs,
     );
     content.style.setProperty(
       '--prompt-fast-transition-duration-content',
-      `${options.transitionDuration}ms`,
+      transitionDurationMs,
     );
     if (backdropLayer) {
       backdropLayer.style.setProperty(
         '--prompt-transition-duration-backdrop',
-        `${options.transitionDuration}ms`,
+        transitionDurationMs,
       );
       backdropLayer.style.setProperty(
         '--prompt-fast-transition-duration-backdrop',
-        `${options.transitionDuration}ms`,
+        transitionDurationMs,
       );
     }
   }

@@ -35,8 +35,11 @@
         font-size: 1em;
       }
 
-      form input:focus {
-        border: 2px solid blue;
+      *:focus {
+        outline-style: solid;
+        outline-color: blue;
+        outline-width: medium;
+        outline-offset: 2px;
       }
 
       .dialog[data-content] {
@@ -172,30 +175,6 @@
     </section>
 
     <section>
-      <h2>With form, focusfirst</h2>
-      <div data-prompt id="form-focusfirst" data-isfocusfirst>
-        <button onclick="Prompt.show(this)">Open dialog</button>
-        <div data-touch></div>
-        <div data-backdrop></div>
-        <div class="dialog" data-content>
-          <p>Content in a dialog with form, focusfirst</p>
-          <form method="dialog">
-            <p>
-              <input type="text" name="first" placeholder="First name" />
-            </p>
-            <p>
-              <input type="text" name="last" placeholder="Last name" />
-            </p>
-            <footer>
-              <button type="submit" onclick="Prompt.hide(this)">Send</button>
-              <button type="submit" onclick="Prompt.hide(this)">Cancel</button>
-            </footer>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <section>
       <h2>With form, focusfirst on specified element</h2>
       <div
         data-prompt
@@ -245,7 +224,7 @@
         Open both
       </button>
 
-      <div data-prompt id="stacked-main" data-isfocusfirst>
+      <div data-prompt id="stacked-main">
         <div data-touch></div>
         <div data-backdrop></div>
         <div class="dialog" data-content>
@@ -257,7 +236,7 @@
         </div>
       </div>
 
-      <div data-prompt id="stacked-confirmation" data-isfocusfirst>
+      <div data-prompt id="stacked-confirmation">
         <div data-touch></div>
         <div data-backdrop></div>
         <div class="dialog confirmation" data-content>
