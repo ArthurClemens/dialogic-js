@@ -114,7 +114,7 @@ BEFORE
   <p>Content</p>
   <button onclick="hideDialog('#my-dialog')">Close</button>
 </dialog>
-  
+
 ```
 
 ```js
@@ -206,7 +206,7 @@ If your application needs to show dialogs on top of other dialogs - perhaps in t
 
 ### Drawers
 
-#### Global drawer 
+#### Global drawer
 
 To create a screen size drawer, add `data-isdrawer` and `data-drawer-content`:
 
@@ -222,7 +222,7 @@ To create a screen size drawer, add `data-isdrawer` and `data-drawer-content`:
 </div>
 ```
 
-By default the drawer opens at the left side. To open at the right, pass `data-isfarside`. 
+By default the drawer opens at the left side. To open at the right, pass `data-isfarside`.
 
 ```html
 <div data-prompt data-isdrawer data-isfarside id="drawer">
@@ -333,7 +333,7 @@ Example of HTML for a menu with all relevant (but some optional) attributes:
 | `data-prompt`                     | required     | Container, may be a `<details>` element.                                                                                                                |
 | `id`                              | -            | Modifier for `data-prompt`. When opening or closing from outside of this container, an id or other selector is required in order to call methods on it. |
 | `data-ismodal`                    | -            | Modifier for `data-prompt`. Creates modal behavior: content can't be closed by clicking on the background.                                              |
-| `data-isescapable`                | -            | Modifier for `data-prompt`. Closes the content when pressing the Escape key.                                                                            |
+| `data-isescapable`                | -            | Modifier for `data-prompt`. Closes the content when pressing the Escape key. Default true. Set to "false" to prevent closing with the Escape key.       |
 | `data-isfocusfirst`               | -            | Modifier for `data-prompt`. On show, gives focus to the first focusable element (the first active element with the lowest tab index).                   |
 | `data-focusfirst="some-selector"` | -            | Modifier for `data-prompt`. Likewise, but find the focusable element by selector.                                                                       |
 | `data-isfast`                     | -            | Modifier for `data-prompt`. Creates fast fade transitions for backdrop and content.                                                                     |
@@ -348,7 +348,7 @@ Example of HTML for a menu with all relevant (but some optional) attributes:
 Example of HTML with all relevant (but some optional) attributes:
 
 ```html
-<div data-prompt data-ismodal data-isescapable data-isfast>
+<div data-prompt data-ismodal data-isfast>
   <div data-backdrop data-islight></div>
   <div data-touch></div>
   <div data-content>
@@ -597,7 +597,7 @@ The [HTMLDetailsElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDe
 
 The downside to using `details` is that it provides little support for transitions; the open state is on or off, which leads to a faily basic user experience.
 
-With `dialogic-js` you can combine the `details` markup combined with transitions. 
+With `dialogic-js` you can combine the `details` markup combined with transitions.
 
 
 With HTML markup, the details is initialized with `Prompt.init()`:
@@ -665,7 +665,7 @@ With React, change the button tag to:
 When using a form:
 
 ```html
-<div data-prompt id="my-form-dialog" data-isescapable>
+<div data-prompt id="my-form-dialog">
   <button onclick="Prompt.show(this)">
     Open form
   </button>

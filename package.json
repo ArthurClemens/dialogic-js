@@ -28,7 +28,7 @@
     "build:types": "./node_modules/typescript/bin/tsc --p tsconfig.gen.json",
     "build": "npm run dist:clean && npm run build:types && npm run build:esm && npm run build:cjs && npm run build:minified",
     "test:server": "http-server -c-1 ./test",
-    "start": "npm run test:server",
+    "dev": "npm run test:server",
     "lint": "eslint --ext .js,.ts,.tsx --fix .",
     "test:setup": "sh scripts/link-dist.sh",
     "test:i": "npm run test:setup && run-p test:server test:open",
