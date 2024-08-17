@@ -93,33 +93,30 @@
     </div>
 
     <div id="dialog" data-prompt data-ismodal>
-      <div data-touch>
-        <div data-backdrop></div>
-        <!-- Modal content -->
+      <div data-touch></div>
+      <div data-backdrop></div>
+      <!-- Modal content -->
+      <div
+        class="relative bg-white rounded-lg shadow dark:bg-gray-700"
+        data-content
+      >
+        <!-- Modal body -->
+        <div class="p-6 space-y-6">
+          <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            Body
+          </p>
+        </div>
+        <!-- Modal footer -->
         <div
-          class="relative bg-white rounded-lg shadow dark:bg-gray-700"
-          data-content
+          class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600"
         >
-          <!-- Modal body -->
-          <div class="p-6 space-y-6">
-            <p
-              class="text-base leading-relaxed text-gray-500 dark:text-gray-400"
-            >
-              Body
-            </p>
-          </div>
-          <!-- Modal footer -->
-          <div
-            class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600"
+          <button
+            type="button"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onclick="Prompt.hide(this)"
           >
-            <button
-              type="button"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onclick="Prompt.hide(this)"
-            >
-              Close
-            </button>
-          </div>
+            Close
+          </button>
         </div>
       </div>
     </div>

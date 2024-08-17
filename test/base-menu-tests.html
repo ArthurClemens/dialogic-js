@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Base menu tests</title>
@@ -114,10 +114,11 @@
     </section>
 
     <section>
-      <h2>Escapable</h2>
-      <div data-prompt id="escapable" data-isescapable>
+      <h2>Not escapable</h2>
+      <div data-prompt id="escapable" data-isescapable="false">
         <div data-touch></div>
         <div data-content aria-role="menu">
+          <p>Can't use the Escape key to close</p>
           <ul>
             <li>Item 1</li>
             <li>Item 2</li>
@@ -128,7 +129,9 @@
         </div>
       </div>
 
-      <button onclick="Prompt.show('#escapable')">Open escapable menu</button>
+      <button onclick="Prompt.show('#escapable')">
+        Open not escapable menu
+      </button>
     </section>
   </body>
 </html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Base dialog tests</title>
@@ -107,8 +107,8 @@
     </section>
 
     <section>
-      <h2>Escapable</h2>
-      <div data-prompt id="escapable" data-isescapable>
+      <h2>Modal, not escapable</h2>
+      <div data-prompt id="escapable" data-ismodal data-isescapable="false">
         <button
           onclick="Prompt.show(this, {
           didHide: () => console.log('didhide')
@@ -118,7 +118,7 @@
         </button>
         <div data-touch></div>
         <div class="dialog" data-content>
-          <p>Content in a escapable dialog</p>
+          <p>Can't use the Escape key to close</p>
           <button onclick="Prompt.hide(this)">Close</button>
         </div>
       </div>
@@ -128,7 +128,7 @@
       <h2>With JavaScript</h2>
       <button id="js-button-show">Open</button>
 
-      <div data-prompt id="js" data-isescapable>
+      <div data-prompt id="js">
         <div data-touch></div>
         <div class="dialog" data-content>
           <p>Content in a JS invoked dialog</p>
@@ -224,7 +224,7 @@
     </section>
 
     <section>
-      <h2>Stacked dialogs</h2>
+      <h2>Stacked dialogs, focusfirst</h2>
 
       <button
         data-testid="button-stacked-main"
@@ -245,29 +245,27 @@
         Open both
       </button>
 
-      <div data-prompt id="stacked-main" data-isescapable>
-        <div data-touch>
-          <div data-backdrop></div>
-          <div class="dialog" data-content>
-            <p>Content in main dialog</p>
-            <button onclick="Prompt.hide(this)">Accept</button>
-            <button onclick="Prompt.show('#stacked-confirmation')">
-              Decline
-            </button>
-          </div>
+      <div data-prompt id="stacked-main" data-isfocusfirst>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <div class="dialog" data-content>
+          <p>Content in main dialog</p>
+          <button onclick="Prompt.hide(this)">Accept</button>
+          <button onclick="Prompt.show('#stacked-confirmation')">
+            Decline
+          </button>
         </div>
       </div>
 
-      <div data-prompt id="stacked-confirmation" data-isescapable>
-        <div data-touch>
-          <div data-backdrop></div>
-          <div class="dialog confirmation" data-content>
-            <p>Content in confirmation dialog</p>
-            <button onclick="Prompt.hide(this); Prompt.hide('#stacked-main')">
-              I'm sure
-            </button>
-            <button onclick="Prompt.hide(this)">Cancel</button>
-          </div>
+      <div data-prompt id="stacked-confirmation" data-isfocusfirst>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <div class="dialog confirmation" data-content>
+          <p>Content in confirmation dialog</p>
+          <button onclick="Prompt.hide(this); Prompt.hide('#stacked-main')">
+            I'm sure
+          </button>
+          <button onclick="Prompt.hide(this)">Cancel</button>
         </div>
       </div>
     </section>

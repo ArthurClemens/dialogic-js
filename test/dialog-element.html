@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Base dialog tests</title>
@@ -214,29 +214,27 @@
       </button>
 
       <div data-prompt id="stacked-main" data-isescapable>
-        <div data-touch>
-          <div data-backdrop></div>
-          <dialog data-content>
-            <p>Content in main dialog</p>
-            <button onclick="Prompt.hide(this)">Accept</button>
-            <button onclick="Prompt.show('#stacked-confirmation')">
-              Decline
-            </button>
-          </dialog>
-        </div>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <dialog data-content>
+          <p>Content in main dialog</p>
+          <button onclick="Prompt.hide(this)">Accept</button>
+          <button onclick="Prompt.show('#stacked-confirmation')">
+            Decline
+          </button>
+        </dialog>
       </div>
 
       <div data-prompt id="stacked-confirmation" data-isescapable>
-        <div data-touch>
-          <div data-backdrop></div>
-          <dialog class="confirmation" data-content>
-            <p>Content in confirmation dialog</p>
-            <button onclick="Prompt.hide(this); Prompt.hide('#stacked-main')">
-              I'm sure
-            </button>
-            <button onclick="Prompt.hide(this)">Cancel</button>
-          </dialog>
-        </div>
+        <div data-touch></div>
+        <div data-backdrop></div>
+        <dialog class="confirmation" data-content>
+          <p>Content in confirmation dialog</p>
+          <button onclick="Prompt.hide(this); Prompt.hide('#stacked-main')">
+            I'm sure
+          </button>
+          <button onclick="Prompt.hide(this)">Cancel</button>
+        </dialog>
       </div>
     </section>
   </body>
