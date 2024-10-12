@@ -55,7 +55,7 @@
     "esbuild": "^0.23.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-import-resolver-typescript": "3.6.1",
-    "eslint-plugin-cypress": "^3.5.0",
+    "eslint-plugin-cypress": "^4.0.0",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-jest-dom": "5.4.0",
     "eslint-plugin-json": "4.0.1",
